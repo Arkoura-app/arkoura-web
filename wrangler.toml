@@ -1,0 +1,10 @@
+name = "arkoura-web"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Output dir produced by @cloudflare/next-on-pages (run `npm run pages:build`)
+pages_build_output_dir = ".vercel/output/static"
+
+[vars]
+# Non-secret environment variables can be set here.
+# Secrets must be set via: wrangler secret put SECRET_NAME
