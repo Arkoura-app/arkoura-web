@@ -1,0 +1,16 @@
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+  // Edge runtime is declared per-route via: export const runtime = 'edge'
+  // @cloudflare/next-on-pages transforms the Next.js output for Cloudflare Pages.
+  // Run `npm run pages:build` to produce the CF Pages artifact.
+  eslint: {
+    // CI enforces zero-warnings via `next lint --max-warnings 0`
+    ignoreDuringBuilds: false,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+}
+
+export default nextConfig
