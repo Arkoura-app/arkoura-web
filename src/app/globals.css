@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+/* ─── Hero entrance animations (CSS-only, no JS on LCP path) ─── */
+
+@keyframes arkoura-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes arkoura-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes arkoura-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.hero-badge     { animation: arkoura-fade  500ms ease-out          both; }
+.hero-headline  { animation: arkoura-fade  600ms ease-out  150ms   both; }
+.hero-sub       { animation: arkoura-fade  600ms ease-out  300ms   both; }
+.hero-ctas      { animation: arkoura-fade  600ms ease-out  450ms   both; }
+.hero-chips     { animation: arkoura-fade  600ms ease-out  550ms   both; }
+.hero-card      { animation: arkoura-fade  700ms ease-out  600ms   both; }
+.hero-card-float{ animation: arkoura-float   4s  ease-in-out 1.3s infinite; }
