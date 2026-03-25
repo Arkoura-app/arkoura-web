@@ -747,6 +747,7 @@ function Nav({ lang, setLang }: { lang: string; setLang: (l: string) => void }) 
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon.png" alt="Arkoura" width={32} height={32} />
           <span className="font-[var(--font-manrope)] font-semibold text-[#1C2B1E]">
             Arkoura
@@ -793,6 +794,7 @@ function EmergencyCard() {
               flexShrink: 0,
               position: 'relative',
             }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/profile.png"
                 alt="Jamie Donovan"
@@ -1281,6 +1283,7 @@ function CTASection({ lang }: { lang: string }) {
           className="flex flex-col items-center"
         >
           <motion.div variants={fadeIn} className="mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icon.png" alt="Arkoura" width={40} height={40} />
           </motion.div>
 
@@ -1326,6 +1329,7 @@ function Footer({ lang }: { lang: string }) {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-wrap items-center justify-between gap-6 py-12">
           <div className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icon.png" alt="Arkoura" width={32} height={32} />
             <span className="font-[var(--font-manrope)] font-semibold text-white">Arkoura</span>
           </div>
