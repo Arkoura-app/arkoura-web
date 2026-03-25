@@ -37,32 +37,23 @@ const vp = { once: true, amount: 0.2 }
 // ─── Language system ─────────────────────────────────────────────────────────────
 
 const LANGUAGES = [
-  { code: 'EN', name: 'English',    native: 'English' },
-  { code: 'ES', name: 'Spanish',    native: 'Español' },
-  { code: 'FR', name: 'French',     native: 'Français' },
-  { code: 'DE', name: 'German',     native: 'Deutsch' },
-  { code: 'PT', name: 'Portuguese', native: 'Português' },
-  { code: 'ZH', name: 'Chinese',    native: '中文' },
-  { code: 'AR', name: 'Arabic',     native: 'العربية' },
-  { code: 'JA', name: 'Japanese',   native: '日本語' },
-  { code: 'KO', name: 'Korean',     native: '한국어' },
-  { code: 'IT', name: 'Italian',    native: 'Italiano' },
-  { code: 'NL', name: 'Dutch',      native: 'Nederlands' },
-  { code: 'RU', name: 'Russian',    native: 'Русский' },
-  { code: 'PL', name: 'Polish',     native: 'Polski' },
-  { code: 'SV', name: 'Swedish',    native: 'Svenska' },
-  { code: 'TR', name: 'Turkish',    native: 'Türkçe' },
-  { code: 'HI', name: 'Hindi',      native: 'हिन्दी' },
-  { code: 'UK', name: 'Ukrainian',  native: 'Українська' },
-  { code: 'VI', name: 'Vietnamese', native: 'Tiếng Việt' },
-  { code: 'TH', name: 'Thai',       native: 'ภาษาไทย' },
-  { code: 'ID', name: 'Indonesian', native: 'Bahasa Indonesia' },
+  { code: 'en', name: 'English',   flag: '🇺🇸' },
+  { code: 'es', name: 'Español',   flag: '🇪🇸' },
+  { code: 'fr', name: 'Français',  flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch',   flag: '🇩🇪' },
+  { code: 'pt', name: 'Português', flag: '🇧🇷' },
+  { code: 'zh', name: '中文',       flag: '🇨🇳' },
+  { code: 'ja', name: '日本語',     flag: '🇯🇵' },
+  { code: 'it', name: 'Italiano',  flag: '🇮🇹' },
+  { code: 'ru', name: 'Русский',   flag: '🇷🇺' },
+  { code: 'sv', name: 'Svenska',   flag: '🇸🇪' },
 ]
 
 const TRANSLATIONS: Record<string, Record<string, string>> = {
-  EN: {
+  en: {
     signIn: 'Sign in',
     getStarted: 'Get Started',
+    nav_cta: 'Get Started',
     heroBadge: 'Personal Health · Emergency Ready',
     heroH1: 'Your health story,',
     heroH2: 'everywhere you go.',
@@ -133,15 +124,16 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     formSuccessTitle: "You're on the list.",
     formSuccessSub: "We'll reach out when Arkoura launches.",
     formErr: 'Something went wrong — please try again.',
-    footerDisclaimer: 'Arkoura is not a medical device and does not provide medical advice. It is an information-sharing tool designed to assist in emergency situations. Always contact emergency services in a life-threatening situation.',
-    footerCopyright: '© 2026 Arkoura. Built with care in Costa Rica. 🇨🇷',
+    footerDisclaimer: 'Arkoura is not a medical device and is not a medical record system. It does not provide medical diagnosis, clinical assessments, or medical advice of any kind. Arkoura is a personal health journal, document management tool, and information-sharing platform designed solely to assist in emergency situations by making user-provided information accessible to helpers. Always contact emergency services immediately in any life-threatening situation.',
+    footer_copy: '© 2026 Arkoura. Engineered for humanity.',
     privacy: 'Privacy',
     terms: 'Terms',
     cookies: 'Cookies',
   },
-  ES: {
+  es: {
     signIn: 'Iniciar sesión',
     getStarted: 'Comenzar',
+    nav_cta: 'Comenzar',
     heroBadge: 'Salud Personal · Listo para Emergencias',
     heroH1: 'Tu historia de salud,',
     heroH2: 'dondequiera que vayas.',
@@ -212,15 +204,16 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     formSuccessTitle: 'Estás en la lista.',
     formSuccessSub: 'Te contactaremos cuando Arkoura lance.',
     formErr: 'Algo salió mal — intenta de nuevo.',
-    footerDisclaimer: 'Arkoura no es un dispositivo médico y no brinda consejo médico. Es una herramienta de compartición de información diseñada para asistir en situaciones de emergencia. Siempre contacta los servicios de emergencia ante una situación de riesgo de vida.',
-    footerCopyright: '© 2026 Arkoura. Construido con cariño en Costa Rica. 🇨🇷',
+    footerDisclaimer: 'Arkoura no es un dispositivo médico ni un sistema de historial clínico. No proporciona diagnósticos médicos, evaluaciones clínicas ni asesoramiento médico de ningún tipo. Arkoura es un diario de salud personal, una herramienta de gestión de documentos y una plataforma de intercambio de información diseñada únicamente para asistir en situaciones de emergencia. Contacte siempre los servicios de emergencia ante cualquier situación que ponga en riesgo la vida.',
+    footer_copy: '© 2026 Arkoura. Diseñado para la humanidad.',
     privacy: 'Privacidad',
     terms: 'Términos',
     cookies: 'Cookies',
   },
-  FR: {
+  fr: {
     signIn: 'Se connecter',
     getStarted: 'Commencer',
+    nav_cta: 'Commencer',
     heroBadge: 'Santé Personnelle · Prêt pour les Urgences',
     heroH1: 'Votre histoire de santé,',
     heroH2: 'partout où vous allez.',
@@ -291,15 +284,16 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     formSuccessTitle: 'Vous êtes sur la liste.',
     formSuccessSub: "Nous vous contacterons au lancement d'Arkoura.",
     formErr: 'Une erreur est survenue — veuillez réessayer.',
-    footerDisclaimer: "Arkoura n'est pas un dispositif médical et ne fournit pas de conseils médicaux. C'est un outil de partage d'informations conçu pour aider dans les situations d'urgence. Contactez toujours les services d'urgence en cas de danger de vie.",
-    footerCopyright: '© 2026 Arkoura. Fait avec soin au Costa Rica. 🇨🇷',
+    footerDisclaimer: "Arkoura n'est pas un dispositif médical et n'est pas un système de dossier médical. Il ne fournit aucun diagnostic médical, aucune évaluation clinique ni aucun conseil médical. Arkoura est un journal de santé personnel, un outil de gestion de documents et une plateforme de partage d'informations conçue uniquement pour aider dans les situations d'urgence. Contactez toujours les services d'urgence immédiatement dans toute situation mettant la vie en danger.",
+    footer_copy: "© 2026 Arkoura. Conçu pour l'humanité.",
     privacy: 'Confidentialité',
     terms: 'Conditions',
     cookies: 'Cookies',
   },
-  DE: {
+  de: {
     signIn: 'Anmelden',
     getStarted: 'Loslegen',
+    nav_cta: 'Loslegen',
     heroBadge: 'Persönliche Gesundheit · Notfallbereit',
     heroH1: 'Deine Gesundheitsgeschichte,',
     heroH2: 'wohin du auch gehst.',
@@ -370,15 +364,16 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     formSuccessTitle: 'Du bist auf der Liste.',
     formSuccessSub: 'Wir melden uns, wenn Arkoura startet.',
     formErr: 'Etwas ist schiefgelaufen — bitte versuche es erneut.',
-    footerDisclaimer: 'Arkoura ist kein Medizinprodukt und bietet keine medizinische Beratung. Es ist ein Informationsaustauschwerkzeug, das in Notsituationen helfen soll. Kontaktiere immer die Notfalldienste bei lebensbedrohlichen Situationen.',
-    footerCopyright: '© 2026 Arkoura. Mit Sorgfalt in Costa Rica gebaut. 🇨🇷',
+    footerDisclaimer: 'Arkoura ist kein Medizinprodukt und kein medizinisches Aktensystem. Es stellt keine medizinischen Diagnosen, klinischen Bewertungen oder medizinischen Ratschläge jeglicher Art bereit. Arkoura ist ein persönliches Gesundheitstagebuch, ein Dokumentenverwaltungstool und eine Informationsplattform, die ausschließlich dazu dient, in Notfallsituationen zu helfen. Rufen Sie bei lebensbedrohlichen Situationen immer sofort den Notfalldienst.',
+    footer_copy: '© 2026 Arkoura. Entwickelt für die Menschheit.',
     privacy: 'Datenschutz',
     terms: 'AGB',
     cookies: 'Cookies',
   },
-  PT: {
+  pt: {
     signIn: 'Entrar',
     getStarted: 'Começar',
+    nav_cta: 'Começar',
     heroBadge: 'Saúde Pessoal · Pronto para Emergências',
     heroH1: 'Sua história de saúde,',
     heroH2: 'onde quer que você vá.',
@@ -449,16 +444,191 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     formSuccessTitle: 'Você está na lista.',
     formSuccessSub: 'Entraremos em contato quando Arkoura lançar.',
     formErr: 'Algo deu errado — por favor tente novamente.',
-    footerDisclaimer: 'Arkoura não é um dispositivo médico e não fornece aconselhamento médico. É uma ferramenta de compartilhamento de informações projetada para auxiliar em situações de emergência. Sempre contate os serviços de emergência em uma situação de risco de vida.',
-    footerCopyright: '© 2026 Arkoura. Feito com carinho na Costa Rica. 🇨🇷',
+    footerDisclaimer: 'Arkoura não é um dispositivo médico nem um sistema de prontuário eletrônico. Não fornece diagnósticos médicos, avaliações clínicas nem aconselhamento médico de qualquer tipo. Arkoura é um diário de saúde pessoal, uma ferramenta de gestão de documentos e uma plataforma de compartilhamento de informações projetada exclusivamente para auxiliar em situações de emergência. Em qualquer situação de risco de vida, contacte sempre os serviços de emergência imediatamente.',
+    footer_copy: '© 2026 Arkoura. Desenvolvido para a humanidade.',
     privacy: 'Privacidade',
     terms: 'Termos',
     cookies: 'Cookies',
   },
+  zh: {
+    badge: '个人健康日记 · 随时应对紧急情况',
+    headline1: '您的健康故事，',
+    headline2: '随时随地伴您左右。',
+    subheadline: 'Arkoura 是一款个人健康日记，在紧急情况下成为您的生命线。一次 QR 扫描即可让任何帮助者即时获取所需信息——以他们的语言。',
+    cta_primary: '加入等候名单 →',
+    cta_secondary: '了解工作原理',
+    trust1: '免费紧急访问',
+    trust2: '符合 GDPR 和 HIPAA',
+    trust3: '无需安装应用',
+    problem_label: 'Arkoura 存在的原因',
+    problem_headline1: '在紧急情况下，沉默',
+    problem_headline2: '是最危险的事。',
+    how_label: '工作原理',
+    how_headline1: '三个步骤。一次扫描。',
+    how_headline2: '守护一条生命。',
+    zero_headline1: '零追踪。',
+    zero_headline2: '零安装。',
+    zero_headline3: '百分之百属于您。',
+    diff_label: 'Arkoura 的优势',
+    diff_headline1: '为最关键的',
+    diff_headline2: '时刻而设计。',
+    cta_headline1: '在需要之前',
+    cta_headline2: '做好准备。',
+    form_name: '您的姓名',
+    form_email: '您的邮箱',
+    form_submit: '加入等候名单 →',
+    form_fine: '紧急访问永久免费。无需信用卡。',
+    success_headline: '您已加入名单。',
+    success_sub: 'Arkoura 发布时我们将与您联系。',
+    footer_copy: '© 2026 Arkoura. 为人类而生。',
+    nav_signin: '登录',
+    nav_cta: '访问 Vault',
+    footerDisclaimer: 'Arkoura 不是医疗设备，也不是医疗记录系统。它不提供任何形式的医疗诊断、临床评估或医疗建议。Arkoura 是个人健康日记、文件管理工具和信息共享平台，专为在紧急情况下协助提供用户信息而设计。在任何危及生命的情况下，请立即联系紧急服务。',
+  },
+  ja: {
+    badge: '個人健康日記 · 緊急事態に備えて',
+    headline1: 'あなたの健康の物語を、',
+    headline2: 'どこへでも。',
+    subheadline: 'Arkouraは個人の健康日記であり、緊急時の命綱となります。QRコードを一回スキャンするだけで、助けてくれる人があなたの情報に即座にアクセスできます—その人の言語で。',
+    cta_primary: '順番待ちリストに参加 →',
+    cta_secondary: '仕組みを見る',
+    trust1: '緊急アクセス無料',
+    trust2: 'GDPRおよびHIPAA準拠',
+    trust3: 'アプリ不要',
+    problem_label: 'ARKOURAが存在する理由',
+    problem_headline1: '緊急時、沈黙は',
+    problem_headline2: '最も危険なことです。',
+    how_label: '仕組み',
+    how_headline1: '3つのステップ。1回のスキャン。',
+    how_headline2: '守られる命。',
+    zero_headline1: 'トラッキングゼロ。',
+    zero_headline2: 'インストールゼロ。',
+    zero_headline3: '100%あなたのもの。',
+    diff_label: 'ARKOURAの優位性',
+    diff_headline1: '最も重要な',
+    diff_headline2: '瞬間のために設計。',
+    cta_headline1: '必要になる前に',
+    cta_headline2: '備えておきましょう。',
+    form_name: 'お名前',
+    form_email: 'メールアドレス',
+    form_submit: '順番待ちリストに参加 →',
+    form_fine: '緊急アクセスは永久無料。クレジットカード不要。',
+    success_headline: 'リストに登録されました。',
+    success_sub: 'Arkouraのローンチ時にご連絡いたします。',
+    footer_copy: '© 2026 Arkoura. 人類のために作られました。',
+    nav_signin: 'サインイン',
+    nav_cta: 'Vaultを開く',
+    footerDisclaimer: 'Arkouraは医療機器でも医療記録システムでもありません。医療診断、臨床評価、または医療アドバイスを提供するものではありません。Arkouraは、緊急時に利用者が提供した情報をヘルパーがアクセスできるよう設計された、個人健康日記・文書管理・情報共有プラットフォームです。生命の危険がある状況では、必ず直ちに緊急サービスに連絡してください。',
+  },
+  it: {
+    badge: 'Diario di Salute · Pronto per le Emergenze',
+    headline1: 'La tua storia di salute,',
+    headline2: 'sempre con te.',
+    subheadline: "Arkoura è un diario di salute personale che diventa un salvagente nelle emergenze. Una scansione QR dà accesso immediato a chiunque ti aiuti — nella sua lingua.",
+    cta_primary: 'Unisciti alla lista →',
+    cta_secondary: 'Scopri come funziona',
+    trust1: 'Accesso emergenze gratuito',
+    trust2: 'Conforme GDPR e HIPAA',
+    trust3: 'Nessuna app richiesta',
+    problem_label: 'PERCHÉ ESISTE ARKOURA',
+    problem_headline1: "In un'emergenza, il silenzio",
+    problem_headline2: 'è la cosa più pericolosa.',
+    how_label: 'COME FUNZIONA',
+    how_headline1: 'Tre passaggi. Una scansione.',
+    how_headline2: 'Una vita protetta.',
+    zero_headline1: 'Zero tracciamento.',
+    zero_headline2: 'Zero installazioni.',
+    zero_headline3: '100% tuo.',
+    diff_label: 'IL VANTAGGIO ARKOURA',
+    diff_headline1: 'Progettato per i',
+    diff_headline2: 'momenti che contano di più.',
+    cta_headline1: 'Sii pronto prima',
+    cta_headline2: 'di averne bisogno.',
+    form_name: 'Il tuo nome',
+    form_email: 'tua@email.com',
+    form_submit: 'Unisciti alla lista →',
+    form_fine: 'Gratuito per sempre per accesso emergenze. Nessuna carta di credito.',
+    success_headline: 'Sei nella lista.',
+    success_sub: 'Ti contatteremo al lancio di Arkoura.',
+    footer_copy: "© 2026 Arkoura. Progettato per l'umanità.",
+    nav_signin: 'Accedi',
+    nav_cta: 'Accedi al Vault',
+    footerDisclaimer: 'Arkoura non è un dispositivo medico né un sistema di cartella clinica. Non fornisce diagnosi mediche, valutazioni cliniche o consigli medici di alcun tipo. Arkoura è un diario sanitario personale, uno strumento di gestione documentale e una piattaforma di condivisione delle informazioni progettata esclusivamente per assistere nelle situazioni di emergenza. Contattare sempre immediatamente i servizi di emergenza in qualsiasi situazione pericolosa per la vita.',
+  },
+  ru: {
+    badge: 'Личный дневник здоровья · Готов к экстренным случаям',
+    headline1: 'Ваша история здоровья,',
+    headline2: 'всегда рядом.',
+    subheadline: 'Arkoura — это личный дневник здоровья, который становится спасательным кругом в экстренных ситуациях. Один QR-скан даёт мгновенный доступ любому помощнику — на его языке.',
+    cta_primary: 'Вступить в список →',
+    cta_secondary: 'Узнать как работает',
+    trust1: 'Бесплатный экстренный доступ',
+    trust2: 'Соответствует GDPR и HIPAA',
+    trust3: 'Приложение не нужно',
+    problem_label: 'ПОЧЕМУ СУЩЕСТВУЕТ ARKOURA',
+    problem_headline1: 'В экстренной ситуации молчание',
+    problem_headline2: 'самое опасное.',
+    how_label: 'КАК ЭТО РАБОТАЕТ',
+    how_headline1: 'Три шага. Один скан.',
+    how_headline2: 'Жизнь под защитой.',
+    zero_headline1: 'Ноль отслеживания.',
+    zero_headline2: 'Ноль установок.',
+    zero_headline3: '100% ваше.',
+    diff_label: 'ПРЕИМУЩЕСТВО ARKOURA',
+    diff_headline1: 'Создан для',
+    diff_headline2: 'моментов, которые важнее всего.',
+    cta_headline1: 'Будьте готовы до того,',
+    cta_headline2: 'как понадобится.',
+    form_name: 'Ваше имя',
+    form_email: 'ваш@email.com',
+    form_submit: 'Вступить в список →',
+    form_fine: 'Бесплатно навсегда для экстренного доступа. Без кредитной карты.',
+    success_headline: 'Вы в списке.',
+    success_sub: 'Мы свяжемся с вами при запуске Arkoura.',
+    footer_copy: '© 2026 Arkoura. Создан для человечества.',
+    nav_signin: 'Войти',
+    nav_cta: 'Открыть Vault',
+    footerDisclaimer: 'Arkoura не является медицинским устройством и не является системой медицинских записей. Он не предоставляет медицинских диагнозов, клинических оценок или медицинских консультаций. Arkoura — это личный дневник здоровья, инструмент управления документами и платформа обмена информацией, предназначенная исключительно для помощи в экстренных ситуациях. В любой ситуации, угрожающей жизни, всегда немедленно обращайтесь в службу экстренной помощи.',
+  },
+  sv: {
+    badge: 'Personlig hälsodagbok · Redo för nödsituationer',
+    headline1: 'Din hälsohistoria,',
+    headline2: 'alltid med dig.',
+    subheadline: 'Arkoura är en personlig hälsodagbok som blir en livlina i nödsituationer. En QR-skanning ger omedelbar tillgång till vem som helst som hjälper dig — på deras språk.',
+    cta_primary: 'Gå med i listan →',
+    cta_secondary: 'Se hur det fungerar',
+    trust1: 'Gratis nödtillgång',
+    trust2: 'GDPR- och HIPAA-kompatibel',
+    trust3: 'Ingen app behövs',
+    problem_label: 'VARFÖR ARKOURA FINNS',
+    problem_headline1: 'I en nödsituation är tystnad',
+    problem_headline2: 'det farligaste som finns.',
+    how_label: 'HUR DET FUNGERAR',
+    how_headline1: 'Tre steg. En skanning.',
+    how_headline2: 'Ett liv skyddat.',
+    zero_headline1: 'Noll spårning.',
+    zero_headline2: 'Noll installationer.',
+    zero_headline3: '100% ditt.',
+    diff_label: 'ARKOURA-FÖRDELEN',
+    diff_headline1: 'Utvecklad för de',
+    diff_headline2: 'stunder som betyder mest.',
+    cta_headline1: 'Var redo innan',
+    cta_headline2: 'du behöver det.',
+    form_name: 'Ditt namn',
+    form_email: 'din@email.com',
+    form_submit: 'Gå med i listan →',
+    form_fine: 'Alltid gratis för nödtillgång. Inget kreditkort krävs.',
+    success_headline: 'Du är med på listan.',
+    success_sub: 'Vi hör av oss när Arkoura lanseras.',
+    footer_copy: '© 2026 Arkoura. Konstruerad för mänskligheten.',
+    nav_signin: 'Logga in',
+    nav_cta: 'Öppna Vault',
+    footerDisclaimer: 'Arkoura är inte en medicinsk enhet och inte ett journalsystem. Det tillhandahåller inga medicinska diagnoser, kliniska bedömningar eller medicinska råd av något slag. Arkoura är en personlig hälsodagbok, ett dokumenthanteringsverktyg och en informationsdelningsplattform utformad enbart för att hjälpa i nödsituationer. Kontakta alltid räddningstjänsten omedelbart i alla livshotande situationer.',
+  },
 }
 
 function getText(lang: string, key: string): string {
-  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.EN[key] ?? key
+  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en[key] ?? key
 }
 
 // ─── Shared section label ──────────────────────────────────────────────────────
@@ -726,7 +896,7 @@ function LanguageSelector({ lang, setLang }: { lang: string; setLang: (l: string
                   lang === l.code ? 'font-semibold text-[#4A7A50]' : 'text-[#374151]'
                 }`}
               >
-                <span>{l.native}</span>
+                <span>{l.flag} {l.name}</span>
                 <span className="text-xs text-[#9CA3AF]">{l.code}</span>
               </button>
             ))}
@@ -753,16 +923,13 @@ function Nav({ lang, setLang }: { lang: string; setLang: (l: string) => void }) 
             Arkoura
           </span>
         </Link>
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-2">
           <LanguageSelector lang={lang} setLang={setLang} />
-          <a href="#" className="text-sm text-[#6B7280] transition hover:text-[#374151]">
-            {getText(lang, 'signIn')}
-          </a>
           <a
             href="#waitlist"
             className="rounded-full bg-[#7A9E7E] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4A7A50]"
           >
-            {getText(lang, 'getStarted')}
+            {getText(lang, 'nav_cta')}
           </a>
         </nav>
       </div>
@@ -1352,7 +1519,7 @@ function Footer({ lang }: { lang: string }) {
             {getText(lang, 'footerDisclaimer')}
           </p>
           <p className="text-xs text-[#4B5563]">
-            {getText(lang, 'footerCopyright')}
+            {getText(lang, 'footer_copy')}
           </p>
         </div>
       </div>
@@ -1363,7 +1530,7 @@ function Footer({ lang }: { lang: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Page() {
-  const [currentLang, setCurrentLang] = useState('EN')
+  const [currentLang, setCurrentLang] = useState('en')
 
   return (
     <div className="bg-[#FAFAF8]" dir={currentLang === 'AR' ? 'rtl' : undefined}>
