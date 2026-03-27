@@ -74,6 +74,15 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     s2tag: 'In every country',
     s3title: 'The parent who forgot',
     s3body: 'Dementia. He wandered from home. No medications list, no doctor name remembered. The ER started from zero.',
+    s4title: 'Abroad and unable to communicate',
+    s4body: 'Severe chest pain in a foreign market. No shared language with locals. Twelve minutes passed before anyone understood what he needed.',
+    s4tag: '1 in 4 emergencies involve a language barrier',
+    s5title: "The child who couldn't say his name",
+    s5body: "Non-verbal and lost at a crowded festival. No name, no parents' contacts, no sensory needs communicated. Responders had nothing to go on.",
+    s5tag: '1 in 36 children is autistic globally',
+    s6title: 'He fainted. He recovered. He opened a session.',
+    s6body: 'Regained consciousness surrounded by paramedics. He opened a timed session, handed them a code — and they accessed his full journal and history in seconds.',
+    s6tag: 'When words come back — more becomes possible',
     s3tag: 'Closer than you think',
     howLabel: 'HOW IT WORKS',
     howH1: 'Three steps. One scan.',
@@ -129,6 +138,58 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     privacy: 'Privacy',
     terms: 'Terms',
     cookies: 'Cookies',
+    privacy_label: 'YOUR DATA IS SACRED',
+    privacy_headline: 'Built on a foundation of uncompromising privacy.',
+    privacy_sub: 'Health data is the most personal data that exists. We designed every layer of Arkoura with that in mind — not as an afterthought, but as the foundation.',
+    privacy1_title: 'AES-256 Encryption at Rest',
+    privacy1_body: 'Every piece of health data you store is encrypted using AES-256 — the same standard used by banks and governments. Your data is unreadable without your keys.',
+    privacy2_title: 'TLS 1.3 in Transit',
+    privacy2_body: 'All data moving between your device and our servers is encrypted with TLS 1.3. No third party can intercept your information — ever.',
+    privacy3_title: 'Contributing to Medical Research',
+    privacy3_body: 'With your explicit opt-in, anonymized health patterns may help advance medical research. You stay in control — it defaults to off and can be revoked at any time.',
+    privacy4_title: 'You Own Your Data',
+    privacy4_body: 'Export everything in one click. Delete everything permanently — including backups — within 30 days of your request. Your data belongs to you, not to us.',
+    privacy5_title: 'GDPR & HIPAA Ready',
+    privacy5_body: 'Arkoura is designed to meet the requirements of both GDPR for European users and HIPAA-aligned infrastructure for health data. Your rights are built in, not bolted on.',
+    privacy6_title: 'Emergency Access is Minimal',
+    privacy6_body: 'The QR profile shows only what you choose — name, conditions, allergies, medications, contacts. Full journal data requires your active consent and a timed session you control.',
+    privacy_hosting_title: 'Hosted on Google Cloud Platform',
+    privacy_hosting_body: 'Firebase + GCP infrastructure with 99.9% uptime SLA, SOC 2 Type II certified data centers, and automatic redundancy across multiple regions.',
+    stats_label: 'THE SCALE OF THE PROBLEM',
+    stats_headline: 'Every day, millions cannot speak for themselves.',
+    stats_sub: 'When seconds matter most, silence is lethal. These are the numbers behind why Arkoura exists.',
+    stats1_label: 'people live with epilepsy — and may lose consciousness without warning',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'people live with dementia, often unable to communicate their identity or medical needs',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'children are diagnosed with autism spectrum disorder, many of whom are non-verbal',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'international tourist arrivals per year — each a potential patient in a foreign-language medical system',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'of adverse medical events involving tourists involve communication failures with local healthcare providers',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'emergency department visits per year in the US — many by patients who cannot communicate their medical history',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'One QR scan changes everything.',
+    stats_closing_body: 'Arkoura puts critical health information where it needs to be — accessible to anyone, anywhere, instantly. No app. No language barrier. No barrier at all.',
+    stats_citation: 'Data referenced from WHO, CDC, UN Tourism, and peer-reviewed medical literature. Full citations available at arkoura.com/research.',
+    appt_label: 'ADVANCED SUPPORT — APPOINTMENT MODE',
+    appt_headline: "When the emergency is over — the conversation doesn't have to be.",
+    appt_body: "Sometimes the person who needs help can speak — but needs to share more than a QR profile allows. Appointment Mode lets you open a timed, secure session and hand a helper a one-time code. They get full access to your health journal, conditions, and history — guided by AI, in their language.",
+    appt_f1_title: 'Timed and controlled',
+    appt_f1_body: 'Sessions expire automatically. You decide how long access lasts.',
+    appt_f2_title: 'One-time code',
+    appt_f2_body: 'Share a single OTP. No account needed for the helper.',
+    appt_f3_title: 'AI-guided conversation',
+    appt_f3_body: 'The helper interacts with an AI that reads your journal and answers their questions — in their language, with your context.',
+    appt_badge: 'Available for premium members',
+    appt_session_active: 'Session Active',
+    appt_session_title: 'Appointment Session',
+    appt_code_label: 'YOUR ACCESS CODE',
+    appt_code_hint: 'Share this code with your helper',
+    appt_chat_ai: 'Based on the journal, the last cardiac episode was 3 weeks ago. Current medications include...',
+    appt_chat_helper: 'Does he have any known drug interactions?',
+    appt_end_session: 'End session',
   },
   es: {
     signIn: 'Iniciar sesión',
@@ -154,6 +215,15 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     s2tag: 'En todos los países',
     s3title: 'El padre que olvidó',
     s3body: 'Demencia. Salió de casa y se perdió. Sin lista de medicamentos, sin nombre del médico. La sala de emergencias empezó desde cero.',
+    s4title: 'En el extranjero sin poder comunicarse',
+    s4body: 'Dolor intenso en el pecho en un mercado extranjero. Sin idioma en común con los locales. Pasaron doce minutos antes de que alguien entendiera lo que necesitaba.',
+    s4tag: '1 de cada 4 emergencias implica una barrera idiomática',
+    s5title: 'El niño que no podía decir su nombre',
+    s5body: 'No verbal y perdido en un festival concurrido. Sin nombre, sin contactos de los padres, sin necesidades sensoriales comunicadas. Los servicios de emergencia no tenían nada con qué trabajar.',
+    s5tag: '1 de cada 36 niños es autista en todo el mundo',
+    s6title: 'Se desmayó. Se recuperó. Abrió una sesión.',
+    s6body: 'Recuperó la consciencia rodeado de paramédicos. Abrió una sesión temporal, les dio un código — y en segundos accedieron a su historial y diario completos.',
+    s6tag: 'Cuando vuelven las palabras — más se vuelve posible',
     s3tag: 'Más cerca de lo que crees',
     howLabel: 'CÓMO FUNCIONA',
     howH1: 'Tres pasos. Un escaneo.',
@@ -209,6 +279,58 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     privacy: 'Privacidad',
     terms: 'Términos',
     cookies: 'Cookies',
+    privacy_label: 'TUS DATOS SON SAGRADOS',
+    privacy_headline: 'Construido sobre una base de privacidad inquebrantable.',
+    privacy_sub: 'Los datos de salud son los más personales que existen. Diseñamos cada capa de Arkoura con eso en mente — no como algo adicional, sino como la base.',
+    privacy1_title: 'Cifrado AES-256 en reposo',
+    privacy1_body: 'Cada dato de salud que almacenas está cifrado con AES-256 — el mismo estándar que usan bancos y gobiernos. Tus datos son ilegibles sin tus claves.',
+    privacy2_title: 'TLS 1.3 en tránsito',
+    privacy2_body: 'Todos los datos entre tu dispositivo y nuestros servidores están cifrados con TLS 1.3. Ningún tercero puede interceptar tu información — nunca.',
+    privacy3_title: 'Contribuyendo a la investigación médica',
+    privacy3_body: 'Con tu consentimiento explícito, patrones de salud anonimizados pueden ayudar a avanzar en la investigación médica. Tú controlas esto — está desactivado por defecto y se puede revocar en cualquier momento.',
+    privacy4_title: 'Tus datos te pertenecen',
+    privacy4_body: 'Exporta todo con un clic. Elimina todo permanentemente — incluyendo copias de seguridad — en 30 días de tu solicitud. Tus datos son tuyos, no nuestros.',
+    privacy5_title: 'Listo para GDPR y HIPAA',
+    privacy5_body: 'Arkoura está diseñado para cumplir con los requisitos del GDPR para usuarios europeos y la infraestructura alineada con HIPAA. Tus derechos están integrados, no añadidos después.',
+    privacy6_title: 'El acceso de emergencia es mínimo',
+    privacy6_body: 'El perfil QR muestra solo lo que eliges — nombre, condiciones, alergias, medicamentos, contactos. Los datos completos requieren tu consentimiento activo en una sesión que controlas.',
+    privacy_hosting_title: 'Alojado en Google Cloud Platform',
+    privacy_hosting_body: 'Infraestructura Firebase + GCP con SLA de 99.9% de disponibilidad, centros de datos certificados SOC 2 Tipo II y redundancia automática en múltiples regiones.',
+    stats_label: 'LA MAGNITUD DEL PROBLEMA',
+    stats_headline: 'Cada día, millones no pueden hablar por sí mismos.',
+    stats_sub: 'Cuando los segundos son más importantes, el silencio es letal. Estos son los números detrás de por qué existe Arkoura.',
+    stats1_label: 'personas viven con epilepsia — y pueden perder el conocimiento sin previo aviso',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'personas viven con demencia, a menudo sin poder comunicar su identidad o necesidades médicas',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'niños son diagnosticados con trastorno del espectro autista, muchos de los cuales son no verbales',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'llegadas de turistas internacionales por año — cada uno un potencial paciente en un sistema médico de idioma extranjero',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'de los eventos médicos adversos con turistas involucran fallos de comunicación con los proveedores de salud locales',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'visitas a urgencias por año en EE.UU. — muchas de pacientes que no pueden comunicar su historial médico',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Un escaneo QR lo cambia todo.',
+    stats_closing_body: 'Arkoura pone la información de salud crítica donde necesita estar — accesible para cualquiera, en cualquier lugar, al instante. Sin app. Sin barrera de idioma. Sin ninguna barrera.',
+    stats_citation: 'Datos referenciados de OMS, CDC, ONU Turismo y literatura médica revisada por pares. Citas completas disponibles en arkoura.com/research.',
+    appt_label: 'SOPORTE AVANZADO — MODO CITA',
+    appt_headline: 'Cuando la emergencia termina — la conversación no tiene por qué.',
+    appt_body: 'A veces quien necesita ayuda puede hablar — pero necesita compartir más de lo que permite un perfil QR. El Modo Cita te permite abrir una sesión segura y temporal y dar a un ayudante un código único. Obtienen acceso completo a tu diario de salud, condiciones e historial — guiados por IA, en su idioma.',
+    appt_f1_title: 'Temporizado y controlado',
+    appt_f1_body: 'Las sesiones expiran automáticamente. Tú decides cuánto tiempo dura el acceso.',
+    appt_f2_title: 'Código de un solo uso',
+    appt_f2_body: 'Comparte un único OTP. El ayudante no necesita cuenta.',
+    appt_f3_title: 'Conversación guiada por IA',
+    appt_f3_body: 'El ayudante interactúa con una IA que lee tu diario y responde sus preguntas — en su idioma, con tu contexto.',
+    appt_badge: 'Disponible para miembros premium',
+    appt_session_active: 'Sesión Activa',
+    appt_session_title: 'Sesión de Cita',
+    appt_code_label: 'TU CÓDIGO DE ACCESO',
+    appt_code_hint: 'Comparte este código con tu ayudante',
+    appt_chat_ai: 'Según el diario, el último episodio cardíaco fue hace 3 semanas. Los medicamentos actuales incluyen...',
+    appt_chat_helper: '¿Tiene alguna interacción medicamentosa conocida?',
+    appt_end_session: 'Finalizar sesión',
   },
   fr: {
     signIn: 'Se connecter',
@@ -234,6 +356,15 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     s2tag: 'Dans tous les pays',
     s3title: "Le parent qui a oublié",
     s3body: "Démence. Il a erré hors de chez lui. Pas de liste de médicaments, pas de nom de médecin. Les urgences sont reparties de zéro.",
+    s4title: 'À l\'étranger sans pouvoir communiquer',
+    s4body: 'Douleur thoracique sévère dans un marché étranger. Aucune langue commune avec les habitants. Douze minutes s\'écoulèrent avant que quelqu\'un comprenne ce dont il avait besoin.',
+    s4tag: '1 urgence sur 4 implique une barrière linguistique',
+    s5title: 'L\'enfant qui ne pouvait pas dire son nom',
+    s5body: 'Non verbal et perdu dans un festival bondé. Pas de nom, pas de contacts des parents, pas de besoins sensoriels communiqués. Les secours n\'avaient rien sur quoi s\'appuyer.',
+    s5tag: '1 enfant sur 36 est autiste dans le monde',
+    s6title: 'Il s\'est évanoui. Il a récupéré. Il a ouvert une session.',
+    s6body: 'Reprit conscience entouré de paramédicaux. Il ouvrit une session temporisée, leur donna un code — et en quelques secondes ils accédèrent à son journal et son historique complets.',
+    s6tag: 'Quand les mots reviennent — plus devient possible',
     s3tag: 'Plus proche que vous ne le pensez',
     howLabel: 'COMMENT ÇA MARCHE',
     howH1: 'Trois étapes. Un scan.',
@@ -289,6 +420,58 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     privacy: 'Confidentialité',
     terms: 'Conditions',
     cookies: 'Cookies',
+    privacy_label: 'VOS DONNÉES SONT SACRÉES',
+    privacy_headline: 'Construit sur une base de confidentialité absolue.',
+    privacy_sub: "Les données de santé sont les données les plus personnelles qui existent. Nous avons conçu chaque couche d'Arkoura avec cela à l'esprit — pas comme une réflexion après coup, mais comme la fondation.",
+    privacy1_title: 'Chiffrement AES-256 au repos',
+    privacy1_body: "Chaque donnée de santé que vous stockez est chiffrée avec AES-256 — le même standard utilisé par les banques et les gouvernements. Vos données sont illisibles sans vos clés.",
+    privacy2_title: 'TLS 1.3 en transit',
+    privacy2_body: "Toutes les données entre votre appareil et nos serveurs sont chiffrées avec TLS 1.3. Aucun tiers ne peut intercepter vos informations — jamais.",
+    privacy3_title: 'Contribution à la recherche médicale',
+    privacy3_body: "Avec votre opt-in explicite, des patterns de santé anonymisés peuvent aider à faire avancer la recherche médicale. Vous restez en contrôle — désactivé par défaut et révocable à tout moment.",
+    privacy4_title: 'Vous possédez vos données',
+    privacy4_body: "Exportez tout en un clic. Supprimez tout définitivement — sauvegardes incluses — dans les 30 jours suivant votre demande. Vos données vous appartiennent, pas à nous.",
+    privacy5_title: 'Conforme RGPD et HIPAA',
+    privacy5_body: "Arkoura est conçu pour répondre aux exigences du RGPD pour les utilisateurs européens et d'une infrastructure alignée sur HIPAA. Vos droits sont intégrés, pas ajoutés après.",
+    privacy6_title: "L'accès d'urgence est minimal",
+    privacy6_body: "Le profil QR affiche uniquement ce que vous choisissez — nom, conditions, allergies, médicaments, contacts. Les données complètes nécessitent votre consentement actif lors d'une session que vous contrôlez.",
+    privacy_hosting_title: 'Hébergé sur Google Cloud Platform',
+    privacy_hosting_body: "Infrastructure Firebase + GCP avec SLA de disponibilité à 99.9%, centres de données certifiés SOC 2 Type II et redondance automatique dans plusieurs régions.",
+    stats_label: "L'AMPLEUR DU PROBLÈME",
+    stats_headline: 'Chaque jour, des millions ne peuvent pas parler pour eux-mêmes.',
+    stats_sub: "Quand chaque seconde compte, le silence est mortel. Ce sont les chiffres qui expliquent pourquoi Arkoura existe.",
+    stats1_label: "personnes vivent avec l'épilepsie — et peuvent perdre conscience sans avertissement",
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'personnes vivent avec la démence, souvent incapables de communiquer leur identité ou leurs besoins médicaux',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'enfants sont diagnostiqués avec un trouble du spectre autistique, dont beaucoup sont non verbaux',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: "arrivées de touristes internationaux par an — chacun un patient potentiel dans un système médical en langue étrangère",
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: "des événements médicaux indésirables impliquant des touristes impliquent des défaillances de communication avec les prestataires de soins locaux",
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: "visites aux urgences par an aux États-Unis — beaucoup de patients qui ne peuvent pas communiquer leurs antécédents médicaux",
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Un scan QR change tout.',
+    stats_closing_body: "Arkoura place les informations de santé critiques là où elles doivent être — accessibles à tous, partout, instantanément. Aucune app. Aucune barrière linguistique. Aucune barrière du tout.",
+    stats_citation: "Données référencées de l'OMS, CDC, ONU Tourisme et littérature médicale à comité de lecture. Citations complètes disponibles sur arkoura.com/research.",
+    appt_label: 'SUPPORT AVANCÉ — MODE RENDEZ-VOUS',
+    appt_headline: "Quand l'urgence est passée — la conversation peut continuer.",
+    appt_body: "Parfois, la personne qui a besoin d'aide peut parler — mais doit partager plus que ce qu'un profil QR permet. Le Mode Rendez-vous vous permet d'ouvrir une session sécurisée et temporisée et de donner à un aidant un code unique. Ils obtiennent un accès complet à votre journal de santé — guidé par IA, dans leur langue.",
+    appt_f1_title: 'Temporisé et contrôlé',
+    appt_f1_body: "Les sessions expirent automatiquement. Vous décidez de la durée d'accès.",
+    appt_f2_title: 'Code à usage unique',
+    appt_f2_body: "Partagez un seul OTP. Aucun compte requis pour l'aidant.",
+    appt_f3_title: 'Conversation guidée par IA',
+    appt_f3_body: "L'aidant interagit avec une IA qui lit votre journal et répond à ses questions — dans sa langue, avec votre contexte.",
+    appt_badge: 'Disponible pour les membres premium',
+    appt_session_active: 'Session Active',
+    appt_session_title: 'Session de Rendez-vous',
+    appt_code_label: "VOTRE CODE D'ACCÈS",
+    appt_code_hint: 'Partagez ce code avec votre aidant',
+    appt_chat_ai: "D'après le journal, le dernier épisode cardiaque remonte à 3 semaines. Les médicaments actuels comprennent...",
+    appt_chat_helper: 'A-t-il des interactions médicamenteuses connues?',
+    appt_end_session: 'Terminer la session',
   },
   de: {
     signIn: 'Anmelden',
@@ -314,6 +497,15 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     s2tag: 'In jedem Land',
     s3title: 'Der Elternteil, der vergaß',
     s3body: 'Demenz. Er lief von zu Hause weg. Keine Medikamentenliste, kein Arztname. Die Notaufnahme begann von Null.',
+    s4title: 'Im Ausland und nicht in der Lage zu kommunizieren',
+    s4body: 'Starke Brustschmerzen auf einem ausländischen Markt. Keine gemeinsame Sprache mit Einheimischen. Zwölf Minuten vergingen, bevor jemand verstand, was er brauchte.',
+    s4tag: '1 von 4 Notfällen beinhaltet eine Sprachbarriere',
+    s5title: 'Das Kind, das seinen Namen nicht sagen konnte',
+    s5body: 'Nicht-verbal und verloren auf einem überfüllten Festival. Kein Name, keine Elternkontakte, keine sensorischen Bedürfnisse kommuniziert. Die Einsatzkräfte hatten nichts, womit sie arbeiten konnten.',
+    s5tag: '1 von 36 Kindern ist weltweit autistisch',
+    s6title: 'Er wurde ohnmächtig. Er erholte sich. Er öffnete eine Sitzung.',
+    s6body: 'Erlangte das Bewusstsein wieder, umgeben von Sanitätern. Er öffnete eine zeitgesteuerte Sitzung, gab ihnen einen Code — und sie hatten in Sekunden Zugang zu seinem vollständigen Tagebuch und seiner Geschichte.',
+    s6tag: 'Wenn die Worte zurückkommen — mehr wird möglich',
     s3tag: 'Näher als du denkst',
     howLabel: 'WIE ES FUNKTIONIERT',
     howH1: 'Drei Schritte. Ein Scan.',
@@ -369,6 +561,58 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     privacy: 'Datenschutz',
     terms: 'AGB',
     cookies: 'Cookies',
+    privacy_label: 'DEINE DATEN SIND HEILIG',
+    privacy_headline: 'Auf einer Grundlage kompromissloser Privatsphäre gebaut.',
+    privacy_sub: 'Gesundheitsdaten sind die persönlichsten Daten, die es gibt. Wir haben jede Schicht von Arkoura mit diesem Gedanken entworfen — nicht als Nachgedanke, sondern als Fundament.',
+    privacy1_title: 'AES-256-Verschlüsselung im Ruhezustand',
+    privacy1_body: 'Jedes Stück Gesundheitsdaten, das du speicherst, wird mit AES-256 verschlüsselt — demselben Standard, den Banken und Regierungen nutzen. Ohne deine Schlüssel sind deine Daten unlesbar.',
+    privacy2_title: 'TLS 1.3 bei der Übertragung',
+    privacy2_body: 'Alle Daten zwischen deinem Gerät und unseren Servern sind mit TLS 1.3 verschlüsselt. Kein Dritter kann deine Informationen abfangen — niemals.',
+    privacy3_title: 'Beitrag zur medizinischen Forschung',
+    privacy3_body: 'Mit deiner ausdrücklichen Zustimmung können anonymisierte Gesundheitsmuster zur medizinischen Forschung beitragen. Du behältst die Kontrolle — standardmäßig deaktiviert und jederzeit widerrufbar.',
+    privacy4_title: 'Du besitzt deine Daten',
+    privacy4_body: 'Alles mit einem Klick exportieren. Alles dauerhaft löschen — einschließlich Backups — innerhalb von 30 Tagen nach deiner Anfrage. Deine Daten gehören dir, nicht uns.',
+    privacy5_title: 'DSGVO & HIPAA bereit',
+    privacy5_body: 'Arkoura ist so gestaltet, dass es die Anforderungen der DSGVO für europäische Nutzer und HIPAA-konforme Infrastruktur für Gesundheitsdaten erfüllt. Deine Rechte sind eingebaut, nicht nachgerüstet.',
+    privacy6_title: 'Notfallzugriff ist minimal',
+    privacy6_body: 'Das QR-Profil zeigt nur, was du wählst — Name, Erkrankungen, Allergien, Medikamente, Kontakte. Vollständige Tagebuchdaten erfordern deine aktive Zustimmung in einer von dir kontrollierten Sitzung.',
+    privacy_hosting_title: 'Gehostet auf Google Cloud Platform',
+    privacy_hosting_body: 'Firebase + GCP-Infrastruktur mit 99,9% Uptime-SLA, SOC 2 Typ II zertifizierten Rechenzentren und automatischer Redundanz über mehrere Regionen.',
+    stats_label: 'DAS AUSMASS DES PROBLEMS',
+    stats_headline: 'Jeden Tag können Millionen nicht für sich selbst sprechen.',
+    stats_sub: 'Wenn Sekunden am wichtigsten sind, ist Stille tödlich. Das sind die Zahlen hinter der Existenz von Arkoura.',
+    stats1_label: 'Menschen leben mit Epilepsie — und können ohne Vorwarnung das Bewusstsein verlieren',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'Menschen leben mit Demenz, oft unfähig, ihre Identität oder medizinischen Bedürfnisse mitzuteilen',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'Kinder werden mit Autismus-Spektrum-Störung diagnostiziert, von denen viele nicht-verbal sind',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'internationale Touristenankünfte pro Jahr — jeder ein potenzieller Patient in einem fremdsprachigen Medizinsystem',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'der unerwünschten medizinischen Ereignisse bei Touristen beinhalten Kommunikationsfehler mit lokalen Gesundheitsdienstleistern',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'Notaufnahmebesuche pro Jahr in den USA — viele von Patienten, die ihre Krankengeschichte nicht mitteilen können',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Ein QR-Scan ändert alles.',
+    stats_closing_body: 'Arkoura bringt kritische Gesundheitsinformationen dorthin, wo sie hingehören — für jeden, überall, sofort zugänglich. Keine App. Keine Sprachbarriere. Überhaupt keine Barriere.',
+    stats_citation: 'Daten referenziert von WHO, CDC, UN-Tourismus und begutachteter medizinischer Literatur. Vollständige Zitate verfügbar unter arkoura.com/research.',
+    appt_label: 'ERWEITERTER SUPPORT — TERMIN-MODUS',
+    appt_headline: 'Wenn der Notfall vorbei ist — das Gespräch muss es nicht sein.',
+    appt_body: 'Manchmal kann die hilfsbedürftige Person sprechen — muss aber mehr teilen als ein QR-Profil erlaubt. Der Termin-Modus ermöglicht es Ihnen, eine zeitgesteuerte, sichere Sitzung zu öffnen und einem Helfer einen Einmalcode zu geben. Er erhält vollen Zugang zu Ihrem Gesundheitstagebuch — durch KI geführt, in seiner Sprache.',
+    appt_f1_title: 'Zeitgesteuert und kontrolliert',
+    appt_f1_body: 'Sitzungen laufen automatisch ab. Sie bestimmen, wie lange der Zugang besteht.',
+    appt_f2_title: 'Einmalcode',
+    appt_f2_body: 'Teilen Sie einen einzigen OTP. Der Helfer benötigt kein Konto.',
+    appt_f3_title: 'KI-geführtes Gespräch',
+    appt_f3_body: 'Der Helfer interagiert mit einer KI, die Ihr Tagebuch liest und seine Fragen beantwortet — in seiner Sprache, mit Ihrem Kontext.',
+    appt_badge: 'Verfügbar für Premium-Mitglieder',
+    appt_session_active: 'Sitzung Aktiv',
+    appt_session_title: 'TerminSitzung',
+    appt_code_label: 'IHR ZUGANGSCODE',
+    appt_code_hint: 'Teilen Sie diesen Code mit Ihrem Helfer',
+    appt_chat_ai: 'Laut Tagebuch war die letzte Herzepisode vor 3 Wochen. Aktuelle Medikamente umfassen...',
+    appt_chat_helper: 'Hat er bekannte Wechselwirkungen mit Medikamenten?',
+    appt_end_session: 'Sitzung beenden',
   },
   pt: {
     signIn: 'Entrar',
@@ -394,6 +638,15 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     s2tag: 'Em todos os países',
     s3title: 'O pai que esqueceu',
     s3body: 'Demência. Ele saiu de casa sem rumo. Sem lista de medicamentos, sem nome do médico. A emergência começou do zero.',
+    s4title: 'No exterior sem conseguir comunicar',
+    s4body: 'Dor intensa no peito num mercado estrangeiro. Sem idioma comum com os locais. Passaram doze minutos antes que alguém entendesse o que ele precisava.',
+    s4tag: '1 em cada 4 emergências envolve uma barreira linguística',
+    s5title: 'A criança que não conseguia dizer o seu nome',
+    s5body: 'Não verbal e perdido num festival lotado. Sem nome, sem contatos dos pais, sem necessidades sensoriais comunicadas. Os socorristas não tinham nada com que trabalhar.',
+    s5tag: '1 em cada 36 crianças é autista globalmente',
+    s6title: 'Ele desmaiou. Ele se recuperou. Ele abriu uma sessão.',
+    s6body: 'Recuperou a consciência rodeado de paramédicos. Abriu uma sessão temporizada, deu-lhes um código — e em segundos acederam ao seu diário e historial completos.',
+    s6tag: 'Quando as palavras voltam — mais se torna possível',
     s3tag: 'Mais perto do que você pensa',
     howLabel: 'COMO FUNCIONA',
     howH1: 'Três passos. Um scan.',
@@ -449,6 +702,58 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     privacy: 'Privacidade',
     terms: 'Termos',
     cookies: 'Cookies',
+    privacy_label: 'SEUS DADOS SÃO SAGRADOS',
+    privacy_headline: 'Construído sobre uma base de privacidade inabalável.',
+    privacy_sub: 'Dados de saúde são os dados mais pessoais que existem. Projetamos cada camada do Arkoura com isso em mente — não como um pensamento posterior, mas como a fundação.',
+    privacy1_title: 'Criptografia AES-256 em repouso',
+    privacy1_body: 'Cada dado de saúde que você armazena é criptografado com AES-256 — o mesmo padrão usado por bancos e governos. Seus dados são ilegíveis sem suas chaves.',
+    privacy2_title: 'TLS 1.3 em trânsito',
+    privacy2_body: 'Todos os dados entre seu dispositivo e nossos servidores são criptografados com TLS 1.3. Nenhum terceiro pode interceptar suas informações — jamais.',
+    privacy3_title: 'Contribuindo para a pesquisa médica',
+    privacy3_body: 'Com seu opt-in explícito, padrões de saúde anonimizados podem ajudar a avançar na pesquisa médica. Você permanece no controle — desativado por padrão e pode ser revogado a qualquer momento.',
+    privacy4_title: 'Você possui seus dados',
+    privacy4_body: 'Exporte tudo com um clique. Delete tudo permanentemente — incluindo backups — em 30 dias da sua solicitação. Seus dados pertencem a você, não a nós.',
+    privacy5_title: 'Pronto para GDPR e HIPAA',
+    privacy5_body: 'Arkoura é projetado para atender aos requisitos do GDPR para usuários europeus e infraestrutura alinhada com HIPAA. Seus direitos são integrados, não adicionados depois.',
+    privacy6_title: 'Acesso de emergência é mínimo',
+    privacy6_body: 'O perfil QR mostra apenas o que você escolhe — nome, condições, alergias, medicamentos, contatos. Dados completos requerem seu consentimento ativo em uma sessão que você controla.',
+    privacy_hosting_title: 'Hospedado no Google Cloud Platform',
+    privacy_hosting_body: 'Infraestrutura Firebase + GCP com SLA de 99.9% de disponibilidade, data centers certificados SOC 2 Tipo II e redundância automática em múltiplas regiões.',
+    stats_label: 'A DIMENSÃO DO PROBLEMA',
+    stats_headline: 'Todos os dias, milhões não conseguem falar por si mesmos.',
+    stats_sub: 'Quando os segundos são mais importantes, o silêncio é letal. Estes são os números por trás da existência do Arkoura.',
+    stats1_label: 'pessoas vivem com epilepsia — e podem perder a consciência sem aviso',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'pessoas vivem com demência, muitas vezes incapazes de comunicar sua identidade ou necessidades médicas',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'crianças são diagnosticadas com transtorno do espectro autista, muitas das quais são não verbais',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'chegadas de turistas internacionais por ano — cada um um potencial paciente em um sistema médico de língua estrangeira',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'dos eventos médicos adversos envolvendo turistas envolvem falhas de comunicação com prestadores de saúde locais',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'visitas a pronto-socorro por ano nos EUA — muitas de pacientes que não conseguem comunicar seu histórico médico',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Um scan QR muda tudo.',
+    stats_closing_body: 'Arkoura coloca informações de saúde críticas onde precisam estar — acessíveis a qualquer pessoa, em qualquer lugar, instantaneamente. Sem app. Sem barreira de idioma. Sem barreira alguma.',
+    stats_citation: 'Dados referenciados da OMS, CDC, ONU Turismo e literatura médica revisada por pares. Citações completas disponíveis em arkoura.com/research.',
+    appt_label: 'SUPORTE AVANÇADO — MODO CONSULTA',
+    appt_headline: 'Quando a emergência acaba — a conversa não precisa acabar.',
+    appt_body: 'Às vezes quem precisa de ajuda pode falar — mas precisa compartilhar mais do que um perfil QR permite. O Modo Consulta permite abrir uma sessão segura temporizada e dar a um ajudante um código único. Ele obtém acesso completo ao seu diário de saúde — guiado por IA, no seu idioma.',
+    appt_f1_title: 'Temporizado e controlado',
+    appt_f1_body: 'As sessões expiram automaticamente. Você decide quanto tempo dura o acesso.',
+    appt_f2_title: 'Código de uso único',
+    appt_f2_body: 'Compartilhe um único OTP. O ajudante não precisa de conta.',
+    appt_f3_title: 'Conversa guiada por IA',
+    appt_f3_body: 'O ajudante interage com uma IA que lê seu diário e responde às perguntas — no idioma dele, com seu contexto.',
+    appt_badge: 'Disponível para membros premium',
+    appt_session_active: 'Sessão Ativa',
+    appt_session_title: 'Sessão de Consulta',
+    appt_code_label: 'SEU CÓDIGO DE ACESSO',
+    appt_code_hint: 'Compartilhe este código com seu ajudante',
+    appt_chat_ai: 'De acordo com o diário, o último episódio cardíaco foi há 3 semanas. Os medicamentos atuais incluem...',
+    appt_chat_helper: 'Ele tem alguma interação medicamentosa conhecida?',
+    appt_end_session: 'Encerrar sessão',
   },
   zh: {
     badge: '个人健康日记 · 随时应对紧急情况',
@@ -484,6 +789,67 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nav_signin: '登录',
     nav_cta: '访问 Vault',
     footerDisclaimer: 'Arkoura 不是医疗设备，也不是医疗记录系统。它不提供任何形式的医疗诊断、临床评估或医疗建议。Arkoura 是个人健康日记、文件管理工具和信息共享平台，专为在紧急情况下协助提供用户信息而设计。在任何危及生命的情况下，请立即联系紧急服务。',
+    privacy_label: '您的数据神圣不可侵犯',
+    privacy_headline: '建立在坚定隐私保护基础上。',
+    privacy_sub: '健康数据是世界上最私密的数据。我们在设计 Arkoura 的每一层时都将这一点放在心中——不是事后的想法，而是作为基础。',
+    s4title: '身处异乡，无法沟通',
+    s4body: '在异国市场突发剧烈胸痛。与当地人没有共同语言。十二分钟过去了，才有人明白他需要什么。',
+    s4tag: '每4次紧急情况中有1次涉及语言障碍',
+    s5title: '说不出自己名字的孩子',
+    s5body: '在拥挤的节日中迷路。没有名字，没有父母联系方式，没有感官需求得到传达。救援人员无从入手。',
+    s5tag: '全球每36名儿童中有1名是自闭症',
+    s6title: '他晕倒了。他苏醒了。他开启了一个会话。',
+    s6body: '在急救人员围绕下恢复意识。他开启了一个定时会话，把代码交给他们——几秒钟内他们就访问了他的完整日记和病史。',
+    s6tag: '当语言回归——更多成为可能',
+    privacy1_title: '静态 AES-256 加密',
+    privacy1_body: '您存储的每一条健康数据都使用 AES-256 加密——与银行和政府使用的相同标准。没有您的密钥，数据无法被读取。',
+    privacy2_title: '传输中的 TLS 1.3',
+    privacy2_body: '您的设备与我们服务器之间的所有数据均使用 TLS 1.3 加密。第三方永远无法拦截您的信息。',
+    privacy3_title: '为医学研究做贡献',
+    privacy3_body: '在您明确选择加入的情况下，匿名化的健康模式可能有助于推进医学研究。您始终保持控制——默认关闭，可随时撤销。',
+    privacy4_title: '数据归您所有',
+    privacy4_body: '一键导出所有内容。在您提出请求后 30 天内永久删除所有内容（包括备份）。您的数据属于您，而非我们。',
+    privacy5_title: '符合 GDPR 和 HIPAA',
+    privacy5_body: 'Arkoura 旨在满足面向欧洲用户的 GDPR 要求以及与 HIPAA 对齐的健康数据基础设施要求。您的权利是内置的，而非事后添加的。',
+    privacy6_title: '紧急访问权限最小化',
+    privacy6_body: 'QR 档案仅显示您选择的内容——姓名、病情、过敏、药物、联系人。完整日记数据需要您主动同意并通过您控制的定时会话访问。',
+    privacy_hosting_title: '托管于 Google Cloud Platform',
+    privacy_hosting_body: 'Firebase + GCP 基础设施，99.9% 正常运行时间 SLA，SOC 2 II 型认证数据中心，以及跨多个区域的自动冗余。',
+    stats_label: '问题的规模',
+    stats_headline: '每天，数百万人无法为自己发声。',
+    stats_sub: '当每一秒都至关重要时，沉默是致命的。这些数字解释了Arkoura存在的原因。',
+    stats1_label: '人患有癫痫——可能在没有预警的情况下失去意识',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: '人患有痴呆症，通常无法表达自己的身份或医疗需求',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: '儿童被诊断为自闭症谱系障碍，其中许多是非语言性的',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: '国际游客每年抵达次数——每一位都可能成为外语医疗系统中的患者',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: '涉及游客的医疗不良事件与当地医疗提供者的沟通障碍有关',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: '美国每年急诊就诊次数——其中许多患者无法表达自己的病史',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: '一次QR扫描改变一切。',
+    stats_closing_body: 'Arkoura将关键健康信息放在需要的地方——任何人、任何地方都能即时访问。无需应用程序。没有语言障碍。没有任何障碍。',
+    stats_citation: '数据来源于WHO、CDC、联合国旅游组织及同行评审医学文献。完整引用请访问arkoura.com/research。',
+    appt_label: '高级支持 — 预约模式',
+    appt_headline: '紧急情况过去了——对话可以继续。',
+    appt_body: '有时需要帮助的人可以说话——但需要分享比QR档案更多的信息。预约模式让您开启一个定时安全会话，并向帮助者提供一次性代码。他们可以完整访问您的健康日记和病史——由AI引导，使用他们的语言。',
+    appt_f1_title: '定时且受控',
+    appt_f1_body: '会话自动过期。您决定访问时长。',
+    appt_f2_title: '一次性代码',
+    appt_f2_body: '分享单个OTP。帮助者无需账号。',
+    appt_f3_title: 'AI引导的对话',
+    appt_f3_body: '帮助者与AI互动，AI读取您的日记并回答问题——使用他们的语言，基于您的背景信息。',
+    appt_badge: '适用于高级会员',
+    appt_session_active: '会话进行中',
+    appt_session_title: '预约会话',
+    appt_code_label: '您的访问码',
+    appt_code_hint: '将此代码分享给您的帮助者',
+    appt_chat_ai: '根据日记，最近一次心脏发作是3周前。目前用药包括……',
+    appt_chat_helper: '他有已知的药物相互作用吗？',
+    appt_end_session: '结束会话',
   },
   ja: {
     badge: '個人健康日記 · 緊急事態に備えて',
@@ -519,6 +885,67 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nav_signin: 'サインイン',
     nav_cta: 'Vaultを開く',
     footerDisclaimer: 'Arkouraは医療機器でも医療記録システムでもありません。医療診断、臨床評価、または医療アドバイスを提供するものではありません。Arkouraは、緊急時に利用者が提供した情報をヘルパーがアクセスできるよう設計された、個人健康日記・文書管理・情報共有プラットフォームです。生命の危険がある状況では、必ず直ちに緊急サービスに連絡してください。',
+    privacy_label: 'あなたのデータは神聖です',
+    privacy_headline: '妥協のないプライバシーの基盤の上に構築。',
+    privacy_sub: '健康データは世界で最もプライベートなデータです。Arkouraのすべての層をその考えを念頭に設計しました——後付けではなく、基盤として。',
+    s4title: '海外で言葉が通じない',
+    s4body: '外国の市場で激しい胸の痛み。地元の人々と共通の言語がない。誰かが何が必要かを理解するまで12分かかった。',
+    s4tag: '4回の救急のうち1回は言語の壁が関係している',
+    s5title: '自分の名前を言えなかった子ども',
+    s5body: '非言語で混んだフェスティバルで迷子に。名前も、親の連絡先も、感覚ニーズも伝えられなかった。対応者には何も手がかりがなかった。',
+    s5tag: '世界では36人に1人の子どもが自閉症',
+    s6title: '彼は気を失った。回復した。セッションを開いた。',
+    s6body: '救急隊員に囲まれて意識を取り戻した。時間制限付きセッションを開き、コードを渡すと——数秒で彼の完全な日記と病歴にアクセスできた。',
+    s6tag: '言葉が戻るとき——もっと多くが可能になる',
+    privacy1_title: '保存時のAES-256暗号化',
+    privacy1_body: '保存するすべての健康データはAES-256で暗号化されています——銀行や政府が使用するのと同じ標準です。あなたのキーなしにデータを読むことはできません。',
+    privacy2_title: '転送時のTLS 1.3',
+    privacy2_body: 'デバイスとサーバー間のすべてのデータはTLS 1.3で暗号化されています。第三者があなたの情報を傍受することは決してできません。',
+    privacy3_title: '医学研究への貢献',
+    privacy3_body: '明示的な同意のもと、匿名化された健康パターンが医学研究の進展に役立つ場合があります。デフォルトはオフで、いつでも取り消せます。',
+    privacy4_title: 'データはあなたのもの',
+    privacy4_body: 'ワンクリックですべてをエクスポート。リクエストから30日以内に、バックアップを含むすべてを完全に削除。あなたのデータは私たちではなくあなたのものです。',
+    privacy5_title: 'GDPRおよびHIPAA対応',
+    privacy5_body: 'ArkouraはEUユーザー向けGDPRおよびHIPAA対応インフラの要件を満たすよう設計されています。あなたの権利は後付けではなく、最初から組み込まれています。',
+    privacy6_title: '緊急アクセスは最小限',
+    privacy6_body: 'QRプロフィールにはあなたが選んだ情報のみ表示されます——氏名、病状、アレルギー、薬、連絡先。完全な日記データにはあなたが管理するセッションでの同意が必要です。',
+    privacy_hosting_title: 'Google Cloud Platformでホスト',
+    privacy_hosting_body: 'Firebase + GCPインフラ、99.9%稼働時間SLA、SOC 2 Type II認定データセンター、複数リージョンにわたる自動冗長性。',
+    stats_label: '問題の規模',
+    stats_headline: '毎日、何百万人もの人が自分のために語れません。',
+    stats_sub: '一秒一秒が最も重要なとき、沈黙は致命的です。これらがArkouraが存在する理由となる数字です。',
+    stats1_label: '人がてんかんを持ち——警告なしに意識を失う可能性があります',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: '人が認知症を持ち、自分の身元や医療ニーズを伝えられないことが多い',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: '子どもが自閉スペクトラム症と診断されており、その多くは非言語です',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: '年間国際観光客到着数——それぞれが外国語の医療システムでの潜在的な患者',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: '旅行者が関与する医療有害事象に地元医療提供者とのコミュニケーション障害が含まれる',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: '米国での年間救急受診数——多くは自分の病歴を伝えられない患者',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: '一回のQRスキャンが全てを変えます。',
+    stats_closing_body: 'Arkouraは重要な健康情報を必要な場所に届けます——誰でも、どこでも、即座にアクセス可能。アプリ不要。言語の壁なし。一切の障壁なし。',
+    stats_citation: 'データはWHO、CDC、国連観光局、査読済み医学文献を参照。完全な引用はarkoura.com/researchでご覧いただけます。',
+    appt_label: '高度なサポート — アポイントメントモード',
+    appt_headline: '緊急事態が終わっても——会話は続けられます。',
+    appt_body: '助けが必要な人が話せる場合でも、QRプロフィール以上の情報を共有する必要があることがあります。アポイントメントモードでは、時間制限付きの安全なセッションを開き、ヘルパーにワンタイムコードを渡すことができます。彼らはAIに案内されながら、あなたの健康日記や病歴への完全なアクセスを得ます。',
+    appt_f1_title: '時間制限付きで制御可能',
+    appt_f1_body: 'セッションは自動的に期限切れになります。アクセス時間はあなたが決めます。',
+    appt_f2_title: 'ワンタイムコード',
+    appt_f2_body: '1つのOTPを共有するだけ。ヘルパーはアカウント不要。',
+    appt_f3_title: 'AIガイドの会話',
+    appt_f3_body: 'ヘルパーはあなたの日記を読むAIと対話し、質問に答えてもらいます——ヘルパーの言語で、あなたのコンテキストに基づいて。',
+    appt_badge: 'プレミアム会員向け',
+    appt_session_active: 'セッション進行中',
+    appt_session_title: 'アポイントメントセッション',
+    appt_code_label: 'アクセスコード',
+    appt_code_hint: 'このコードをヘルパーに共有してください',
+    appt_chat_ai: '日記によると、最後の心臓発作は3週間前でした。現在の薬には……',
+    appt_chat_helper: '既知の薬物相互作用はありますか？',
+    appt_end_session: 'セッション終了',
   },
   it: {
     badge: 'Diario di Salute · Pronto per le Emergenze',
@@ -554,6 +981,67 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nav_signin: 'Accedi',
     nav_cta: 'Accedi al Vault',
     footerDisclaimer: 'Arkoura non è un dispositivo medico né un sistema di cartella clinica. Non fornisce diagnosi mediche, valutazioni cliniche o consigli medici di alcun tipo. Arkoura è un diario sanitario personale, uno strumento di gestione documentale e una piattaforma di condivisione delle informazioni progettata esclusivamente per assistere nelle situazioni di emergenza. Contattare sempre immediatamente i servizi di emergenza in qualsiasi situazione pericolosa per la vita.',
+    privacy_label: 'I TUOI DATI SONO SACRI',
+    privacy_headline: 'Costruito su una base di privacy assoluta.',
+    privacy_sub: 'I dati sanitari sono i dati più personali che esistono. Abbiamo progettato ogni strato di Arkoura con questo in mente — non come un ripensamento, ma come fondamento.',
+    s4title: 'All\'estero senza poter comunicare',
+    s4body: 'Forte dolore al petto in un mercato straniero. Nessuna lingua comune con i locali. Passarono dodici minuti prima che qualcuno capisse di cosa aveva bisogno.',
+    s4tag: '1 emergenza su 4 coinvolge una barriera linguistica',
+    s5title: 'Il bambino che non riusciva a dire il suo nome',
+    s5body: 'Non verbale e perso in un festival affollato. Nessun nome, nessun contatto dei genitori, nessun bisogno sensoriale comunicato. I soccorritori non avevano nulla su cui lavorare.',
+    s5tag: '1 bambino su 36 è autistico a livello globale',
+    s6title: 'È svenuto. Si è ripreso. Ha aperto una sessione.',
+    s6body: 'Riprese conoscenza circondato dai paramedici. Aprì una sessione temporizzata, diede loro un codice — e in pochi secondi accedettero al suo diario e alla sua storia completi.',
+    s6tag: 'Quando le parole tornano — più diventa possibile',
+    privacy1_title: 'Crittografia AES-256 a riposo',
+    privacy1_body: 'Ogni dato sanitario che conservi è crittografato con AES-256 — lo stesso standard usato da banche e governi. I tuoi dati sono illeggibili senza le tue chiavi.',
+    privacy2_title: 'TLS 1.3 in transito',
+    privacy2_body: 'Tutti i dati tra il tuo dispositivo e i nostri server sono crittografati con TLS 1.3. Nessuna terza parte può intercettare le tue informazioni — mai.',
+    privacy3_title: 'Contribuire alla ricerca medica',
+    privacy3_body: "Con il tuo opt-in esplicito, pattern di salute anonimizzati possono contribuire all'avanzamento della ricerca medica. Rimani in controllo — disattivato per impostazione predefinita e revocabile in qualsiasi momento.",
+    privacy4_title: 'Possiedi i tuoi dati',
+    privacy4_body: "Esporta tutto con un clic. Elimina tutto permanentemente — inclusi i backup — entro 30 giorni dalla tua richiesta. I tuoi dati appartengono a te, non a noi.",
+    privacy5_title: 'Conforme GDPR e HIPAA',
+    privacy5_body: "Arkoura è progettato per soddisfare i requisiti del GDPR per gli utenti europei e un'infrastruttura allineata HIPAA per i dati sanitari. I tuoi diritti sono integrati, non aggiunti dopo.",
+    privacy6_title: "L'accesso di emergenza è minimo",
+    privacy6_body: 'Il profilo QR mostra solo ciò che scegli — nome, condizioni, allergie, farmaci, contatti. I dati completi del diario richiedono il tuo consenso attivo in una sessione che controlli.',
+    privacy_hosting_title: 'Ospitato su Google Cloud Platform',
+    privacy_hosting_body: 'Infrastruttura Firebase + GCP con SLA di uptime al 99.9%, data center certificati SOC 2 Type II e ridondanza automatica su più regioni.',
+    stats_label: 'LA PORTATA DEL PROBLEMA',
+    stats_headline: 'Ogni giorno, milioni di persone non possono parlare per se stesse.',
+    stats_sub: "Quando i secondi contano di più, il silenzio è letale. Questi sono i numeri dietro l'esistenza di Arkoura.",
+    stats1_label: "persone vivono con l'epilessia — e possono perdere conoscenza senza preavviso",
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'persone vivono con la demenza, spesso incapaci di comunicare la propria identità o le proprie esigenze mediche',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'bambini vengono diagnosticati con disturbo dello spettro autistico, molti dei quali sono non verbali',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: "arrivi di turisti internazionali all'anno — ognuno un potenziale paziente in un sistema medico in lingua straniera",
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'degli eventi medici avversi che coinvolgono turisti comportano fallimenti di comunicazione con i fornitori sanitari locali',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: "visite al pronto soccorso all'anno negli USA — molte da pazienti che non riescono a comunicare la loro storia medica",
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Una scansione QR cambia tutto.',
+    stats_closing_body: "Arkoura mette le informazioni sanitarie critiche dove devono essere — accessibili a chiunque, ovunque, istantaneamente. Nessuna app. Nessuna barriera linguistica. Nessuna barriera.",
+    stats_citation: 'Dati riferiti da OMS, CDC, ONU Turismo e letteratura medica peer-reviewed. Citazioni complete disponibili su arkoura.com/research.',
+    appt_label: 'SUPPORTO AVANZATO — MODALITÀ APPUNTAMENTO',
+    appt_headline: "Quando l'emergenza è finita — la conversazione non deve esserlo.",
+    appt_body: "A volte chi ha bisogno di aiuto può parlare — ma deve condividere più di quanto permetta un profilo QR. La Modalità Appuntamento ti permette di aprire una sessione sicura e temporizzata e dare a un aiutante un codice unico. Ottiene accesso completo al tuo diario di salute — guidato dall'IA, nella sua lingua.",
+    appt_f1_title: 'Temporizzato e controllato',
+    appt_f1_body: "Le sessioni scadono automaticamente. Decidi tu quanto dura l'accesso.",
+    appt_f2_title: 'Codice monouso',
+    appt_f2_body: "Condividi un unico OTP. L'aiutante non ha bisogno di un account.",
+    appt_f3_title: "Conversazione guidata dall'IA",
+    appt_f3_body: "L'aiutante interagisce con un'IA che legge il tuo diario e risponde alle sue domande — nella sua lingua, con il tuo contesto.",
+    appt_badge: 'Disponibile per i membri premium',
+    appt_session_active: 'Sessione Attiva',
+    appt_session_title: 'Sessione Appuntamento',
+    appt_code_label: 'IL TUO CODICE DI ACCESSO',
+    appt_code_hint: 'Condividi questo codice con il tuo aiutante',
+    appt_chat_ai: "Dal diario, l'ultimo episodio cardiaco è stato 3 settimane fa. I farmaci attuali includono...",
+    appt_chat_helper: 'Ha interazioni farmacologiche note?',
+    appt_end_session: 'Termina sessione',
   },
   ru: {
     badge: 'Личный дневник здоровья · Готов к экстренным случаям',
@@ -589,6 +1077,67 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nav_signin: 'Войти',
     nav_cta: 'Открыть Vault',
     footerDisclaimer: 'Arkoura не является медицинским устройством и не является системой медицинских записей. Он не предоставляет медицинских диагнозов, клинических оценок или медицинских консультаций. Arkoura — это личный дневник здоровья, инструмент управления документами и платформа обмена информацией, предназначенная исключительно для помощи в экстренных ситуациях. В любой ситуации, угрожающей жизни, всегда немедленно обращайтесь в службу экстренной помощи.',
+    privacy_label: 'ВАШИ ДАННЫЕ СВЯЩЕННЫ',
+    privacy_headline: 'Построен на основе бескомпромиссной конфиденциальности.',
+    privacy_sub: 'Данные о здоровье — самые личные данные в мире. Мы проектировали каждый уровень Arkoura с этой мыслью — не как запоздалую мысль, а как фундамент.',
+    s4title: 'За рубежом без возможности общаться',
+    s4body: 'Сильная боль в груди на иностранном рынке. Нет общего языка с местными. Прошло двенадцать минут, прежде чем кто-то понял, что ему нужно.',
+    s4tag: '1 из 4 экстренных случаев связан с языковым барьером',
+    s5title: 'Ребёнок, который не мог назвать своё имя',
+    s5body: 'Невербальный и потерявшийся на переполненном фестивале. Нет имени, нет контактов родителей, нет информации о сенсорных потребностях. У спасателей не было ничего, с чего начать.',
+    s5tag: '1 из 36 детей в мире имеет аутизм',
+    s6title: 'Он потерял сознание. Пришёл в себя. Открыл сеанс.',
+    s6body: 'Пришёл в сознание, окружённый парамедиками. Открыл временный сеанс, передал им код — и за секунды они получили доступ к его полному дневнику и истории.',
+    s6tag: 'Когда слова возвращаются — становится возможным больше',
+    privacy1_title: 'Шифрование AES-256 в покое',
+    privacy1_body: 'Каждый фрагмент данных о здоровье шифруется с помощью AES-256 — того же стандарта, что используют банки и правительства. Без ваших ключей данные нечитаемы.',
+    privacy2_title: 'TLS 1.3 при передаче',
+    privacy2_body: 'Все данные между вашим устройством и нашими серверами зашифрованы TLS 1.3. Третьи лица никогда не смогут перехватить вашу информацию.',
+    privacy3_title: 'Вклад в медицинские исследования',
+    privacy3_body: 'При вашем явном согласии анонимизированные паттерны здоровья могут помочь в развитии медицинских исследований. Вы сохраняете контроль — по умолчанию отключено, можно отозвать в любой момент.',
+    privacy4_title: 'Данные принадлежат вам',
+    privacy4_body: 'Экспортируйте всё в один клик. Навсегда удалите всё — включая резервные копии — в течение 30 дней с момента запроса. Ваши данные принадлежат вам, а не нам.',
+    privacy5_title: 'Готовность к GDPR и HIPAA',
+    privacy5_body: 'Arkoura спроектирован для соответствия требованиям GDPR для европейских пользователей и инфраструктуре, согласованной с HIPAA. Ваши права встроены изначально, а не добавлены потом.',
+    privacy6_title: 'Экстренный доступ минимален',
+    privacy6_body: 'QR-профиль показывает только то, что вы выбрали — имя, состояния, аллергии, лекарства, контакты. Полные данные дневника требуют вашего активного согласия в сессии, которую вы контролируете.',
+    privacy_hosting_title: 'Размещено на Google Cloud Platform',
+    privacy_hosting_body: 'Инфраструктура Firebase + GCP с SLA 99.9% доступности, дата-центрами с сертификацией SOC 2 Type II и автоматическим резервированием в нескольких регионах.',
+    stats_label: 'МАСШТАБ ПРОБЛЕМЫ',
+    stats_headline: 'Каждый день миллионы не могут говорить за себя.',
+    stats_sub: 'Когда каждая секунда на счету, молчание смертельно. Это цифры, объясняющие, почему существует Arkoura.',
+    stats1_label: 'человек живут с эпилепсией — и могут потерять сознание без предупреждения',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'человек живут с деменцией, часто не способных сообщить о своей личности или медицинских потребностях',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'детей диагностируют расстройство аутистического спектра, многие из которых не вербальны',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'международных туристических прибытий в год — каждое потенциальный пациент в иноязычной медицинской системе',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'неблагоприятных медицинских событий с участием туристов связаны с коммуникационными сбоями с местными медицинскими работниками',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'обращений в отделения скорой помощи в год в США — многие от пациентов, которые не могут сообщить свою историю болезни',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'Один QR-скан меняет всё.',
+    stats_closing_body: 'Arkoura помещает критически важную медицинскую информацию туда, где она нужна — доступную для всех, везде, мгновенно. Без приложения. Без языкового барьера. Без каких-либо барьеров.',
+    stats_citation: 'Данные ссылаются на ВОЗ, CDC, ООН по туризму и рецензируемую медицинскую литературу. Полные ссылки доступны на arkoura.com/research.',
+    appt_label: 'РАСШИРЕННАЯ ПОДДЕРЖКА — РЕЖИМ ВСТРЕЧИ',
+    appt_headline: 'Когда экстренная ситуация позади — разговор может продолжиться.',
+    appt_body: 'Иногда человеку, которому нужна помощь, удаётся говорить — но нужно поделиться большим, чем позволяет QR-профиль. Режим встречи позволяет открыть временный защищённый сеанс и передать помощнику одноразовый код. Он получает полный доступ к вашему дневнику здоровья — при поддержке ИИ, на своём языке.',
+    appt_f1_title: 'Временный и управляемый',
+    appt_f1_body: 'Сеансы истекают автоматически. Вы решаете, как долго длится доступ.',
+    appt_f2_title: 'Одноразовый код',
+    appt_f2_body: 'Поделитесь одним OTP. Помощнику не нужна учётная запись.',
+    appt_f3_title: 'Разговор под руководством ИИ',
+    appt_f3_body: 'Помощник взаимодействует с ИИ, который читает ваш дневник и отвечает на вопросы — на языке помощника, с учётом вашего контекста.',
+    appt_badge: 'Доступно для премиум-участников',
+    appt_session_active: 'Сеанс активен',
+    appt_session_title: 'Сеанс встречи',
+    appt_code_label: 'ВАШ КОД ДОСТУПА',
+    appt_code_hint: 'Поделитесь этим кодом с помощником',
+    appt_chat_ai: 'По данным дневника, последний сердечный эпизод был 3 недели назад. Текущие препараты включают...',
+    appt_chat_helper: 'Есть ли у него известные лекарственные взаимодействия?',
+    appt_end_session: 'Завершить сеанс',
   },
   sv: {
     badge: 'Personlig hälsodagbok · Redo för nödsituationer',
@@ -624,6 +1173,67 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     nav_signin: 'Logga in',
     nav_cta: 'Öppna Vault',
     footerDisclaimer: 'Arkoura är inte en medicinsk enhet och inte ett journalsystem. Det tillhandahåller inga medicinska diagnoser, kliniska bedömningar eller medicinska råd av något slag. Arkoura är en personlig hälsodagbok, ett dokumenthanteringsverktyg och en informationsdelningsplattform utformad enbart för att hjälpa i nödsituationer. Kontakta alltid räddningstjänsten omedelbart i alla livshotande situationer.',
+    privacy_label: 'DIN DATA ÄR HELIG',
+    privacy_headline: 'Byggt på en grund av kompromisslös integritet.',
+    privacy_sub: 'Hälsodata är de mest personliga data som finns. Vi designade varje lager av Arkoura med det i åtanke — inte som en eftertanke, utan som grunden.',
+    s4title: 'Utomlands och oförmögen att kommunicera',
+    s4body: 'Svår bröstsmärta på en utländsk marknad. Inget gemensamt språk med lokalbefolkningen. Tolv minuter gick innan någon förstod vad han behövde.',
+    s4tag: '1 av 4 nödsituationer involverar en språkbarriär',
+    s5title: 'Barnet som inte kunde säga sitt namn',
+    s5body: 'Icke-verbal och borttappad på ett trångt festival. Inget namn, inga föräldrars kontakter, inga sensoriska behov kommunicerade. Räddningspersonalen hade ingenting att gå på.',
+    s5tag: '1 av 36 barn är autistiska globalt',
+    s6title: 'Han svimmade. Han återhämtade sig. Han öppnade en session.',
+    s6body: 'Återfick medvetandet omgiven av ambulanspersonal. Han öppnade en tidsbegränsad session, gav dem en kod — och på sekunder fick de tillgång till hans fullständiga dagbok och historik.',
+    s6tag: 'När orden kommer tillbaka — mer blir möjligt',
+    privacy1_title: 'AES-256-kryptering i vila',
+    privacy1_body: 'Varje hälsodata du lagrar krypteras med AES-256 — samma standard som banker och regeringar använder. Dina data är oläsliga utan dina nycklar.',
+    privacy2_title: 'TLS 1.3 under överföring',
+    privacy2_body: 'All data mellan din enhet och våra servrar krypteras med TLS 1.3. Ingen tredje part kan avlyssna din information — aldrig.',
+    privacy3_title: 'Bidrar till medicinsk forskning',
+    privacy3_body: 'Med ditt explicita samtycke kan anonymiserade hälsomönster bidra till att främja medicinsk forskning. Du behåller kontrollen — avstängt som standard och kan återkallas när som helst.',
+    privacy4_title: 'Du äger din data',
+    privacy4_body: 'Exportera allt med ett klick. Radera allt permanent — inklusive säkerhetskopior — inom 30 dagar från din begäran. Din data tillhör dig, inte oss.',
+    privacy5_title: 'GDPR- och HIPAA-kompatibel',
+    privacy5_body: 'Arkoura är designat för att uppfylla kraven i GDPR för europeiska användare och HIPAA-anpassad infrastruktur för hälsodata. Dina rättigheter är inbyggda, inte tillagda efteråt.',
+    privacy6_title: 'Nödtillgång är minimal',
+    privacy6_body: 'QR-profilen visar bara vad du väljer — namn, tillstånd, allergier, mediciner, kontakter. Fullständig dagboksdata kräver ditt aktiva samtycke i en session du kontrollerar.',
+    privacy_hosting_title: 'Hostad på Google Cloud Platform',
+    privacy_hosting_body: 'Firebase + GCP-infrastruktur med 99.9% drifttid SLA, SOC 2 Type II-certifierade datacenter och automatisk redundans över flera regioner.',
+    stats_label: 'PROBLEMETS OMFATTNING',
+    stats_headline: 'Varje dag kan miljoner inte tala för sig själva.',
+    stats_sub: 'När sekunder räknas som mest är tystnad dödlig. Dessa är siffrorna bakom varför Arkoura finns.',
+    stats1_label: 'personer lever med epilepsi — och kan förlora medvetandet utan förvarning',
+    stats1_source: 'WHO Global Epilepsy Report, 2024',
+    stats2_label: 'personer lever med demens, ofta oförmögna att kommunicera sin identitet eller medicinska behov',
+    stats2_source: 'WHO Dementia Fact Sheet, 2023',
+    stats3_label: 'barn diagnostiseras med autismspektrumstörning, varav många är icke-verbala',
+    stats3_source: 'CDC ADDM Network, 2023',
+    stats4_label: 'internationella turistankomster per år — var och en en potentiell patient i ett utländskt medicinskt system',
+    stats4_source: 'UN Tourism World Barometer, 2024',
+    stats5_label: 'av negativa medicinska händelser som involverar turister involverar kommunikationsmisslyckanden med lokala vårdgivare',
+    stats5_source: 'Journal of Travel Medicine, 2022',
+    stats6_label: 'akutmottagningsbesök per år i USA — många av patienter som inte kan kommunicera sin medicinska historia',
+    stats6_source: 'CDC NHCS, 2022',
+    stats_closing_headline: 'En QR-skanning förändrar allt.',
+    stats_closing_body: 'Arkoura placerar kritisk hälsoinformation där den behöver vara — tillgänglig för alla, var som helst, omedelbart. Ingen app. Ingen språkbarriär. Ingen barriär alls.',
+    stats_citation: 'Data refererade från WHO, CDC, UN Tourism och granskad medicinsk litteratur. Fullständiga citat tillgängliga på arkoura.com/research.',
+    appt_label: 'AVANCERAT STÖD — MÖTESLÄGE',
+    appt_headline: 'När nödsituationen är över — behöver inte samtalet vara det.',
+    appt_body: 'Ibland kan den som behöver hjälp tala — men behöver dela mer än vad en QR-profil tillåter. Mötesläget låter dig öppna en tidsbegränsad, säker session och ge en hjälpare en engångskod. De får full tillgång till din hälsodagbok — guidad av AI, på deras språk.',
+    appt_f1_title: 'Tidsbegränsad och kontrollerad',
+    appt_f1_body: 'Sessioner löper ut automatiskt. Du bestämmer hur länge åtkomsten varar.',
+    appt_f2_title: 'Engångskod',
+    appt_f2_body: 'Dela en enda OTP. Hjälparen behöver inget konto.',
+    appt_f3_title: 'AI-guidad konversation',
+    appt_f3_body: 'Hjälparen interagerar med en AI som läser din dagbok och svarar på deras frågor — på deras språk, med ditt sammanhang.',
+    appt_badge: 'Tillgänglig för premiummedlemmar',
+    appt_session_active: 'Session aktiv',
+    appt_session_title: 'Mötessession',
+    appt_code_label: 'DIN ÅTKOMSTKOD',
+    appt_code_hint: 'Dela den här koden med din hjälpare',
+    appt_chat_ai: 'Enligt dagboken var det senaste hjärtepisoden för 3 veckor sedan. Nuvarande mediciner inkluderar...',
+    appt_chat_helper: 'Har han några kända läkemedelsinteraktioner?',
+    appt_end_session: 'Avsluta session',
   },
 }
 
@@ -668,39 +1278,6 @@ function LeafDecor({ className }: { className?: string }) {
 }
 
 // ─── Inline SVG icons ─────────────────────────────────────────────────────────
-
-function IconBicycle() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <circle cx="10" cy="29" r="7" stroke="#7A9E7E" strokeWidth="1.5" />
-      <circle cx="30" cy="29" r="7" stroke="#7A9E7E" strokeWidth="1.5" />
-      <path d="M10 29L17 14L23 19H31L30 29" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M17 14H21" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M23 19L25 17H30" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconAirplane() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path d="M35 20L5 10l6 8-3 3 11 4 3-3 8 6-5-8zM11 18l9 3" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M17 21L14 29l4-2 2 5 3-8" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconElderly() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <circle cx="20" cy="9" r="4" stroke="#7A9E7E" strokeWidth="1.5" />
-      <path d="M14 20v10" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M14 20C14 16 17 14 20 14C23 14 26 16 26 20L24 28" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M26 22l4 10" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M26 28h5" stroke="#7A9E7E" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
 
 function IconNotebook() {
   return (
@@ -1124,19 +1701,241 @@ function HeroSection({ lang }: { lang: string }) {
   )
 }
 
-// ─── Section 2 — Problem ──────────────────────────────────────────────────────
+// ─── Section 2 — Problem (Carousel) ──────────────────────────────────────────
+
+// ─── Scenario icons ───────────────────────────────────────────────────────────
+
+function IconBicycle() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48"
+         fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round"
+         className="text-[#4A7A50]">
+      <circle cx="12" cy="34" r="8"/>
+      <circle cx="36" cy="34" r="8"/>
+      <path d="M12,34 L22,16 L36,16"/>
+      <path d="M22,16 L30,34"/>
+      <path d="M18,16 L26,16"/>
+      <path d="M34,10 L34,6 M32,8 L36,8"/>
+    </svg>
+  )
+}
+
+function IconAirplane() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48"
+         fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round"
+         className="text-[#4A7A50]">
+      <circle cx="24" cy="24" r="16"/>
+      <path d="M24,8 C18,14 18,34 24,40"/>
+      <path d="M24,8 C30,14 30,34 24,40"/>
+      <path d="M8,24 C12,20 36,20 40,24"/>
+      <path d="M8,24 C12,28 36,28 40,24"/>
+      <path d="M30,12 L38,12 L38,20 L34,20 L30,24 L30,20 L30,12 Z"/>
+      <path d="M33,15 L35,17 M35,15 L33,17"/>
+    </svg>
+  )
+}
+
+function IconElderly() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48"
+         fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round"
+         className="text-[#4A7A50]">
+      <circle cx="24" cy="12" r="6"/>
+      <path d="M24,18 L24,32"/>
+      <path d="M14,24 L24,20 L34,24"/>
+      <path d="M18,32 L24,32 L30,42"/>
+      <path d="M24,32 L20,42"/>
+      <path d="M30,42 L36,42 C36,42 38,42 38,40 L38,30"/>
+      <path d="M40,14 C40,11 43,10 43,13 C43,15 41,15 41,17"/>
+      <circle cx="41" cy="19" r="0.8" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconChild() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round"
+         className="text-[#4A7A50]">
+      <circle cx="12" cy="5" r="3"/>
+      <path d="M12,8 L12,16"/>
+      <path d="M7,11 L12,9 L17,11"/>
+      <path d="M9,16 L12,16 L15,21"/>
+      <path d="M12,16 L10,21"/>
+      <path d="M17,7 C18,6 20,6 20,8 C20,9 19,10 18,9"/>
+      <circle cx="18" cy="10" r="0.8" fill="currentColor"/>
+    </svg>
+  )
+}
+
+function IconSession() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round"
+         className="text-[#4A7A50]">
+      <rect x="7" y="2" width="10" height="16" rx="2"/>
+      <line x1="10" y1="7" x2="14" y2="7"/>
+      <line x1="10" y1="10" x2="14" y2="10"/>
+      <line x1="10" y1="13" x2="12" y2="13"/>
+      <circle cx="10" cy="16" r="1" fill="currentColor"/>
+      <circle cx="12" cy="16" r="1" fill="currentColor"/>
+      <circle cx="14" cy="16" r="1" fill="currentColor"/>
+      <path d="M17,14 L20,17 L17,20"/>
+      <path d="M11,22 L20,17"/>
+    </svg>
+  )
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const SCENARIOS = [
+  {
+    id: 1,
+    tag: 'Happens every day',
+    tagColor: '#E8F2E6',
+    tagText: '#4A7A50',
+    accentBg: '#F0F7F0',
+    title: "The cyclist who couldn't speak",
+    body: 'Collapsed mid-route. No ID. Responders had no way to know about his penicillin allergy. The treatment nearly ended his life.',
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <circle cx="12" cy="34" r="8"/>
+        <circle cx="36" cy="34" r="8"/>
+        <path d="M12,34 L22,16 L36,16"/>
+        <path d="M22,16 L30,34"/>
+        <path d="M18,16 L26,16"/>
+        <path d="M34,10 L34,6 M32,8 L36,8"/>
+      </svg>
+    ),
+  },
+  {
+    id: 2,
+    tag: 'In every country',
+    tagColor: '#DBEAFE',
+    tagText: '#1E40AF',
+    accentBg: '#EFF6FF',
+    title: 'The tourist and the language barrier',
+    body: "Anaphylactic reaction in Tokyo. Her allergy history was in English. The doctors were brilliant — but twenty minutes was lost to translation.",
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <circle cx="24" cy="24" r="16"/>
+        <path d="M24,8 C18,14 18,34 24,40"/>
+        <path d="M24,8 C30,14 30,34 24,40"/>
+        <path d="M8,24 C12,20 36,20 40,24"/>
+        <path d="M8,24 C12,28 36,28 40,24"/>
+        <path d="M30,12 L38,12 L38,20 L34,20 L30,24 L30,20 L30,12 Z"/>
+        <path d="M33,15 L35,17 M35,15 L33,17"/>
+      </svg>
+    ),
+  },
+  {
+    id: 3,
+    tag: 'Closer than you think',
+    tagColor: '#FEF3C7',
+    tagText: '#92400E',
+    accentBg: '#FFFBEB',
+    title: 'The parent who forgot',
+    body: "Dementia. He wandered from home. No medications list, no doctor's name remembered. The ER started from zero.",
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <circle cx="24" cy="12" r="6"/>
+        <path d="M24,18 L24,32"/>
+        <path d="M14,24 L24,20 L34,24"/>
+        <path d="M18,32 L24,32 L30,42"/>
+        <path d="M24,32 L20,42"/>
+        <path d="M30,42 L36,42 C36,42 38,42 38,40 L38,30"/>
+        <path d="M40,14 C40,11 43,10 43,13 C43,15 41,15 41,17"/>
+        <circle cx="41" cy="19" r="0.8" fill="#4A7A50"/>
+      </svg>
+    ),
+  },
+  {
+    id: 4,
+    tag: '1 in 4 emergencies involve a language barrier',
+    tagColor: '#FCE7F3',
+    tagText: '#9D174D',
+    accentBg: '#FDF2F8',
+    title: 'Abroad and unable to communicate',
+    body: 'Severe chest pain in a foreign market. No shared language with locals. Twelve minutes passed before anyone understood what he needed.',
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <path d="M24,38 C24,38 8,28 8,18 C8,12 13,8 18,8 C21,8 23,10 24,12 C25,10 27,8 30,8 C35,8 40,12 40,18 C40,28 24,38 24,38 Z"/>
+        <path d="M13,20 L17,20 L19,14 L22,26 L25,18 L27,20 L35,20"/>
+      </svg>
+    ),
+  },
+  {
+    id: 5,
+    tag: '1 in 36 children is autistic globally',
+    tagColor: '#EDE9FE',
+    tagText: '#5B21B6',
+    accentBg: '#F5F3FF',
+    title: "The child who couldn't say his name",
+    body: "Non-verbal and lost at a crowded festival. No name, no parents' contacts, no sensory needs communicated. Responders had nothing to go on.",
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <circle cx="24" cy="11" r="5"/>
+        <path d="M24,16 L24,28"/>
+        <path d="M16,22 L24,19 L32,22"/>
+        <path d="M19,28 L24,28 L29,38"/>
+        <path d="M24,28 L21,38"/>
+        <path d="M33,8 C33,6 35,5 37,5 C39,5 40,6 40,8 C40,10 39,11 37,11 C35,11 33,10 33,8 Z"/>
+        <path d="M37,8 C37,6 39,5 41,5 C43,5 44,6 44,8 C44,10 43,11 41,11 C39,11 37,10 37,8 Z"/>
+      </svg>
+    ),
+  },
+  {
+    id: 6,
+    tag: 'When words come back — more is possible',
+    tagColor: '#ECFDF5',
+    tagText: '#065F46',
+    accentBg: '#F0FDF4',
+    title: 'He fainted. He recovered. He opened a session.',
+    body: 'Regained consciousness surrounded by paramedics. He opened a timed session, handed them a code — and they accessed his full journal and history in seconds.',
+    icon: (
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
+           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
+           strokeLinejoin="round">
+        <rect x="14" y="6" width="20" height="32" rx="4"/>
+        <line x1="19" y1="14" x2="29" y2="14"/>
+        <line x1="19" y1="19" x2="29" y2="19"/>
+        <line x1="19" y1="24" x2="25" y2="24"/>
+        <circle cx="19" cy="30" r="1.5" fill="#4A7A50"/>
+        <circle cx="24" cy="30" r="1.5" fill="#4A7A50"/>
+        <circle cx="29" cy="30" r="1.5" fill="#4A7A50"/>
+        <path d="M36,16 L40,20 L46,12"/>
+      </svg>
+    ),
+  },
+]
 
 function ProblemSection({ lang }: { lang: string }) {
   const scenarios = [
-    { icon: <IconBicycle />, titleKey: 's1title', bodyKey: 's1body', tagKey: 's1tag' },
+    { icon: <IconBicycle />,  titleKey: 's1title', bodyKey: 's1body', tagKey: 's1tag' },
     { icon: <IconAirplane />, titleKey: 's2title', bodyKey: 's2body', tagKey: 's2tag' },
-    { icon: <IconElderly />, titleKey: 's3title', bodyKey: 's3body', tagKey: 's3tag' },
+    { icon: <IconElderly />,  titleKey: 's3title', bodyKey: 's3body', tagKey: 's3tag' },
+    { icon: <IconGlobe />,    titleKey: 's4title', bodyKey: 's4body', tagKey: 's4tag' },
+    { icon: <IconChild />,    titleKey: 's5title', bodyKey: 's5body', tagKey: 's5tag' },
+    { icon: <IconSession />,  titleKey: 's6title', bodyKey: 's6body', tagKey: 's6tag' },
   ]
-
   return (
     <section className="relative overflow-hidden bg-white py-28">
       <LeafDecor className="pointer-events-none absolute -bottom-20 -left-10 w-[250px] -rotate-12 text-[#7A9E7E] opacity-[0.04]" />
-
       <div className="relative mx-auto max-w-6xl px-6">
         <motion.div
           variants={stagger()}
@@ -1157,7 +1956,6 @@ function ProblemSection({ lang }: { lang: string }) {
             {getText(lang, 'problemH2')}
           </motion.h2>
         </motion.div>
-
         <motion.div
           variants={stagger(0.12)}
           initial="hidden"
@@ -1271,7 +2069,401 @@ function HowItWorksSection({ lang }: { lang: string }) {
   )
 }
 
-// ─── Section 4 — Zero Friction (dark) ────────────────────────────────────────
+// ─── Section 4 — Data Privacy ────────────────────────────────────────────────
+
+function DataPrivacySection({ lang }: { lang: string }) {
+  const pillars = [
+    {
+      titleKey: 'privacy1_title',
+      bodyKey: 'privacy1_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12,10 L12,8 C12,5 16,3 20,3 C24,3 28,5 28,8 L28,10"/>
+          <rect x="8" y="10" width="24" height="18" rx="4"/>
+          <circle cx="20" cy="19" r="3"/>
+          <path d="M20,22 L20,25"/>
+        </svg>
+      ),
+    },
+    {
+      titleKey: 'privacy2_title',
+      bodyKey: 'privacy2_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12,12 L20,8 L28,12 L28,20 C28,26 20,30 20,30 C20,30 12,26 12,20 Z"/>
+          <path d="M17,18 L19,20 L23,16"/>
+        </svg>
+      ),
+    },
+    {
+      titleKey: 'privacy3_title',
+      bodyKey: 'privacy3_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20,6 L20,18"/>
+          <path d="M15,9 L25,9"/>
+          <path d="M20,18 L20,24"/>
+          <path d="M16,24 L24,24"/>
+          <circle cx="20" cy="28" r="4"/>
+          <path d="M14,36 L26,36"/>
+          <path d="M20,32 L20,36"/>
+        </svg>
+      ),
+    },
+    {
+      titleKey: 'privacy4_title',
+      bodyKey: 'privacy4_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="20" cy="10" r="5"/>
+          <path d="M12,30 C12,22 28,22 28,30"/>
+          <circle cx="28" cy="20" r="4"/>
+          <path d="M32,20 L38,20 M36,18 L38,20 L36,22"/>
+        </svg>
+      ),
+    },
+    {
+      titleKey: 'privacy5_title',
+      bodyKey: 'privacy5_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10,6 L10,34 L30,34 L30,14 L22,6 Z"/>
+          <path d="M22,6 L22,14 L30,14"/>
+          <path d="M14,20 L18,24 L26,16"/>
+        </svg>
+      ),
+    },
+    {
+      titleKey: 'privacy6_title',
+      bodyKey: 'privacy6_body',
+      icon: (
+        <svg viewBox="0 0 40 40" width="24" height="24" fill="none" stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8,20 C8,20 12,12 20,12 C28,12 32,20 32,20 C32,20 28,28 20,28 C12,28 8,20 8,20 Z"/>
+          <circle cx="20" cy="20" r="4"/>
+          <path d="M17,17 L17,15 C17,13 23,13 23,15 L23,17"/>
+          <rect x="15" y="17" width="10" height="8" rx="2"/>
+        </svg>
+      ),
+    },
+  ]
+
+  return (
+    <section className="bg-white py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <motion.div
+          variants={stagger()}
+          initial="hidden"
+          whileInView="show"
+          viewport={vp}
+          className="mb-16 text-center"
+        >
+          <motion.div variants={fadeIn}>
+            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-[#7A9E7E]">
+              {getText(lang, 'privacy_label')}
+            </p>
+          </motion.div>
+          <motion.h2
+            variants={fadeUp}
+            className="mx-auto max-w-2xl font-[var(--font-manrope)] text-4xl font-bold leading-tight text-[#1C2B1E]"
+          >
+            {getText(lang, 'privacy_headline')}
+          </motion.h2>
+          <motion.p variants={fadeUp} className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-gray-600">
+            {getText(lang, 'privacy_sub')}
+          </motion.p>
+        </motion.div>
+
+        {/* Pillars grid */}
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {pillars.map((pillar, i) => (
+            <motion.div
+              key={pillar.titleKey}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={vp}
+              transition={{ delay: i * 0.08 }}
+              className="rounded-2xl p-8"
+              style={{
+                background: '#FAFAF8',
+                border: '1px solid rgba(74,122,80,0.08)',
+              }}
+            >
+              <div className="mb-5 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#E8F2E6]">
+                {pillar.icon}
+              </div>
+              <h3 className="mb-2 font-[var(--font-manrope)] text-base font-semibold text-[#1C2B1E]">
+                {getText(lang, pillar.titleKey)}
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-500">
+                {getText(lang, pillar.bodyKey)}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  )
+}
+
+// ─── Statistics section ───────────────────────────────────────────────────────
+
+const STAT_ITEMS = [
+  { number: '117M',   labelKey: 'stats1_label', sourceKey: 'stats1_source' },
+  { number: '55M',    labelKey: 'stats2_label', sourceKey: 'stats2_source' },
+  { number: '1 in 36', labelKey: 'stats3_label', sourceKey: 'stats3_source' },
+  { number: '1.35B',  labelKey: 'stats4_label', sourceKey: 'stats4_source' },
+  { number: '67%',    labelKey: 'stats5_label', sourceKey: 'stats5_source' },
+  { number: '136M',   labelKey: 'stats6_label', sourceKey: 'stats6_source' },
+]
+
+function StatisticsSection({ lang }: { lang: string }) {
+  return (
+    <section className="bg-[#F0F2EE] py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <motion.div
+          variants={stagger()}
+          initial="hidden"
+          whileInView="show"
+          viewport={vp}
+          className="mb-16 text-center"
+        >
+          <motion.div variants={fadeIn}>
+            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-[#7A9E7E]">
+              {getText(lang, 'stats_label')}
+            </p>
+          </motion.div>
+          <motion.h2
+            variants={fadeUp}
+            className="mx-auto max-w-2xl font-[var(--font-manrope)] text-4xl font-bold leading-tight text-[#1C2B1E]"
+          >
+            {getText(lang, 'stats_headline')}
+          </motion.h2>
+          <motion.p variants={fadeUp} className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-gray-600">
+            {getText(lang, 'stats_sub')}
+          </motion.p>
+        </motion.div>
+
+        {/* Stats grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {STAT_ITEMS.map((stat, i) => (
+            <motion.div
+              key={stat.number + i}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={vp}
+              transition={{ delay: i * 0.1 }}
+              className="rounded-2xl bg-white p-8"
+              style={{ boxShadow: '0 2px 16px 0 rgba(28,43,30,0.06)' }}
+            >
+              <p className="mb-2 font-[var(--font-manrope)] text-5xl font-black leading-none text-[#4A7A50]">
+                {stat.number}
+              </p>
+              <p className="mb-3 text-base font-semibold leading-snug text-[#1C2B1E]">
+                {getText(lang, stat.labelKey)}
+              </p>
+              <p className="text-xs italic text-gray-400">{getText(lang, stat.sourceKey)}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Closing card */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={vp}
+          className="mx-auto mt-12 max-w-3xl rounded-2xl p-10"
+          style={{ background: '#1C2B1E' }}
+        >
+          <div className="flex flex-col gap-8 md:flex-row md:items-start">
+            <p className="max-w-xs font-[var(--font-manrope)] text-2xl font-bold leading-tight text-white">
+              {getText(lang, 'stats_closing_headline')}
+            </p>
+            <p className="max-w-sm text-sm leading-relaxed text-gray-400">
+              {getText(lang, 'stats_closing_body')}
+            </p>
+          </div>
+          <div className="mt-6 border-t border-white/10 pt-6">
+            <p className="text-center text-xs italic text-gray-600">
+              {getText(lang, 'stats_citation')}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Appointment Mode section ─────────────────────────────────────────────────
+
+function AppointmentModeSection({ lang }: { lang: string }) {
+  return (
+    <section className="bg-white py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-1 gap-16 md:grid-cols-2 md:items-center">
+          {/* Left column — text */}
+          <motion.div
+            variants={stagger(0.12)}
+            initial="hidden"
+            whileInView="show"
+            viewport={vp}
+            className="max-w-lg"
+          >
+            <motion.div variants={fadeIn}>
+              <p className="mb-3 text-xs font-medium uppercase tracking-widest text-[#7A9E7E]">
+                {getText(lang, 'appt_label')}
+              </p>
+            </motion.div>
+            <motion.h2
+              variants={fadeUp}
+              className="font-[var(--font-manrope)] text-4xl font-bold leading-tight text-[#1C2B1E]"
+            >
+              {getText(lang, 'appt_headline')}
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mt-6 text-lg leading-relaxed text-gray-600">
+              {getText(lang, 'appt_body')}
+            </motion.p>
+
+            {/* Feature rows */}
+            <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-5">
+              {[
+                {
+                  titleKey: 'appt_f1_title',
+                  bodyKey: 'appt_f1_body',
+                  icon: (
+                    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="#4A7A50" strokeWidth="2" strokeLinecap="round">
+                      <circle cx="10" cy="10" r="8"/>
+                      <path d="M10,5 L10,10 L14,13"/>
+                    </svg>
+                  ),
+                },
+                {
+                  titleKey: 'appt_f2_title',
+                  bodyKey: 'appt_f2_body',
+                  icon: (
+                    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="#4A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="7" cy="10" r="4"/>
+                      <path d="M11,10 L18,10 M16,8 L18,10 L16,12"/>
+                    </svg>
+                  ),
+                },
+                {
+                  titleKey: 'appt_f3_title',
+                  bodyKey: 'appt_f3_body',
+                  icon: (
+                    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="#4A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3,4 C3,3 4,2 5,2 L15,2 C16,2 17,3 17,4 L17,12 C17,13 16,14 15,14 L8,14 L4,18 L4,14 L5,14 C4,14 3,13 3,12 Z"/>
+                      <line x1="6" y1="6" x2="14" y2="6"/>
+                      <line x1="6" y1="9" x2="11" y2="9"/>
+                    </svg>
+                  ),
+                },
+              ].map((feat) => (
+                <div key={feat.titleKey} className="flex items-start gap-4">
+                  <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E8F2E6]">
+                    {feat.icon}
+                  </div>
+                  <div>
+                    <p className="font-[var(--font-manrope)] text-sm font-semibold text-[#1C2B1E]">
+                      {getText(lang, feat.titleKey)}
+                    </p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-gray-500">
+                      {getText(lang, feat.bodyKey)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Premium badge */}
+            <motion.div variants={fadeUp} className="mt-8">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#E8F2E6] px-4 py-2 text-sm font-medium text-[#4A7A50]">
+                <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="6" width="10" height="8" rx="2"/>
+                  <path d="M4,6 L4,4 C4,2 10,2 10,4 L10,6"/>
+                </svg>
+                {getText(lang, 'appt_badge')}
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Right column — phone mockup */}
+          <motion.div
+            variants={scaleUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={vp}
+            className="flex justify-center"
+          >
+            <div
+              className="w-full max-w-xs rounded-3xl p-5 shadow-xl"
+              style={{
+                background: '#F4F6F2',
+                animation: 'arkoura-float 4s ease-in-out infinite',
+              }}
+            >
+              {/* Status row */}
+              <div className="mb-4 flex items-center justify-between">
+                <span className="font-[var(--font-manrope)] text-sm font-semibold text-[#1C2B1E]">Arkoura</span>
+                <span className="rounded-full bg-[#ECFDF5] px-2 py-0.5 text-xs font-semibold text-[#065F46]">
+                  {getText(lang, 'appt_session_active')}
+                </span>
+              </div>
+
+              {/* Session card */}
+              <div className="mb-3 rounded-2xl bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-[#1C2B1E]">
+                    {getText(lang, 'appt_session_title')}
+                  </span>
+                  <span className="font-[var(--font-manrope)] text-sm font-bold text-[#4A7A50]">14:32</span>
+                </div>
+                <div className="mt-3">
+                  <p className="text-xs uppercase tracking-wider text-gray-400">
+                    {getText(lang, 'appt_code_label')}
+                  </p>
+                  <p className="mt-1 font-[var(--font-manrope)] text-3xl font-black tracking-widest text-[#1C2B1E]">
+                    7 4 2 9
+                  </p>
+                  <p className="mt-1 text-xs text-gray-400">
+                    {getText(lang, 'appt_code_hint')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Chat bubbles */}
+              <div
+                className="rounded-2xl rounded-tl-sm p-3 mb-2"
+                style={{ background: '#F4F6F2' }}
+              >
+                <p className="text-xs text-[#374151]">
+                  {getText(lang, 'appt_chat_ai')}
+                </p>
+              </div>
+              <div className="ml-6 rounded-2xl rounded-tr-sm bg-[#4A7A50] p-3">
+                <p className="text-xs text-white">
+                  {getText(lang, 'appt_chat_helper')}
+                </p>
+              </div>
+
+              {/* End session button */}
+              <button className="mt-4 w-full cursor-pointer rounded-xl border border-red-200 py-2 text-center text-xs font-medium text-red-400">
+                {getText(lang, 'appt_end_session')}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Section 5 — Zero Friction (dark) ────────────────────────────────────────
 
 function ZeroFrictionSection({ lang }: { lang: string }) {
   const factBlocks = [
@@ -1538,6 +2730,9 @@ export default function Page() {
       <HeroSection lang={currentLang} />
       <ProblemSection lang={currentLang} />
       <HowItWorksSection lang={currentLang} />
+      <DataPrivacySection lang={currentLang} />
+      <StatisticsSection lang={currentLang} />
+      <AppointmentModeSection lang={currentLang} />
       <ZeroFrictionSection lang={currentLang} />
       <DifferentiatorsSection lang={currentLang} />
       <TrustSection lang={currentLang} />
@@ -1546,3 +2741,106 @@ export default function Page() {
     </div>
   )
 }
+
+/*
+TRANSLATION INVENTORY — UNTRANSLATED STRINGS
+=============================================
+
+Section: SCENARIOS array (ProblemSection alternating layout)
+NOTE: All 6 scenario entries use hardcoded English. The TRANSLATIONS object has
+s1tag/s1title/s1body through s3tag/s3title/s3body (scenarios 1–3 only). Scenarios
+4–6 have no translation keys at all. The SCENARIOS array is not currently wired to
+getText() — titles, bodies, and tags are rendered directly.
+
+Line 1619: "Happens every day"
+  Suggested key: s1tag  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1623: "The cyclist who couldn't speak"
+  Suggested key: s1title  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1624: "Collapsed mid-route. No ID. Responders had no way to know about his penicillin allergy. The treatment nearly ended his life."
+  Suggested key: s1body  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1640: "In every country"
+  Suggested key: s2tag  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1644: "The tourist and the language barrier"
+  Suggested key: s2title  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1645: "Anaphylactic reaction in Tokyo. Her allergy history was in English. The doctors were brilliant — but twenty minutes was lost to translation."
+  Suggested key: s2body  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1662: "Closer than you think"
+  Suggested key: s3tag  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1666: "The parent who forgot"
+  Suggested key: s3title  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1667: "Dementia. He wandered from home. No medications list, no doctor's name remembered. The ER started from zero."
+  Suggested key: s3body  (key exists in TRANSLATIONS but not used by SCENARIOS)
+
+Line 1685: "1 in 4 emergencies involve a language barrier"
+  Suggested key: s4tag  (no translation key exists — needs new key + all 10 languages)
+
+Line 1689: "Abroad and unable to communicate"
+  Suggested key: s4title  (no translation key exists)
+
+Line 1690: "Severe chest pain in a foreign market. No shared language with locals. Twelve minutes passed before anyone understood what he needed."
+  Suggested key: s4body  (no translation key exists)
+
+Line 1702: "1 in 36 children is autistic globally"
+  Suggested key: s5tag  (no translation key exists)
+
+Line 1706: "The child who couldn't say his name"
+  Suggested key: s5title  (no translation key exists)
+
+Line 1707: "Non-verbal and lost at a crowded festival. No name, no parents' contacts, no sensory needs communicated. Responders had nothing to go on."
+  Suggested key: s5body  (no translation key exists)
+
+Line 1724: "When words come back — more is possible"
+  Suggested key: s6tag  (no translation key exists)
+
+Line 1728: "He fainted. He recovered. He opened a session."
+  Suggested key: s6title  (no translation key exists)
+
+Line 1729: "Regained consciousness surrounded by paramedics. He opened a timed session, handed them a code — and they accessed his full journal and history in seconds."
+  Suggested key: s6body  (no translation key exists)
+
+Section: ProblemSection
+
+Line ~1878: "These are not edge cases. They happen every single day."
+  Suggested key: problem_closing
+  Section: ProblemSection closing line
+
+Section: EmergencyCard (hero right column — UI demo mockup with persona data)
+
+Line ~1507: "San Francisco, CA"
+  Suggested key: hero_card_location  (mock location label — may be intentionally static)
+  Section: EmergencyCard
+
+Line ~1517: "TYPE 1 DIABETES"
+  Suggested key: hero_card_chip2  (mock condition chip — may be intentionally static)
+  Section: EmergencyCard
+
+Line ~1542: "This is an emergency"
+  Suggested key: hero_card_emergency_btn
+  Section: EmergencyCard
+
+Section: TrustSection
+
+Line 2479: "Firebase + GCP"
+  Suggested key: trust_badge1  (technical brand name — may be intentionally untranslated)
+  Section: TRUST_BADGES array
+
+Line 2479: "SOC 2 Infrastructure"
+  Suggested key: trust_badge4  (technical certification — may be intentionally untranslated)
+  Section: TRUST_BADGES array
+
+TOTAL UNTRANSLATED: 23
+
+ACTION REQUIRED: The SCENARIOS array tag/title/body fields need to be refactored to
+use getText() calls (passing lang down from ProblemSection). Keys s1–s3 already exist
+in TRANSLATIONS and just need to be wired. Keys s4–s6 need new entries in all 10
+language objects. The EmergencyCard and TRUST_BADGES items are UI demo/brand content
+and can be deferred or kept as static English.
+*/
