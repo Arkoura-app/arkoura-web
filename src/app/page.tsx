@@ -126,6 +126,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaIcon1: '🌿 Free emergency access',
     ctaIcon2: '🔒 Encrypted & private',
     ctaIcon3: '🌍 20 languages',
+    trust1: 'Free emergency access',
+    trust2: 'Encrypted & private',
+    trust3: '20 languages',
     formName: 'Your name',
     formEmail: 'your@email.com',
     formSubmit: 'Join the waitlist →',
@@ -267,6 +270,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaIcon1: '🌿 Acceso de emergencia gratuito',
     ctaIcon2: '🔒 Cifrado y privado',
     ctaIcon3: '🌍 20 idiomas',
+    trust1: 'Acceso de emergencia gratuito',
+    trust2: 'Cifrado y privado',
+    trust3: '20 idiomas',
     formName: 'Tu nombre',
     formEmail: 'tu@email.com',
     formSubmit: 'Unirse a la lista →',
@@ -408,6 +414,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaIcon1: "🌿 Accès urgence gratuit",
     ctaIcon2: '🔒 Chiffré et privé',
     ctaIcon3: '🌍 20 langues',
+    trust1: "Accès d'urgence gratuit",
+    trust2: 'Chiffré et privé',
+    trust3: '20 langues',
     formName: 'Votre nom',
     formEmail: 'votre@email.com',
     formSubmit: "Rejoindre la liste →",
@@ -549,6 +558,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaIcon1: '🌿 Kostenloser Notfallzugriff',
     ctaIcon2: '🔒 Verschlüsselt & privat',
     ctaIcon3: '🌍 20 Sprachen',
+    trust1: 'Kostenloser Notfallzugang',
+    trust2: 'Verschlüsselt & privat',
+    trust3: '20 Sprachen',
     formName: 'Dein Name',
     formEmail: 'deine@email.com',
     formSubmit: 'Warteliste beitreten →',
@@ -690,6 +702,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaIcon1: '🌿 Acesso de emergência gratuito',
     ctaIcon2: '🔒 Criptografado e privado',
     ctaIcon3: '🌍 20 idiomas',
+    trust1: 'Acesso de emergência gratuito',
+    trust2: 'Criptografado e privado',
+    trust3: '20 idiomas',
     formName: 'Seu nome',
     formEmail: 'seu@email.com',
     formSubmit: 'Entrar na lista →',
@@ -763,8 +778,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_primary: '加入等候名单 →',
     cta_secondary: '了解工作原理',
     trust1: '免费紧急访问',
-    trust2: '符合 GDPR 和 HIPAA',
-    trust3: '无需安装应用',
+    trust2: '加密且私密',
+    trust3: '20种语言',
     problem_label: 'Arkoura 存在的原因',
     problem_headline1: '在紧急情况下，沉默',
     problem_headline2: '是最危险的事。',
@@ -859,8 +874,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_primary: '順番待ちリストに参加 →',
     cta_secondary: '仕組みを見る',
     trust1: '緊急アクセス無料',
-    trust2: 'GDPRおよびHIPAA準拠',
-    trust3: 'アプリ不要',
+    trust2: '暗号化されたプライベート',
+    trust3: '20言語対応',
     problem_label: 'ARKOURAが存在する理由',
     problem_headline1: '緊急時、沈黙は',
     problem_headline2: '最も危険なことです。',
@@ -955,8 +970,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_primary: 'Unisciti alla lista →',
     cta_secondary: 'Scopri come funziona',
     trust1: 'Accesso emergenze gratuito',
-    trust2: 'Conforme GDPR e HIPAA',
-    trust3: 'Nessuna app richiesta',
+    trust2: 'Crittografato e privato',
+    trust3: '20 lingue',
     problem_label: 'PERCHÉ ESISTE ARKOURA',
     problem_headline1: "In un'emergenza, il silenzio",
     problem_headline2: 'è la cosa più pericolosa.',
@@ -1051,8 +1066,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_primary: 'Вступить в список →',
     cta_secondary: 'Узнать как работает',
     trust1: 'Бесплатный экстренный доступ',
-    trust2: 'Соответствует GDPR и HIPAA',
-    trust3: 'Приложение не нужно',
+    trust2: 'Зашифровано и приватно',
+    trust3: '20 языков',
     problem_label: 'ПОЧЕМУ СУЩЕСТВУЕТ ARKOURA',
     problem_headline1: 'В экстренной ситуации молчание',
     problem_headline2: 'самое опасное.',
@@ -1147,8 +1162,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_primary: 'Gå med i listan →',
     cta_secondary: 'Se hur det fungerar',
     trust1: 'Gratis nödtillgång',
-    trust2: 'GDPR- och HIPAA-kompatibel',
-    trust3: 'Ingen app behövs',
+    trust2: 'Krypterat och privat',
+    trust3: '20 språk',
     problem_label: 'VARFÖR ARKOURA FINNS',
     problem_headline1: 'I en nödsituation är tystnad',
     problem_headline2: 'det farligaste som finns.',
@@ -2670,9 +2685,30 @@ function CTASection({ lang }: { lang: string }) {
             variants={fadeIn}
             className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-[#6B7280]"
           >
-            <span>{getText(lang, 'ctaIcon1')}</span>
-            <span>{getText(lang, 'ctaIcon2')}</span>
-            <span>{getText(lang, 'ctaIcon3')}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M2,12 C2,12 3,5 7,3 C11,1 12,2 12,2 C12,2 11,7 8,9 C5,11 2,12 2,12 Z"/>
+                <path d="M2,12 L6,8"/>
+              </svg>
+              {getText(lang, 'trust1')}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="2" y="6" width="10" height="7" rx="2"/>
+                <path d="M4,6 L4,4 C4,2 10,2 10,4 L10,6"/>
+                <circle cx="7" cy="9.5" r="1" fill="#4A7A50" stroke="none"/>
+              </svg>
+              {getText(lang, 'trust2')}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="7" cy="7" r="5.5"/>
+                <path d="M7,1.5 C5.5,3.5 5.5,10.5 7,12.5"/>
+                <path d="M7,1.5 C8.5,3.5 8.5,10.5 7,12.5"/>
+                <path d="M1.5,7 C3,6 11,6 12.5,7"/>
+              </svg>
+              {getText(lang, 'trust3')}
+            </span>
           </motion.div>
         </motion.div>
       </div>
