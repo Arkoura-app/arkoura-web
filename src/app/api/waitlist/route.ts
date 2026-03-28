@@ -5,7 +5,7 @@ import { createElement } from 'react'
 import { Resend } from 'resend'
 import { z } from 'zod'
 import { FieldValue } from 'firebase-admin/firestore'
-import { db } from '@/lib/firebase-admin'
+import { getAdminDb } from '@/lib/firebase-admin'
 import WaitlistConfirmation from '@/emails/WaitlistConfirmation'
 import { render } from '@react-email/render'
 
@@ -44,6 +44,14 @@ export async function POST(request: Request) {
   }
 
   const { email, name } = parsed.data
+
+  // Guard: Resend API key must be present at runtime
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY not set')
+    return Response.json({ error: 'server_error' }, { status: 500 })
+  }
+
+  const db = getAdminDb()
 
   // 3. Rate limiting — max 5 signups per IP per hour
   const ip =
