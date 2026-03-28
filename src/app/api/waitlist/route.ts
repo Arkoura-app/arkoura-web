@@ -14,7 +14,13 @@ const schema = z.object({
   name: z.string().optional(),
 })
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured')
+  }
+  return new Resend(apiKey)
+}
 
 const ipTimestamps = new Map<string, number[]>()
 
@@ -45,13 +51,8 @@ export async function POST(request: Request) {
 
   const { email, name } = parsed.data
 
-  // Guard: Resend API key must be present at runtime
-  if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY not set')
-    return Response.json({ error: 'server_error' }, { status: 500 })
-  }
-
   const db = getAdminDb()
+  const resend = getResendClient()
 
   // 3. Rate limiting — max 5 signups per IP per hour
   const ip =
