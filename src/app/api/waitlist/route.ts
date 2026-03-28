@@ -133,7 +133,7 @@ export async function POST(request: Request) {
 
     const isDuplicate = await checkDuplicate(email, token)
     if (isDuplicate) {
-      return Response.json({ error: 'already_registered' }, { status: 400 })
+      return Response.json({ ok: true })
     }
 
     await writeWaitlist(email, name, token)
