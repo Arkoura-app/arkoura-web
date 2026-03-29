@@ -1,5 +1,7 @@
-import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app'
-import { getAuth, Auth } from 'firebase/auth'
+import { initializeApp, getApps, getApp } from 'firebase/app'
+import type { FirebaseApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
+import type { Auth } from 'firebase/auth'
 
 // Firebase public config — these values are intentionally
 // public client identifiers, not secrets.
