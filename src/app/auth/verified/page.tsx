@@ -3,6 +3,7 @@
 import dynamicImport from 'next/dynamic'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Render entirely on client — never during build/SSR
 // This prevents Firebase initialization at build time

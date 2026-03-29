@@ -1,9 +1,18 @@
 'use client'
 
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useAuth } from '@/hooks/useAuth'
-import Sidebar from '@/components/layout/Sidebar'
-import { VerificationBanner } from '@/components/layout/VerificationBanner'
+
+const Sidebar = dynamic(
+  () => import('@/components/layout/Sidebar'),
+  { ssr: false }
+)
+
+const VerificationBanner = dynamic(
+  () => import('@/components/layout/VerificationBanner').then(mod => mod.VerificationBanner),
+  { ssr: false }
+)
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()

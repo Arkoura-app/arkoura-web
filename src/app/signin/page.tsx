@@ -17,6 +17,7 @@ import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 type View = 'login' | 'register' | 'forgot'
 

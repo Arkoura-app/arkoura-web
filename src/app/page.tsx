@@ -5,7 +5,12 @@ export const runtime = 'edge'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
-import { AuthModal } from '@/components/auth/AuthModal'
+import dynamic from 'next/dynamic'
+
+const AuthModal = dynamic(
+  () => import('@/components/auth/AuthModal').then(mod => mod.AuthModal),
+  { ssr: false }
+)
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 // #FAFAF8 page bg · #F5F5F0 hero/cta bg · #F0F2EE section wash
