@@ -15,6 +15,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
+import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -166,7 +167,7 @@ function SignInContent() {
       await updateProfile(cred.user, { displayName: data.name })
       try {
         const token = await cred.user.getIdToken()
-        const base = process.env.NEXT_PUBLIC_CF_FUNCTIONS_BASE
+        const base = CF_FUNCTIONS_BASE
         await fetch(`${base}/sendVerificationEmail`, {
           method: 'POST',
           headers: {
@@ -197,7 +198,7 @@ function SignInContent() {
       return
     }
     try {
-      const base = process.env.NEXT_PUBLIC_CF_FUNCTIONS_BASE
+      const base = CF_FUNCTIONS_BASE
       const response = await fetch(`${base}/sendPasswordReset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

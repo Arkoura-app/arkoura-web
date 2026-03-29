@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { auth } from '@/lib/firebase'
+import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
 export function VerificationBanner() {
   const [sent, setSent] = useState(false)
@@ -16,7 +17,7 @@ export function VerificationBanner() {
     setSending(true)
     try {
       const token = await user.getIdToken()
-      const base = process.env.NEXT_PUBLIC_CF_FUNCTIONS_BASE
+      const base = CF_FUNCTIONS_BASE
       await fetch(`${base}/sendVerificationEmail`, {
         method: 'POST',
         headers: {
