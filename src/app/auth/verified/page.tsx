@@ -1,9 +1,9 @@
-export const dynamic = 'force-dynamic'
-
 'use client'
 
 import { useEffect, useState } from 'react'
 import { auth } from '@/lib/firebase'
+
+export const dynamic = 'force-dynamic'
 
 export default function VerifiedPage() {
   const [status, setStatus] = useState<'loading' | 'verified' | 'already'>('loading')

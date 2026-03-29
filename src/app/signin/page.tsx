@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 'use client'
 
 import { useState, Suspense } from 'react'
@@ -17,6 +15,8 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
+
+export const dynamic = 'force-dynamic'
 
 type View = 'login' | 'register' | 'forgot'
 
