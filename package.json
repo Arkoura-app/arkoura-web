@@ -13,15 +13,19 @@
     "preview": "wrangler pages dev"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@react-email/components": "^1.0.10",
     "@react-email/render": "^2.0.4",
+    "firebase": "^12.11.0",
     "firebase-admin": "^13.7.0",
     "framer-motion": "^12.38.0",
     "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.72.0",
     "resend": "^6.9.4",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.12",
@@ -30,6 +34,7 @@
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/zxcvbn": "^4.4.5",
     "eslint": "^9.22.0",
     "eslint-config-next": "^15.2.3",
     "eslint-config-prettier": "^10.1.1",

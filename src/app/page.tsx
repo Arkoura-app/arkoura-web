@@ -5,6 +5,7 @@ export const runtime = 'edge'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
+import { AuthModal } from '@/components/auth/AuthModal'
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 // #FAFAF8 page bg · #F5F5F0 hero/cta bg · #F0F2EE section wash
@@ -1501,7 +1502,7 @@ function LanguageSelector({ lang, setLang }: { lang: string; setLang: (l: string
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
-function Nav({ lang, setLang }: { lang: string; setLang: (l: string) => void }) {
+function Nav({ lang, setLang, onGetStarted }: { lang: string; setLang: (l: string) => void; onGetStarted: () => void }) {
   return (
     <header
       className="sticky top-0 z-50 border-b border-[rgba(122,158,126,0.1)]"
@@ -1517,12 +1518,12 @@ function Nav({ lang, setLang }: { lang: string; setLang: (l: string) => void }) 
         </Link>
         <nav className="flex items-center gap-2">
           <LanguageSelector lang={lang} setLang={setLang} />
-          <a
-            href="#waitlist"
+          <button
+            onClick={onGetStarted}
             className="rounded-full bg-[#7A9E7E] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4A7A50]"
           >
             {getText(lang, 'nav_cta')}
-          </a>
+          </button>
         </nav>
       </div>
     </header>
@@ -1655,7 +1656,7 @@ function EmergencyCard() {
 
 // ─── Section 1 — Hero ─────────────────────────────────────────────────────────
 
-function HeroSection({ lang }: { lang: string }) {
+function HeroSection({ lang, onGetStarted }: { lang: string; onGetStarted: () => void }) {
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#F5F5F0]">
       <LeafDecor className="pointer-events-none absolute -right-16 -top-10 w-[300px] text-[#7A9E7E] opacity-[0.05]" />
@@ -1682,12 +1683,12 @@ function HeroSection({ lang }: { lang: string }) {
             </p>
 
             <div className="hero-ctas mt-10 flex flex-wrap gap-3">
-              <a
-                href="#waitlist"
+              <button
+                onClick={onGetStarted}
                 className="rounded-xl bg-[#7A9E7E] px-8 py-4 font-[var(--font-manrope)] text-base font-semibold text-white transition-colors hover:bg-[#4A7A50]"
               >
                 {getText(lang, 'heroCta1')}
-              </a>
+              </button>
               <a
                 href="#how-it-works"
                 className="rounded-xl border border-[#A8C5A0] px-8 py-4 text-base font-medium text-[#4A7A50] transition-colors hover:bg-[#E8F2E6]"
@@ -2759,11 +2760,18 @@ function Footer({ lang }: { lang: string }) {
 
 export default function Page() {
   const [currentLang, setCurrentLang] = useState('en')
+  const [authOpen, setAuthOpen] = useState(false)
+  const [authView, setAuthView] = useState<'login' | 'register'>('register')
+
+  function openRegister() {
+    setAuthView('register')
+    setAuthOpen(true)
+  }
 
   return (
     <div className="bg-[#FAFAF8]" dir={currentLang === 'AR' ? 'rtl' : undefined}>
-      <Nav lang={currentLang} setLang={setCurrentLang} />
-      <HeroSection lang={currentLang} />
+      <Nav lang={currentLang} setLang={setCurrentLang} onGetStarted={openRegister} />
+      <HeroSection lang={currentLang} onGetStarted={openRegister} />
       <ProblemSection lang={currentLang} />
       <HowItWorksSection lang={currentLang} />
       <DataPrivacySection lang={currentLang} />
@@ -2774,6 +2782,7 @@ export default function Page() {
       <TrustSection lang={currentLang} />
       <CTASection lang={currentLang} />
       <Footer lang={currentLang} />
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultView={authView} />
     </div>
   )
 }
