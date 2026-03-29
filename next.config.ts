@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['firebase', 'firebase/app', 'firebase/auth', '@firebase/app', '@firebase/auth'],
   images: {
     unoptimized: true,
   },

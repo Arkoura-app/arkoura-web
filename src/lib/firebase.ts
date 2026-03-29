@@ -16,7 +16,12 @@ const firebaseConfig = {
   appId: '1:843849501519:web:d096ae61cbe9bbfc59933a',
 }
 
+// Firebase must only initialize in the browser.
+// Never initialize during SSR or edge rendering.
+const isBrowser = typeof window !== 'undefined'
+
 function getFirebaseApp(): FirebaseApp | null {
+  if (!isBrowser) return null
   if (!firebaseConfig.apiKey) return null
   return getApps().length === 0
     ? initializeApp(firebaseConfig)
