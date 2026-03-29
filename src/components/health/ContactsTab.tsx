@@ -1,0 +1,273 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { cfFetch } from '@/lib/api'
+import { RecordCard } from './RecordCard'
+import { SlideDrawer } from './SlideDrawer'
+import {
+  INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS,
+  LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
+} from './formStyles'
+
+interface EmergencyContact {
+  id: string
+  name: string
+  relationship: string
+  phone: string
+  alternatePhone?: string
+  email?: string
+  priority: number
+  showOnEmergencyProfile: boolean
+  notes?: string
+}
+
+const schema = z.object({
+  name: z.string().min(1, 'Full name is required'),
+  relationship: z.string().min(1, 'Relationship is required'),
+  phone: z.string().min(7, 'Phone number is required'),
+  alternatePhone: z.string().optional(),
+  email: z.string().email('Invalid email').optional().or(z.literal('')),
+  showOnEmergencyProfile: z.boolean(),
+  notes: z.string().optional(),
+})
+
+type FormValues = z.infer<typeof schema>
+
+const DEFAULTS: FormValues = {
+  name: '',
+  relationship: '',
+  phone: '',
+  alternatePhone: '',
+  email: '',
+  showOnEmergencyProfile: true,
+  notes: '',
+}
+
+export function ContactsTab() {
+  const [items, setItems] = useState<EmergencyContact[]>([])
+  const [loading, setLoading] = useState(true)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<EmergencyContact | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
+
+  const fetchItems = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await cfFetch('getEmergencyContacts')
+      if (!res.ok) throw new Error()
+      const json = (await res.json()) as { contacts: EmergencyContact[] }
+      const sorted = (json.contacts ?? []).sort((a, b) => a.priority - b.priority)
+      setItems(sorted)
+    } catch {
+      setItems([])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void fetchItems()
+  }, [fetchItems])
+
+  function openAdd() {
+    reset(DEFAULTS)
+    setEditingItem(null)
+    setSubmitError(null)
+    setDrawerOpen(true)
+  }
+
+  function openEdit(item: EmergencyContact) {
+    reset({
+      name: item.name,
+      relationship: item.relationship,
+      phone: item.phone,
+      alternatePhone: item.alternatePhone ?? '',
+      email: item.email ?? '',
+      showOnEmergencyProfile: item.showOnEmergencyProfile,
+      notes: item.notes ?? '',
+    })
+    setEditingItem(item)
+    setSubmitError(null)
+    setDrawerOpen(true)
+  }
+
+  async function handleDelete(id: string) {
+    setDeletingId(id)
+    try {
+      await cfFetch(`deleteEmergencyContact/${id}`, { method: 'DELETE' })
+      await fetchItems()
+    } catch {
+      // silent
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  async function onSubmit(values: FormValues) {
+    setSubmitting(true)
+    setSubmitError(null)
+    try {
+      const res = editingItem
+        ? await cfFetch(`updateEmergencyContact/${editingItem.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(values),
+          })
+        : await cfFetch('createEmergencyContact', {
+            method: 'POST',
+            body: JSON.stringify(values),
+          })
+      if (!res.ok) throw new Error()
+      setDrawerOpen(false)
+      await fetchItems()
+    } catch {
+      setSubmitError('Failed to save. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function handleDrawerChange(open: boolean) {
+    setDrawerOpen(open)
+    if (!open) setEditingItem(null)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <div className="w-5 h-5 border-2 border-[#4A7A50] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="space-y-3">
+        {items.length === 0 ? (
+          <div className={EMPTY_STATE_CLS}>
+            <p className="text-3xl mb-3">📞</p>
+            <p className="text-sm font-medium text-[#1C2B1E] mb-1">No emergency contacts</p>
+            <p className="text-xs text-gray-400 mb-4">Add people who should be contacted in an emergency</p>
+            <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
+              Add Contact
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-end">
+              <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
+                + Add
+              </button>
+            </div>
+            {items.map((item) => (
+              <RecordCard
+                key={item.id}
+                title={item.name}
+                subtitle={`${item.relationship} · ${item.phone}`}
+                badge={
+                  item.priority === 1 ? (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#4A7A50]/10 text-[#4A7A50]">
+                      Primary
+                    </span>
+                  ) : undefined
+                }
+                onEdit={() => openEdit(item)}
+                onDelete={() => void handleDelete(item.id)}
+                isDeleting={deletingId === item.id}
+              />
+            ))}
+          </>
+        )}
+      </div>
+
+      <SlideDrawer
+        open={drawerOpen}
+        onOpenChange={handleDrawerChange}
+        title={editingItem ? 'Edit Contact' : 'Add Emergency Contact'}
+      >
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+          <div>
+            <label className={LABEL_CLS}>Full name <span className="text-red-400">*</span></label>
+            <input
+              {...register('name')}
+              type="text"
+              placeholder="e.g. María García"
+              className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
+            />
+            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
+          </div>
+
+          <div>
+            <label className={LABEL_CLS}>Relationship <span className="text-red-400">*</span></label>
+            <input
+              {...register('relationship')}
+              type="text"
+              placeholder="e.g. Spouse, Parent, Sibling"
+              className={`${INPUT_CLS} ${errors.relationship ? INPUT_ERR_CLS : ''}`}
+            />
+            {errors.relationship && <p className="text-xs text-red-500 mt-1">{errors.relationship.message}</p>}
+          </div>
+
+          <div>
+            <label className={LABEL_CLS}>Phone <span className="text-red-400">*</span></label>
+            <input
+              {...register('phone')}
+              type="tel"
+              placeholder="+1 555 000 0000 (include country code)"
+              className={`${INPUT_CLS} ${errors.phone ? INPUT_ERR_CLS : ''}`}
+            />
+            {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone.message}</p>}
+          </div>
+
+          <div>
+            <label className={LABEL_CLS}>Alternate phone <span className="text-gray-300 font-normal">(optional)</span></label>
+            <input {...register('alternatePhone')} type="tel" placeholder="+1 555 000 0001" className={INPUT_CLS} />
+          </div>
+
+          <div>
+            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">(optional)</span></label>
+            <input
+              {...register('email')}
+              type="email"
+              placeholder="contact@example.com"
+              className={`${INPUT_CLS} ${errors.email ? INPUT_ERR_CLS : ''}`}
+            />
+            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
+          </div>
+
+          <label className="flex items-center gap-3 cursor-pointer group w-fit">
+            <div className="relative flex-shrink-0">
+              <input type="checkbox" {...register('showOnEmergencyProfile')} className="sr-only peer" />
+              <div className={TOGGLE_TRACK_CLS} />
+            </div>
+            <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
+              Show on emergency profile
+            </span>
+          </label>
+
+          <div>
+            <label className={LABEL_CLS}>Notes <span className="text-gray-300 font-normal">(optional)</span></label>
+            <textarea {...register('notes')} rows={2} placeholder="e.g. Best reached after 6pm" className={TEXTAREA_CLS} />
+          </div>
+
+          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
+
+          <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
+            {submitting ? 'Saving…' : editingItem ? 'Save changes' : 'Add contact'}
+          </button>
+        </form>
+      </SlideDrawer>
+    </>
+  )
+}

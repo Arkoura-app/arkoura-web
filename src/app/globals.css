@@ -24,3 +24,9 @@
 .hero-chips     { animation: arkoura-fade  600ms ease-out  550ms   both; }
 .hero-card      { animation: arkoura-fade  700ms ease-out  600ms   both; }
 .hero-card-float{ animation: arkoura-float   4s  ease-in-out 1.3s infinite; }
+
+/* ─── Slide drawer animation ─── */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
