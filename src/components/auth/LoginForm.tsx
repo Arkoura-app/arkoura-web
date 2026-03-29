@@ -35,6 +35,10 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
 
   async function handleLogin(data: z.infer<typeof schema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password)
       onSuccess()
@@ -46,6 +50,10 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
 
   async function handleGoogle() {
     setGoogleError('')
+    if (!auth) {
+      setGoogleError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithPopup(auth, new GoogleAuthProvider())
       onSuccess()

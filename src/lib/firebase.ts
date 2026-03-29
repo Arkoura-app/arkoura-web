@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
+import type { FirebaseApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import type { Auth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -10,7 +12,23 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
+// Guard: only initialize Firebase when API key is present.
+// During Next.js static generation at build time,
+// NEXT_PUBLIC_* vars are not available — this prevents
+// Firebase from throwing auth/invalid-api-key.
+function getFirebaseApp(): FirebaseApp | null {
+  if (!firebaseConfig.apiKey) return null
+  return getApps().length === 0
+    ? initializeApp(firebaseConfig)
+    : getApp()
+}
 
-export const auth = getAuth(app)
+function getFirebaseAuth(): Auth | null {
+  const app = getFirebaseApp()
+  if (!app) return null
+  return getAuth(app)
+}
+
+export const app = getFirebaseApp()
+export const auth = getFirebaseAuth()
 export default app

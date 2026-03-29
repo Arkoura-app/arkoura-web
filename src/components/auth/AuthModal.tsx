@@ -107,6 +107,10 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
 
   async function handleLogin(data: z.infer<typeof loginSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password)
       onSuccess()
@@ -122,6 +126,10 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
 
   async function handleRegister(data: z.infer<typeof registerSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
       await updateProfile(cred.user, { displayName: data.name })
@@ -141,6 +149,10 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
 
   async function handleForgot(data: z.infer<typeof forgotSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await sendPasswordResetEmail(auth, data.email)
       setResetSent(true)
@@ -151,6 +163,10 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
 
   async function handleGoogle() {
     setGoogleError('')
+    if (!auth) {
+      setGoogleError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithPopup(auth, new GoogleAuthProvider())
       onSuccess()

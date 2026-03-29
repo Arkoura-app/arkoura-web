@@ -139,7 +139,7 @@ export default function Sidebar() {
   const { user } = useAuth()
 
   async function handleSignOut() {
-    await signOut(auth)
+    if (auth) await signOut(auth)
     router.push('/')
   }
 

@@ -56,6 +56,10 @@ function GoogleButton({ onSuccess, disabled }: { onSuccess: () => void; disabled
 
   async function handleGoogle() {
     setError('')
+    if (!auth) {
+      setError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithPopup(auth, new GoogleAuthProvider())
       onSuccess()
@@ -133,6 +137,10 @@ function SignInContent() {
 
   async function handleLogin(data: z.infer<typeof loginSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password)
       onSuccess()
@@ -148,6 +156,10 @@ function SignInContent() {
 
   async function handleRegister(data: z.infer<typeof registerSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
       await updateProfile(cred.user, { displayName: data.name })
@@ -179,6 +191,10 @@ function SignInContent() {
 
   async function handleForgot(data: z.infer<typeof forgotSchema>) {
     setFirebaseError('')
+    if (!auth) {
+      setFirebaseError('Authentication not available. Please refresh.')
+      return
+    }
     try {
       const base = process.env.NEXT_PUBLIC_CF_FUNCTIONS_BASE
       const response = await fetch(`${base}/sendPasswordReset`, {

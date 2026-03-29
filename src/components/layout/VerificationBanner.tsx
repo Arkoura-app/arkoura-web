@@ -8,7 +8,7 @@ export function VerificationBanner() {
   const [sending, setSending] = useState(false)
   const [dismissed, setDismissed] = useState(false)
 
-  const user = auth.currentUser
+  const user = auth?.currentUser
   if (!user || user.emailVerified || dismissed) return null
 
   async function resend() {
