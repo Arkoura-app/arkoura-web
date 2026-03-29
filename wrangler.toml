@@ -1,10 +1,10 @@
 name = "arkoura-web"
-compatibility_date = "2024-09-23"
+compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
-
-# Output dir produced by @cloudflare/next-on-pages (run `npm run pages:build`)
 pages_build_output_dir = ".vercel/output/static"
 
 [vars]
-# Non-secret environment variables can be set here.
-# Secrets must be set via: wrangler secret put SECRET_NAME
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "arkoura-dev.firebaseapp.com"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID = "arkoura-dev"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "arkoura-dev.appspot.com"
+NEXT_PUBLIC_CF_FUNCTIONS_BASE = "https://us-central1-arkoura-dev.cloudfunctions.net"
