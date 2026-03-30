@@ -78,9 +78,22 @@ const GLANCE_MAP: Record<string, { emoji: string; label: string }> = {
   neurodevelopmental: { emoji: '🧩', label: 'Neuro-dev' },
   pregnancy: { emoji: '🤰', label: 'Pregnancy' },
   device: { emoji: '🔧', label: 'Device' },
-  dnr: { emoji: '📋', label: 'DNR/DNI' },
+  directive: { emoji: '📋', label: 'DNR/DNI' },
   medication: { emoji: '💊', label: 'Critical Med' },
   mobility: { emoji: '♿', label: 'Mobility' },
+}
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English',
+  es: 'Español',
+  fr: 'Français',
+  de: 'Deutsch',
+  pt: 'Português',
+  zh: '中文',
+  ja: '日本語',
+  it: 'Italiano',
+  ru: 'Русский',
+  sv: 'Svenska',
 }
 
 const LANGUAGES = [
@@ -298,11 +311,14 @@ export default function EmergencyProfilePage() {
   // ── Profile found ──
   const { profile, primaryPhysician, conditions, allergies, medications, emergencyContacts } = data
 
-  const fullName =
-    [profile.firstName, profile.lastName].filter(Boolean).join(' ') || 'Unknown'
+  const firstName = data?.profile?.firstName ?? ''
+  const lastName = data?.profile?.lastName ?? ''
+  const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Unknown'
+
+  const photoUrl = data?.profile?.profilePhotoUrl ?? null
 
   const initials =
-    [(profile.firstName ?? '').charAt(0), (profile.lastName ?? '').charAt(0)]
+    [firstName.charAt(0), lastName.charAt(0)]
       .filter(Boolean)
       .join('')
       .toUpperCase() || '?'
@@ -335,17 +351,25 @@ export default function EmergencyProfilePage() {
 
             {/* Profile photo */}
             <div className="flex flex-col items-center mb-4">
-              {profile.profilePhotoUrl ? (
-                <Image
-                  src={profile.profilePhotoUrl}
-                  alt={fullName}
-                  width={96}
-                  height={96}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-white/20"
-                  unoptimized
-                />
+              {photoUrl ? (
+                <button
+                  onClick={() => window.open(photoUrl, '_blank')}
+                  className="relative group"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photoUrl}
+                    alt={fullName}
+                    className="w-28 h-28 rounded-full object-cover border-4 border-white/20 cursor-pointer group-hover:opacity-90 transition-opacity"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-white text-xs bg-black/30 px-2 py-1 rounded-full">
+                      View
+                    </span>
+                  </div>
+                </button>
               ) : (
-                <div className="w-24 h-24 rounded-full bg-[#4A7A50]/40 flex items-center justify-center border-4 border-white/20">
+                <div className="w-28 h-28 rounded-full bg-[#4A7A50]/40 flex items-center justify-center border-4 border-white/20">
                   <span className="text-3xl font-bold text-white">{initials}</span>
                 </div>
               )}
@@ -371,6 +395,15 @@ export default function EmergencyProfilePage() {
                   })}
                 </p>
               )}
+              {profile.primaryLanguage && (
+                <p className="text-white/60 text-xs mt-2">
+                  {firstName}&apos;s Language:{' '}
+                  <span className="text-white/90 font-medium">
+                    {LANGUAGE_NAMES[profile.primaryLanguage] ?? profile.primaryLanguage}
+                  </span>{' '}
+                  Primary
+                </p>
+              )}
             </div>
 
             {/* Info chips */}
@@ -378,11 +411,6 @@ export default function EmergencyProfilePage() {
               {profile.bloodType && profile.bloodType !== 'unknown' && (
                 <span className="bg-white/10 text-white px-3 py-1 rounded-full text-sm font-bold">
                   {profile.bloodType}
-                </span>
-              )}
-              {profile.primaryLanguage && (
-                <span className="bg-[#4A7A50]/30 text-white/90 px-2.5 py-1 rounded-full text-xs font-medium">
-                  🌍 {profile.primaryLanguage.toUpperCase()}
                 </span>
               )}
               {profile.organDonor && (
@@ -415,20 +443,31 @@ export default function EmergencyProfilePage() {
           </div>
 
           {/* ── SECTION 2: Language selector strip ── */}
-          <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide bg-[#F0F4EE] border-b border-[#E8EDE8]">
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => setSelectedLang(lang.code)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  selectedLang === lang.code
-                    ? 'bg-[#4A7A50] text-white'
-                    : 'bg-white text-gray-500 border border-gray-200'
-                }`}
-              >
-                {lang.label}
-              </button>
-            ))}
+          <div className="relative bg-[#F0F4EE] border-b border-[#E8EDE8]">
+            {/* Right fade — signals more content */}
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#F0F4EE] to-transparent pointer-events-none z-10" />
+            {/* Left fade — shown when scrolled */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F0F4EE] to-transparent pointer-events-none z-10" />
+            <div
+              className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide"
+              style={{ scrollbarWidth: 'none' }}
+            >
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setSelectedLang(lang.code)}
+                  className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                    selectedLang === lang.code
+                      ? 'bg-[#4A7A50] text-white shadow-sm'
+                      : 'bg-white text-gray-500 border border-gray-200'
+                  }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
+              {/* Spacer so last item isn't hidden behind gradient */}
+              <div className="flex-shrink-0 w-12" />
+            </div>
           </div>
 
           {/* ── Critical alert banner ── */}
