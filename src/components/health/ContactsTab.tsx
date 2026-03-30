@@ -17,7 +17,7 @@ interface EmergencyContact {
   name: string
   relationship: string
   phone: string
-  alternatePhone?: string
+  phoneAlt?: string
   email?: string
   priority: number
   showOnEmergencyProfile: boolean
@@ -26,10 +26,11 @@ interface EmergencyContact {
 
 const schema = z.object({
   name: z.string().min(1, 'Full name is required'),
-  relationship: z.string().min(1, 'Relationship is required'),
+  relationship: z.string().optional(),
   phone: z.string().min(7, 'Phone number is required'),
-  alternatePhone: z.string().optional(),
+  phoneAlt: z.string().optional(),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
+  canAccessJournal: z.boolean().optional(),
   showOnEmergencyProfile: z.boolean(),
   notes: z.string().optional(),
 })
@@ -40,8 +41,9 @@ const DEFAULTS: FormValues = {
   name: '',
   relationship: '',
   phone: '',
-  alternatePhone: '',
+  phoneAlt: '',
   email: '',
+  canAccessJournal: false,
   showOnEmergencyProfile: true,
   notes: '',
 }
@@ -93,8 +95,9 @@ export function ContactsTab() {
       name: item.name,
       relationship: item.relationship,
       phone: item.phone,
-      alternatePhone: item.alternatePhone ?? '',
+      phoneAlt: item.phoneAlt ?? '',
       email: item.email ?? '',
+      canAccessJournal: false,
       showOnEmergencyProfile: item.showOnEmergencyProfile,
       notes: item.notes ?? '',
     })
@@ -119,14 +122,17 @@ export function ContactsTab() {
     setSubmitting(true)
     setSubmitError(null)
     try {
+      const cleanData = Object.fromEntries(
+        Object.entries(values).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+      )
       const res = editingItem
         ? await cfFetch(`updateEmergencyContact/${editingItem.id}`, {
             method: 'PUT',
-            body: JSON.stringify(values),
+            body: JSON.stringify(cleanData),
           })
         : await cfFetch('createEmergencyContact', {
             method: 'POST',
-            body: JSON.stringify(values),
+            body: JSON.stringify(cleanData),
           })
       if (!res.ok) throw new Error()
       setDrawerOpen(false)
@@ -209,14 +215,13 @@ export function ContactsTab() {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Relationship <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>Relationship <span className="text-gray-300 font-normal">(optional)</span></label>
             <input
               {...register('relationship')}
               type="text"
               placeholder="e.g. Spouse, Parent, Sibling"
-              className={`${INPUT_CLS} ${errors.relationship ? INPUT_ERR_CLS : ''}`}
+              className={INPUT_CLS}
             />
-            {errors.relationship && <p className="text-xs text-red-500 mt-1">{errors.relationship.message}</p>}
           </div>
 
           <div>
@@ -232,7 +237,7 @@ export function ContactsTab() {
 
           <div>
             <label className={LABEL_CLS}>Alternate phone <span className="text-gray-300 font-normal">(optional)</span></label>
-            <input {...register('alternatePhone')} type="tel" placeholder="+1 555 000 0001" className={INPUT_CLS} />
+            <input {...register('phoneAlt')} type="tel" placeholder="+1 555 000 0001" className={INPUT_CLS} />
           </div>
 
           <div>

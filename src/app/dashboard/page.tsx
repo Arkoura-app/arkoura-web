@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useProfile } from '@/hooks/useProfile'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
+import { cfFetch } from '@/lib/api'
 
 // ─── Constants ────────────────────────────────────────
 
@@ -101,7 +102,6 @@ export default function DashboardPage() {
 
   // ── Icons state ──
   const [selectedIcons, setSelectedIcons] = useState<string[]>([])
-  const [iconsInitialized, setIconsInitialized] = useState(false)
   const [iconsSaving, setIconsSaving] = useState(false)
 
   // ── Form setup ──
@@ -146,13 +146,12 @@ export default function DashboardPage() {
     }
   }, [data])
 
-  // ── Initialize icons once ──
+  // ── Initialize icons from profile data ──
   useEffect(() => {
-    if (data && !iconsInitialized) {
-      setSelectedIcons(data.profile.quickGlanceIcons ?? [])
-      setIconsInitialized(true)
+    if (data?.profile?.quickGlanceIcons) {
+      setSelectedIcons(data.profile.quickGlanceIcons)
     }
-  }, [data, iconsInitialized])
+  }, [data])
 
   // ── Animate completion ring ──
   useEffect(() => {
@@ -236,19 +235,14 @@ export default function DashboardPage() {
 
   // ── Auto-save quick-glance icons ──
   const saveQuickGlanceIcons = useCallback(async (icons: string[]) => {
-    const currentUser = auth?.currentUser
-    if (!currentUser) return
     setIconsSaving(true)
     try {
-      const token = await currentUser.getIdToken()
-      await fetch(`${CF_FUNCTIONS_BASE}/updateProfile`, {
+      const res = await cfFetch('updateProfile', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ quickGlanceIcons: icons }),
       })
+      const body = await res.json()
+      console.log('updateProfile response:', res.status, body)
     } catch {
       // silent fail — auto-save
     } finally {
@@ -263,6 +257,7 @@ export default function DashboardPage() {
       : selectedIcons.length < 5
         ? [...selectedIcons, key]
         : selectedIcons
+    console.log('Icon toggled:', key, newIcons)
     if (newIcons !== selectedIcons) {
       setSelectedIcons(newIcons)
       void saveQuickGlanceIcons(newIcons)
@@ -279,7 +274,10 @@ export default function DashboardPage() {
     try {
       const token = await currentUser.getIdToken()
       const cleanData = Object.fromEntries(
-        Object.entries(values).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+        Object.entries(values).filter(([, v]) => {
+          if (Array.isArray(v)) return true
+          return v !== '' && v !== null && v !== undefined
+        })
       )
       const res = await fetch(`${CF_FUNCTIONS_BASE}/updateProfile`, {
         method: 'PATCH',
@@ -311,7 +309,7 @@ export default function DashboardPage() {
 
   const score = data?.completionScore ?? 0
   const ringColor =
-    score >= 70 ? '#4A7A50' : score >= 40 ? '#F59E0B' : '#DC2626'
+    score === 100 ? '#4A7A50' : score >= 85 ? '#86EFAC' : score >= 60 ? '#F59E0B' : '#DC2626'
   const ringOffset = CIRCUMFERENCE * (1 - animatedScore / 100)
 
   // ── Loading ──
@@ -413,9 +411,22 @@ export default function DashboardPage() {
 
               <p className="text-xs text-gray-400 text-center leading-relaxed">
                 {score === 100
-                  ? 'Your profile is complete ✓'
-                  : 'Add more info to complete your profile'}
+                  ? 'Profile complete ✓'
+                  : score >= 85
+                    ? 'Almost complete'
+                    : score >= 60
+                      ? 'Add more info to improve your profile'
+                      : 'Add an emergency contact to activate your profile'}
               </p>
+              {score < 60 && (
+                <a
+                  href="/dashboard/emergency"
+                  className="mt-1 px-4 py-2 rounded-xl text-sm font-semibold text-white text-center"
+                  style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
+                >
+                  Add Emergency Contact →
+                </a>
+              )}
             </div>
           </div>
 
