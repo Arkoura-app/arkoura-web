@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useAuth } from '@/hooks/useAuth'
+import { cfFetch } from '@/lib/api'
 
 const Sidebar = dynamic(
   () => import('@/components/layout/Sidebar'),
@@ -16,12 +18,32 @@ const VerificationBanner = dynamic(
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
+  const pathname = usePathname()
 
   useEffect(() => {
     if (!loading && !user) {
       window.location.href = '/signin'
     }
   }, [user, loading])
+
+  useEffect(() => {
+    if (!user || loading) return
+    if (pathname === '/dashboard/onboarding') return
+
+    async function checkOnboarding() {
+      try {
+        const res = await cfFetch('getProfile')
+        if (!res.ok) return
+        const data = (await res.json()) as { profile?: { onboardingComplete?: boolean } }
+        if (!data?.profile?.onboardingComplete) {
+          window.location.href = '/dashboard/onboarding'
+        }
+      } catch {
+        // Don't block dashboard if check fails
+      }
+    }
+    void checkOnboarding()
+  }, [user, loading, pathname])
 
   if (loading) {
     return (
@@ -36,6 +58,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (!user) return null
+
+  if (pathname === '/dashboard/onboarding') {
+    return <>{children}</>
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
