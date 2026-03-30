@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
@@ -31,15 +32,24 @@ export function useProfile() {
   const [data, setData] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [fetchCount, setFetchCount] = useState(0)
+  const [refetchTrigger, setRefetchTrigger] = useState(0)
 
   useEffect(() => {
-    // Only fetch once on mount
+    if (!auth) {
+      setLoading(false)
+      return
+    }
+
     let cancelled = false
 
-    async function fetchProfile() {
-      // Wait for Firebase auth to initialize
-      const user = auth?.currentUser
+    // Wait for Firebase auth to initialize via
+    // onAuthStateChanged — this fires once with
+    // the current user (or null) after SDK init.
+    // Do NOT use auth.currentUser directly — it's
+    // null before auth initializes even if logged in.
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (cancelled) return
+
       if (!user) {
         setLoading(false)
         return
@@ -47,16 +57,21 @@ export function useProfile() {
 
       try {
         const token = await user.getIdToken()
+        if (cancelled) return
+
         const res = await fetch(
           `${CF_FUNCTIONS_BASE}/getProfile`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
+
         if (cancelled) return
+
         if (!res.ok) {
           setError('Failed to load profile')
           setLoading(false)
           return
         }
+
         const json = await res.json()
         setData(json)
       } catch (err) {
@@ -65,16 +80,26 @@ export function useProfile() {
           console.error('useProfile error:', err)
         }
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) {
+          setLoading(false)
+          // Unsubscribe after first successful auth event
+          // to prevent re-fetching on token refresh
+          unsubscribe()
+        }
       }
+    })
+
+    return () => {
+      cancelled = true
+      unsubscribe()
     }
+  }, [refetchTrigger])
 
-    fetchProfile()
-
-    return () => { cancelled = true }
-  }, [fetchCount]) // fetchCount allows manual refetch
-
-  const refetch = () => setFetchCount(c => c + 1)
+  const refetch = () => {
+    setLoading(true)
+    setError(null)
+    setRefetchTrigger(t => t + 1)
+  }
 
   return { data, loading, error, refetch }
 }
