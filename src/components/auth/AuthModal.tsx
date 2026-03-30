@@ -87,9 +87,9 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
 
   const strength = passwordValue.length > 0 ? zxcvbn(passwordValue).score : -1
 
-  function onSuccess() {
+  function onSuccess(destination = '/dashboard') {
     onOpenChange(false)
-    router.push('/dashboard')
+    router.push(destination)
   }
 
   function switchView(v: View) {
@@ -136,7 +136,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       await sendEmailVerification(cred.user)
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
-      onSuccess()
+      onSuccess('/dashboard/onboarding')
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? ''
       setFirebaseError(authErrors[code] ?? 'Registration failed. Try again.')

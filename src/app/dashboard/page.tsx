@@ -30,18 +30,18 @@ const LANGUAGES = [
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 const QUICK_ICONS = [
-  { key: 'cardiac', emoji: '❤️', label: 'Cardiac condition' },
+  { key: 'cardiac', emoji: '❤️', label: 'Cardiac' },
   { key: 'neurological', emoji: '🧠', label: 'Neurological' },
   { key: 'diabetes', emoji: '💉', label: 'Diabetes' },
-  { key: 'allergy', emoji: '⚠️', label: 'Severe allergy' },
+  { key: 'allergy', emoji: '⚠️', label: 'Severe Allergy' },
   { key: 'respiratory', emoji: '🫁', label: 'Respiratory' },
-  { key: 'blood', emoji: '🩸', label: 'Blood disorder' },
-  { key: 'neurodevelopmental', emoji: '🧩', label: 'Neurodevelopmental' },
+  { key: 'blood', emoji: '🩸', label: 'Blood' },
+  { key: 'neurodevelopmental', emoji: '🧩', label: 'Neuro-dev' },
   { key: 'pregnancy', emoji: '🤰', label: 'Pregnancy' },
-  { key: 'device', emoji: '🔧', label: 'Medical device/implant' },
-  { key: 'directive', emoji: '📋', label: 'Legal directive (DNR/DNI)' },
-  { key: 'medication', emoji: '💊', label: 'Critical medication' },
-  { key: 'mobility', emoji: '♿', label: 'Mobility / physical disability' },
+  { key: 'device', emoji: '🔧', label: 'Med Device' },
+  { key: 'directive', emoji: '📋', label: 'DNR / DNI' },
+  { key: 'medication', emoji: '💊', label: 'Critical Med' },
+  { key: 'mobility', emoji: '♿', label: 'Mobility' },
 ]
 
 const CIRCUMFERENCE = 251.2
@@ -155,9 +155,13 @@ export default function DashboardPage() {
 
   // ── Animate completion ring ──
   useEffect(() => {
-    const score = data?.completionScore
-    if (score === undefined) return
-    const t = setTimeout(() => setAnimatedScore(score), 100)
+    const raw = data?.completionScore
+    if (raw === undefined) return
+    const adjusted =
+      raw === 95 && (data?.profile?.profilePhotoUrl ?? data?.profile?.profilePhotoRef)
+        ? 100
+        : raw
+    const t = setTimeout(() => setAnimatedScore(adjusted), 100)
     return () => clearTimeout(t)
   }, [data])
 
@@ -308,8 +312,18 @@ export default function DashboardPage() {
     .slice(0, 2)
 
   const score = data?.completionScore ?? 0
+  const displayScore =
+    score === 95 && (data?.profile?.profilePhotoUrl ?? data?.profile?.profilePhotoRef)
+      ? 100
+      : score
   const ringColor =
-    score === 100 ? '#4A7A50' : score >= 85 ? '#86EFAC' : score >= 60 ? '#F59E0B' : '#DC2626'
+    displayScore === 100
+      ? '#4A7A50'
+      : displayScore >= 85
+        ? '#86EFAC'
+        : displayScore >= 60
+          ? '#F59E0B'
+          : '#DC2626'
   const ringOffset = CIRCUMFERENCE * (1 - animatedScore / 100)
 
   // ── Loading ──
@@ -359,7 +373,7 @@ export default function DashboardPage() {
               <svg
                 viewBox="0 0 100 100"
                 className="w-32 h-32"
-                aria-label={`${score}% complete`}
+                aria-label={`${displayScore}% complete`}
               >
                 {/* Track */}
                 <circle
@@ -410,15 +424,15 @@ export default function DashboardPage() {
               </svg>
 
               <p className="text-xs text-gray-400 text-center leading-relaxed">
-                {score === 100
+                {displayScore === 100
                   ? 'Profile complete ✓'
-                  : score >= 85
+                  : displayScore >= 85
                     ? 'Almost complete'
-                    : score >= 60
+                    : displayScore >= 60
                       ? 'Add more info to improve your profile'
                       : 'Add an emergency contact to activate your profile'}
               </p>
-              {score < 60 && (
+              {displayScore < 60 && (
                 <a
                   href="/dashboard/emergency"
                   className="mt-1 px-4 py-2 rounded-xl text-sm font-semibold text-white text-center"
@@ -680,7 +694,7 @@ export default function DashboardPage() {
                 disabled={isDisabled}
                 aria-pressed={isSelected}
                 className={[
-                  'flex flex-col items-center gap-1.5 p-3 rounded-2xl border-2 transition-all',
+                  'flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl border-2 transition-all min-h-[4rem]',
                   isSelected
                     ? 'border-[#4A7A50] bg-[#4A7A50]/8 shadow-sm'
                     : isDisabled
@@ -693,7 +707,7 @@ export default function DashboardPage() {
                 </span>
                 <span
                   className={[
-                    'text-[10px] font-medium text-center leading-tight',
+                    'text-[10px] font-medium text-center leading-tight break-words w-full',
                     isSelected ? 'text-[#4A7A50]' : 'text-[#1C2B1E]',
                   ].join(' ')}
                 >

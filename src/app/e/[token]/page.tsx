@@ -145,7 +145,8 @@ export default function EmergencyProfilePage() {
         const profile = await res.json()
         setData(profile)
         setStatus('found')
-      } catch {
+      } catch (err) {
+        console.error('Emergency profile fetch error:', err)
         setStatus('error')
       }
     }
@@ -204,16 +205,18 @@ export default function EmergencyProfilePage() {
         <div className="text-center max-w-sm">
           <p className="text-4xl mb-4">⚠️</p>
           <h1 className="font-[var(--font-manrope)] text-xl font-bold text-[#1C2B1E] mb-2">
-            Something went wrong
+            Unable to load profile
           </h1>
           <p className="text-sm text-gray-500 mb-4">
-            Unable to load this profile. Please try again.
+            This profile exists but couldn&apos;t be loaded right now. Please try again in a
+            moment.
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="text-sm text-[#4A7A50] font-medium hover:underline"
+            className="px-6 py-2.5 rounded-full text-sm font-semibold text-white"
+            style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
           >
-            Retry
+            Try again
           </button>
         </div>
       </div>

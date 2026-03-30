@@ -180,7 +180,8 @@ function SignInContent() {
       }
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
-      onSuccess()
+      router.push('/dashboard/onboarding')
+      window.location.href = '/dashboard/onboarding'
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? ''
       setFirebaseError(authErrors[code] ?? 'Registration failed. Try again.')
