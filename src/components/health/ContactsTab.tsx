@@ -12,6 +12,25 @@ import {
   LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
 } from './formStyles'
 
+const RELATIONSHIPS = [
+  'Spouse / Partner',
+  'Parent',
+  'Child',
+  'Sibling',
+  'Grandparent',
+  'Aunt / Uncle',
+  'Cousin',
+  'Friend',
+  'Caretaker',
+  'Legal Guardian',
+  'Neighbour',
+  'Colleague',
+  'Doctor',
+  'Nurse',
+  'Social Worker',
+  'Other',
+]
+
 interface EmergencyContact {
   id: string
   name: string
@@ -56,11 +75,14 @@ export function ContactsTab() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [relSelect, setRelSelect] = useState('')
+  const [customRel, setCustomRel] = useState('')
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
 
@@ -87,10 +109,15 @@ export function ContactsTab() {
     reset(DEFAULTS)
     setEditingItem(null)
     setSubmitError(null)
+    setRelSelect('')
+    setCustomRel('')
     setDrawerOpen(true)
   }
 
   function openEdit(item: EmergencyContact) {
+    const isKnown = RELATIONSHIPS.includes(item.relationship)
+    const sel = isKnown ? item.relationship : (item.relationship ? 'Other' : '')
+    const custom = isKnown ? '' : (item.relationship ?? '')
     reset({
       name: item.name,
       relationship: item.relationship,
@@ -101,6 +128,8 @@ export function ContactsTab() {
       showOnEmergencyProfile: item.showOnEmergencyProfile,
       notes: item.notes ?? '',
     })
+    setRelSelect(sel)
+    setCustomRel(custom)
     setEditingItem(item)
     setSubmitError(null)
     setDrawerOpen(true)
@@ -125,16 +154,38 @@ export function ContactsTab() {
       const cleanData = Object.fromEntries(
         Object.entries(values).filter(([, v]) => v !== '' && v !== null && v !== undefined)
       )
-      const res = editingItem
-        ? await cfFetch(`updateEmergencyContact/${editingItem.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(cleanData),
-          })
-        : await cfFetch('createEmergencyContact', {
-            method: 'POST',
-            body: JSON.stringify(cleanData),
-          })
-      if (!res.ok) throw new Error()
+
+      if (editingItem) {
+        const res = await cfFetch(`updateEmergencyContact/${editingItem.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(cleanData),
+        })
+        if (!res.ok) {
+          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[] }
+          setSubmitError(
+            errorBody.issues
+              ? `Validation error: ${errorBody.issues.map((i) => i.message).join(', ')}`
+              : 'Failed to save contact. Please try again.'
+          )
+          return
+        }
+      } else {
+        const res = await cfFetch('createEmergencyContact', {
+          method: 'POST',
+          body: JSON.stringify(cleanData),
+        })
+        if (!res.ok) {
+          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[] }
+          console.error('createEmergencyContact failed:', res.status, errorBody)
+          setSubmitError(
+            errorBody.issues
+              ? `Validation error: ${errorBody.issues.map((i) => i.message).join(', ')}`
+              : 'Failed to save contact. Please try again.'
+          )
+          return
+        }
+      }
+
       setDrawerOpen(false)
       await fetchItems()
     } catch {
@@ -216,12 +267,37 @@ export function ContactsTab() {
 
           <div>
             <label className={LABEL_CLS}>Relationship <span className="text-gray-300 font-normal">(optional)</span></label>
-            <input
-              {...register('relationship')}
-              type="text"
-              placeholder="e.g. Spouse, Parent, Sibling"
+            <select
+              value={relSelect}
+              onChange={(e) => {
+                const val = e.target.value
+                setRelSelect(val)
+                if (val !== 'Other') {
+                  setCustomRel('')
+                  setValue('relationship', val)
+                } else {
+                  setValue('relationship', customRel)
+                }
+              }}
               className={INPUT_CLS}
-            />
+            >
+              <option value="">— select relationship —</option>
+              {RELATIONSHIPS.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+            {relSelect === 'Other' && (
+              <input
+                type="text"
+                value={customRel}
+                onChange={(e) => {
+                  setCustomRel(e.target.value)
+                  setValue('relationship', e.target.value)
+                }}
+                placeholder="Describe the relationship"
+                className={`${INPUT_CLS} mt-2`}
+              />
+            )}
           </div>
 
           <div>
