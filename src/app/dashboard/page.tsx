@@ -36,7 +36,7 @@ const QUICK_ICONS = [
   { key: 'allergy', emoji: '⚠️', label: 'Severe Allergy' },
   { key: 'respiratory', emoji: '🫁', label: 'Respiratory' },
   { key: 'blood', emoji: '🩸', label: 'Blood Disorder' },
-  { key: 'neurodevelopmental', emoji: '🧩', label: 'Neuro-dev' },
+  { key: 'neurodevelopmental', emoji: '🧩', label: 'Neuro-\u200Bdev' },
   { key: 'pregnancy', emoji: '🤰', label: 'Pregnancy' },
   { key: 'device', emoji: '🔧', label: 'Med Device' },
   { key: 'directive', emoji: '📋', label: 'DNR / DNI' },
@@ -694,7 +694,7 @@ export default function DashboardPage() {
                 disabled={isDisabled}
                 aria-pressed={isSelected}
                 className={[
-                  'flex flex-col items-center justify-center gap-1 p-2 h-16 rounded-2xl border-2 transition-all',
+                  'flex flex-col items-center justify-center gap-1 p-2 min-h-[4.5rem] rounded-2xl border-2 transition-all',
                   isSelected
                     ? 'border-[#4A7A50] bg-[#4A7A50]/8 shadow-sm'
                     : isDisabled
@@ -707,7 +707,7 @@ export default function DashboardPage() {
                 </span>
                 <span
                   className={[
-                    'text-xs font-medium text-center leading-tight break-words w-full max-w-full',
+                    'text-xs font-medium text-center leading-tight break-words hyphens-auto w-full max-w-full',
                     isSelected ? 'text-[#4A7A50]' : 'text-[#1C2B1E]',
                   ].join(' ')}
                 >

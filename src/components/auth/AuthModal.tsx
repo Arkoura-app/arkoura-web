@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
+import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
 type View = 'login' | 'register' | 'forgot'
 
@@ -168,7 +169,25 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       return
     }
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider())
+      const result = await signInWithPopup(auth, new GoogleAuthProvider())
+      try {
+        const token = await result.user.getIdToken()
+        const res = await fetch(
+          `${CF_FUNCTIONS_BASE}/getProfile`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        if (res.ok) {
+          const data = await res.json()
+          const needsOnboarding = !data?.profile?.onboardingComplete
+          if (needsOnboarding) {
+            onOpenChange(false)
+            window.location.href = '/dashboard/onboarding'
+            return
+          }
+        }
+      } catch {
+        // If profile check fails, go to dashboard normally
+      }
       onSuccess()
     } catch {
       setGoogleError('Google sign-in failed. Please try again.')

@@ -63,7 +63,24 @@ function GoogleButton({ onSuccess, disabled }: { onSuccess: () => void; disabled
       return
     }
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider())
+      const result = await signInWithPopup(auth, new GoogleAuthProvider())
+      try {
+        const token = await result.user.getIdToken()
+        const res = await fetch(
+          `${CF_FUNCTIONS_BASE}/getProfile`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        if (res.ok) {
+          const data = await res.json()
+          const needsOnboarding = !data?.profile?.onboardingComplete
+          if (needsOnboarding) {
+            window.location.href = '/dashboard/onboarding'
+            return
+          }
+        }
+      } catch {
+        // If profile check fails, go to dashboard normally
+      }
       onSuccess()
     } catch {
       setError('Google sign-in failed. Please try again.')
