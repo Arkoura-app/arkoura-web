@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useAuth } from '@/hooks/useAuth'
-import { cfFetch } from '@/lib/api'
 
 const Sidebar = dynamic(
   () => import('@/components/layout/Sidebar'),
@@ -25,25 +24,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       window.location.href = '/signin'
     }
   }, [user, loading])
-
-  useEffect(() => {
-    if (!user || loading) return
-    if (pathname === '/dashboard/onboarding') return
-
-    async function checkOnboarding() {
-      try {
-        const res = await cfFetch('getProfile')
-        if (!res.ok) return
-        const data = (await res.json()) as { profile?: { onboardingComplete?: boolean } }
-        if (!data?.profile?.onboardingComplete) {
-          window.location.href = '/dashboard/onboarding'
-        }
-      } catch {
-        // Don't block dashboard if check fails
-      }
-    }
-    void checkOnboarding()
-  }, [user, loading, pathname])
 
   if (loading) {
     return (

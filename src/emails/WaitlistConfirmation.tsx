@@ -55,7 +55,7 @@ export default function WaitlistConfirmation({ name }: WaitlistConfirmationProps
               <tbody>
                 {[
                   'Free emergency QR profile — forever',
-                  'Works in 20 languages',
+                  'Works in 10 languages',
                   'Your data, your control',
                 ].map((feature) => (
                   <tr key={feature}>

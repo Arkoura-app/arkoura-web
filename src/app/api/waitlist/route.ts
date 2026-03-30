@@ -165,7 +165,7 @@ export async function POST(request: Request) {
             </div>
             <div style="display:flex;align-items:center;margin-bottom:8px;">
               <span style="color:#4A7A50;margin-right:8px;">✓</span>
-              <span style="color:#374151;font-size:14px;">Works in 20 languages</span>
+              <span style="color:#374151;font-size:14px;">Works in 10 languages</span>
             </div>
             <div style="display:flex;align-items:center;">
               <span style="color:#4A7A50;margin-right:8px;">✓</span>

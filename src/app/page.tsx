@@ -64,7 +64,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     heroH1: 'Your health story,',
     heroH2: 'everywhere you go.',
     heroSub: "Arkoura is a personal health journal that becomes an emergency lifeline. One QR scan gives any helper anywhere in the world instant access to what they need — in their language.",
-    heroCta1: 'Join the waitlist →',
+    heroCta1: 'Get started free →',
     heroCta2: 'See how it works',
     heroChip1: 'Free emergency access',
     heroChip2: 'GDPR & HIPAA ready',
@@ -117,7 +117,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     diffH2: 'moments that matter most.',
     d1title: 'Free for emergencies. Forever.',
     d1body: 'Emergency access will never sit behind a paywall. The feature that saves lives is free. No exceptions. No asterisks. No future pricing changes.',
-    d2title: 'Speaks 20 languages instantly',
+    d2title: 'Speaks 10 languages instantly',
     d2body: "Your profile auto-renders in the helper's language. The AI chat adapts its terminology for doctors, first responders, and everyday bystanders alike.",
     d3title: 'Your data. Your control.',
     d3body: 'Export everything in one click. Delete everything permanently. No data sold, no advertising, no profiling. Your health story belongs entirely to you.',
@@ -131,10 +131,10 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaDisclaimer: 'Free forever for emergency access. No credit card required.',
     ctaIcon1: '🌿 Free emergency access',
     ctaIcon2: '🔒 Encrypted & private',
-    ctaIcon3: '🌍 20 languages',
+    ctaIcon3: '🌍 10 languages',
     trust1: 'Free emergency access',
     trust2: 'Encrypted & private',
-    trust3: '20 languages',
+    trust3: '10 languages',
     formName: 'Your name',
     formEmail: 'your@email.com',
     formSubmit: 'Join the waitlist →',
@@ -208,7 +208,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     heroH1: 'Tu historia de salud,',
     heroH2: 'dondequiera que vayas.',
     heroSub: 'Arkoura es un diario de salud personal que se convierte en un salvavidas. Un escaneo QR da acceso instantáneo a cualquier asistente en el mundo — en su idioma.',
-    heroCta1: 'Unirse a la lista →',
+    heroCta1: 'Comenzar gratis →',
     heroCta2: 'Cómo funciona',
     heroChip1: 'Acceso de emergencia gratuito',
     heroChip2: 'GDPR y HIPAA listo',
@@ -261,7 +261,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     diffH2: 'momentos que más importan.',
     d1title: 'Gratuito para emergencias. Siempre.',
     d1body: 'El acceso de emergencia nunca estará detrás de un muro de pago. La función que salva vidas es gratuita. Sin excepciones. Sin asteriscos.',
-    d2title: 'Habla 20 idiomas al instante',
+    d2title: 'Habla 10 idiomas al instante',
     d2body: 'Tu perfil se muestra automáticamente en el idioma del asistente. La IA adapta su terminología para médicos, socorristas y transeúntes.',
     d3title: 'Tus datos. Tu control.',
     d3body: 'Exporta todo con un clic. Elimina todo permanentemente. Sin datos vendidos, sin publicidad. Tu historia de salud te pertenece totalmente.',
@@ -275,10 +275,10 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaDisclaimer: 'Gratuito para siempre para acceso de emergencia. Sin tarjeta de crédito.',
     ctaIcon1: '🌿 Acceso de emergencia gratuito',
     ctaIcon2: '🔒 Cifrado y privado',
-    ctaIcon3: '🌍 20 idiomas',
+    ctaIcon3: '🌍 10 idiomas',
     trust1: 'Acceso de emergencia gratuito',
     trust2: 'Cifrado y privado',
-    trust3: '20 idiomas',
+    trust3: '10 idiomas',
     formName: 'Tu nombre',
     formEmail: 'tu@email.com',
     formSubmit: 'Unirse a la lista →',
@@ -352,7 +352,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     heroH1: 'Votre histoire de santé,',
     heroH2: 'partout où vous allez.',
     heroSub: "Arkoura est un journal de santé personnel qui devient un filet de sécurité d'urgence. Un scan QR donne un accès instantané à tout assistant dans le monde — dans sa langue.",
-    heroCta1: "Rejoindre la liste →",
+    heroCta1: "Commencer gratuitement →",
     heroCta2: 'Comment ça marche',
     heroChip1: "Accès d'urgence gratuit",
     heroChip2: 'Conforme RGPD et HIPAA',
@@ -405,7 +405,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     diffH2: 'moments qui comptent le plus.',
     d1title: "Gratuit pour les urgences. Pour toujours.",
     d1body: "L'accès d'urgence ne sera jamais derrière un mur payant. La fonctionnalité qui sauve des vies est gratuite. Sans exception.",
-    d2title: 'Parle 20 langues instantanément',
+    d2title: 'Parle 10 langues instantanément',
     d2body: "Votre profil s'affiche automatiquement dans la langue de l'assistant. L'IA adapte sa terminologie pour les médecins, les secouristes et les passants.",
     d3title: 'Vos données. Votre contrôle.',
     d3body: "Exportez tout en un clic. Supprimez tout définitivement. Aucune donnée vendue, aucune publicité. Votre histoire de santé vous appartient entièrement.",
@@ -419,10 +419,10 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaDisclaimer: "Gratuit pour toujours pour l'accès d'urgence. Aucune carte de crédit requise.",
     ctaIcon1: "🌿 Accès urgence gratuit",
     ctaIcon2: '🔒 Chiffré et privé',
-    ctaIcon3: '🌍 20 langues',
+    ctaIcon3: '🌍 10 langues',
     trust1: "Accès d'urgence gratuit",
     trust2: 'Chiffré et privé',
-    trust3: '20 langues',
+    trust3: '10 langues',
     formName: 'Votre nom',
     formEmail: 'votre@email.com',
     formSubmit: "Rejoindre la liste →",
@@ -496,7 +496,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     heroH1: 'Deine Gesundheitsgeschichte,',
     heroH2: 'wohin du auch gehst.',
     heroSub: 'Arkoura ist ein persönliches Gesundheitstagebuch, das zur Notfallhilfe wird. Ein QR-Scan gibt jedem Helfer weltweit sofortigen Zugriff auf das Wichtigste — in seiner Sprache.',
-    heroCta1: 'Warteliste beitreten →',
+    heroCta1: 'Kostenlos starten →',
     heroCta2: 'Wie es funktioniert',
     heroChip1: 'Kostenloser Notfallzugriff',
     heroChip2: 'DSGVO & HIPAA bereit',
@@ -549,7 +549,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     diffH2: 'Momente, die am meisten zählen.',
     d1title: 'Kostenlos für Notfälle. Für immer.',
     d1body: 'Der Notfallzugriff wird niemals hinter einer Paywall sitzen. Die lebensrettende Funktion ist kostenlos. Keine Ausnahmen. Kein Kleingedrucktes.',
-    d2title: 'Spricht sofort 20 Sprachen',
+    d2title: 'Spricht sofort 10 Sprachen',
     d2body: 'Dein Profil wird automatisch in der Sprache des Helfers angezeigt. Die KI passt ihre Terminologie für Ärzte, Ersthelfer und Passanten an.',
     d3title: 'Deine Daten. Deine Kontrolle.',
     d3body: 'Alles mit einem Klick exportieren. Alles dauerhaft löschen. Keine verkauften Daten, keine Werbung. Deine Gesundheitsgeschichte gehört dir.',
@@ -563,10 +563,10 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaDisclaimer: 'Für immer kostenlos für Notfallzugriff. Keine Kreditkarte erforderlich.',
     ctaIcon1: '🌿 Kostenloser Notfallzugriff',
     ctaIcon2: '🔒 Verschlüsselt & privat',
-    ctaIcon3: '🌍 20 Sprachen',
+    ctaIcon3: '🌍 10 Sprachen',
     trust1: 'Kostenloser Notfallzugang',
     trust2: 'Verschlüsselt & privat',
-    trust3: '20 Sprachen',
+    trust3: '10 Sprachen',
     formName: 'Dein Name',
     formEmail: 'deine@email.com',
     formSubmit: 'Warteliste beitreten →',
@@ -640,7 +640,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     heroH1: 'Sua história de saúde,',
     heroH2: 'onde quer que você vá.',
     heroSub: 'Arkoura é um diário de saúde pessoal que se torna um salva-vidas de emergência. Um scan QR dá acesso instantâneo a qualquer pessoa no mundo — no idioma dela.',
-    heroCta1: 'Entrar na lista de espera →',
+    heroCta1: 'Começar grátis →',
     heroCta2: 'Ver como funciona',
     heroChip1: 'Acesso de emergência gratuito',
     heroChip2: 'GDPR e HIPAA pronto',
@@ -693,7 +693,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     diffH2: 'momentos que mais importam.',
     d1title: 'Gratuito para emergências. Para sempre.',
     d1body: 'O acesso de emergência nunca ficará atrás de um paywall. O recurso que salva vidas é gratuito. Sem exceções. Sem asteriscos.',
-    d2title: 'Fala 20 idiomas instantaneamente',
+    d2title: 'Fala 10 idiomas instantaneamente',
     d2body: 'Seu perfil é renderizado automaticamente no idioma do assistente. O chat de IA adapta sua terminologia para médicos, socorristas e transeuntes.',
     d3title: 'Seus dados. Seu controle.',
     d3body: 'Exporte tudo com um clique. Delete tudo permanentemente. Sem dados vendidos, sem publicidade. Sua história de saúde pertence totalmente a você.',
@@ -707,10 +707,10 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     ctaDisclaimer: 'Gratuito para sempre para acesso de emergência. Sem cartão de crédito necessário.',
     ctaIcon1: '🌿 Acesso de emergência gratuito',
     ctaIcon2: '🔒 Criptografado e privado',
-    ctaIcon3: '🌍 20 idiomas',
+    ctaIcon3: '🌍 10 idiomas',
     trust1: 'Acesso de emergência gratuito',
     trust2: 'Criptografado e privado',
-    trust3: '20 idiomas',
+    trust3: '10 idiomas',
     formName: 'Seu nome',
     formEmail: 'seu@email.com',
     formSubmit: 'Entrar na lista →',
@@ -785,7 +785,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_secondary: '了解工作原理',
     trust1: '免费紧急访问',
     trust2: '加密且私密',
-    trust3: '20种语言',
+    trust3: '10种语言',
     problem_label: 'Arkoura 存在的原因',
     problem_headline1: '在紧急情况下，沉默',
     problem_headline2: '是最危险的事。',
@@ -881,7 +881,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_secondary: '仕組みを見る',
     trust1: '緊急アクセス無料',
     trust2: '暗号化されたプライベート',
-    trust3: '20言語対応',
+    trust3: '10言語対応',
     problem_label: 'ARKOURAが存在する理由',
     problem_headline1: '緊急時、沈黙は',
     problem_headline2: '最も危険なことです。',
@@ -977,7 +977,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_secondary: 'Scopri come funziona',
     trust1: 'Accesso emergenze gratuito',
     trust2: 'Crittografato e privato',
-    trust3: '20 lingue',
+    trust3: '10 lingue',
     problem_label: 'PERCHÉ ESISTE ARKOURA',
     problem_headline1: "In un'emergenza, il silenzio",
     problem_headline2: 'è la cosa più pericolosa.',
@@ -1073,7 +1073,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_secondary: 'Узнать как работает',
     trust1: 'Бесплатный экстренный доступ',
     trust2: 'Зашифровано и приватно',
-    trust3: '20 языков',
+    trust3: '10 языков',
     problem_label: 'ПОЧЕМУ СУЩЕСТВУЕТ ARKOURA',
     problem_headline1: 'В экстренной ситуации молчание',
     problem_headline2: 'самое опасное.',
@@ -1169,7 +1169,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     cta_secondary: 'Se hur det fungerar',
     trust1: 'Gratis nödtillgång',
     trust2: 'Krypterat och privat',
-    trust3: '20 språk',
+    trust3: '10 språk',
     problem_label: 'VARFÖR ARKOURA FINNS',
     problem_headline1: 'I en nödsituation är tystnad',
     problem_headline2: 'det farligaste som finns.',
@@ -1343,85 +1343,6 @@ function IconSmallCheck() {
   )
 }
 
-function IconCheckLarge() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <circle cx="24" cy="24" r="24" fill="#E8F2E6" />
-      <path d="M14 24l7 7 13-14" stroke="#4A7A50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-// ─── WaitlistForm ─────────────────────────────────────────────────────────────
-
-function WaitlistForm({ lang }: { lang: string }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'ok' | 'err'>('idle')
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    setStatus('loading')
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim() }),
-      })
-      const json = await res.json()
-      setStatus(json.ok ? 'ok' : 'err')
-    } catch {
-      setStatus('err')
-    }
-  }
-
-  if (status === 'ok') {
-    return (
-      <div className="flex flex-col items-center gap-3 text-center">
-        <IconCheckLarge />
-        <p className="mt-1 font-[var(--font-manrope)] text-xl font-semibold text-[#1C2B1E]">
-          {getText(lang, 'formSuccessTitle')}
-        </p>
-        <p className="text-sm text-[#6B7280]">
-          {getText(lang, 'formSuccessSub')}
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={submit} className="flex flex-col gap-3 w-full">
-      <input
-        required
-        type="text"
-        placeholder={getText(lang, 'formName')}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full rounded-xl border-0 bg-white px-5 py-3.5 text-sm text-[#374151] placeholder-[#6B7280] shadow-[0_1px_3px_rgba(0,0,0,0.06)] outline-none transition focus:ring-2 focus:ring-[#A8C5A0]"
-      />
-      <input
-        required
-        type="email"
-        placeholder={getText(lang, 'formEmail')}
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full rounded-xl border-0 bg-white px-5 py-3.5 text-sm text-[#374151] placeholder-[#6B7280] shadow-[0_1px_3px_rgba(0,0,0,0.06)] outline-none transition focus:ring-2 focus:ring-[#A8C5A0]"
-      />
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className="mt-1 w-full rounded-xl bg-[#7A9E7E] py-4 font-[var(--font-manrope)] text-base font-semibold text-white transition-colors hover:bg-[#4A7A50] disabled:opacity-60"
-      >
-        {status === 'loading' ? getText(lang, 'formLoading') : getText(lang, 'formSubmit')}
-      </button>
-      {status === 'err' && (
-        <p className="text-center text-sm text-red-500">
-          {getText(lang, 'formErr')}
-        </p>
-      )}
-    </form>
-  )
-}
 
 // ─── Language Selector ────────────────────────────────────────────────────────
 
@@ -2647,81 +2568,6 @@ function TrustSection({ lang }: { lang: string }) {
   )
 }
 
-// ─── Section 7 — CTA + Waitlist ───────────────────────────────────────────────
-
-function CTASection({ lang }: { lang: string }) {
-  return (
-    <section id="waitlist" className="relative overflow-hidden bg-[#F5F5F0] py-28">
-      <LeafDecor className="pointer-events-none absolute left-1/2 top-1/2 w-[350px] -translate-x-1/2 -translate-y-1/2 text-[#7A9E7E] opacity-[0.05]" />
-
-      <div className="relative mx-auto max-w-lg px-6 text-center">
-        <motion.div
-          variants={stagger(0.12)}
-          initial="hidden"
-          whileInView="show"
-          viewport={vp}
-          className="flex flex-col items-center"
-        >
-          <motion.div variants={fadeIn} className="mb-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icon.png" alt="Arkoura" width={40} height={40} />
-          </motion.div>
-
-          <motion.h2
-            variants={fadeUp}
-            className="font-[var(--font-manrope)] text-5xl font-extrabold leading-tight tracking-tight text-[#1C2B1E]"
-          >
-            {getText(lang, 'ctaH1')}
-            <br />
-            {getText(lang, 'ctaH2')}
-          </motion.h2>
-
-          <motion.p variants={fadeUp} className="mt-4 text-lg text-[#6B7280]">
-            {getText(lang, 'ctaSub')}
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="mt-10 w-full max-w-sm">
-            <WaitlistForm lang={lang} />
-            <p className="mt-3 text-xs text-[#6B7280]">
-              {getText(lang, 'ctaDisclaimer')}
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={fadeIn}
-            className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-[#6B7280]"
-          >
-            <span className="inline-flex items-center gap-1.5">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M2,12 C2,12 3,5 7,3 C11,1 12,2 12,2 C12,2 11,7 8,9 C5,11 2,12 2,12 Z"/>
-                <path d="M2,12 L6,8"/>
-              </svg>
-              {getText(lang, 'trust1')}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="2" y="6" width="10" height="7" rx="2"/>
-                <path d="M4,6 L4,4 C4,2 10,2 10,4 L10,6"/>
-                <circle cx="7" cy="9.5" r="1" fill="#4A7A50" stroke="none"/>
-              </svg>
-              {getText(lang, 'trust2')}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4A7A50" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="7" cy="7" r="5.5"/>
-                <path d="M7,1.5 C5.5,3.5 5.5,10.5 7,12.5"/>
-                <path d="M7,1.5 C8.5,3.5 8.5,10.5 7,12.5"/>
-                <path d="M1.5,7 C3,6 11,6 12.5,7"/>
-              </svg>
-              {getText(lang, 'trust3')}
-            </span>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  )
-}
-
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 function Footer({ lang }: { lang: string }) {
@@ -2785,7 +2631,6 @@ export default function Page() {
       <ZeroFrictionSection lang={currentLang} />
       <DifferentiatorsSection lang={currentLang} />
       <TrustSection lang={currentLang} />
-      <CTASection lang={currentLang} />
       <Footer lang={currentLang} />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultView={authView} />
     </div>
