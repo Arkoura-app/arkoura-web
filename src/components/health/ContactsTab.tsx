@@ -91,8 +91,8 @@ export function ContactsTab() {
     try {
       const res = await cfFetch('getEmergencyContacts')
       if (!res.ok) throw new Error()
-      const json = (await res.json()) as { contacts: EmergencyContact[] }
-      const sorted = (json.contacts ?? []).sort((a, b) => a.priority - b.priority)
+      const json = (await res.json()) as { emergencyContacts: EmergencyContact[] }
+      const sorted = (json.emergencyContacts ?? []).sort((a, b) => a.priority - b.priority)
       setItems(sorted)
     } catch {
       setItems([])
@@ -161,11 +161,11 @@ export function ContactsTab() {
           body: JSON.stringify(cleanData),
         })
         if (!res.ok) {
-          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[] }
+          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[]; error?: string }
           setSubmitError(
             errorBody.issues
-              ? `Validation error: ${errorBody.issues.map((i) => i.message).join(', ')}`
-              : 'Failed to save contact. Please try again.'
+              ? errorBody.issues.map((i) => i.message).join(', ')
+              : `Error ${res.status}: ${errorBody.error ?? 'Failed to save contact. Please try again.'}`
           )
           return
         }
@@ -175,21 +175,26 @@ export function ContactsTab() {
           body: JSON.stringify(cleanData),
         })
         if (!res.ok) {
-          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[] }
+          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[]; error?: string }
           console.error('createEmergencyContact failed:', res.status, errorBody)
           setSubmitError(
             errorBody.issues
-              ? `Validation error: ${errorBody.issues.map((i) => i.message).join(', ')}`
-              : 'Failed to save contact. Please try again.'
+              ? errorBody.issues.map((i) => i.message).join(', ')
+              : `Error ${res.status}: ${errorBody.error ?? 'Failed to save contact. Please try again.'}`
           )
           return
         }
       }
 
+      reset(DEFAULTS)
+      setRelSelect('')
+      setCustomRel('')
+      setSubmitError(null)
       setDrawerOpen(false)
       await fetchItems()
-    } catch {
-      setSubmitError('Failed to save. Please try again.')
+    } catch (err) {
+      console.error('Emergency contact submit error:', err)
+      setSubmitError('Unexpected error. Please try again.')
     } finally {
       setSubmitting(false)
     }
