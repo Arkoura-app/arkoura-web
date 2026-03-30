@@ -1,29 +1,33 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
-import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
+import dynamic from 'next/dynamic'
 
 const Sidebar = dynamic(
   () => import('@/components/layout/Sidebar'),
   { ssr: false }
 )
-
 const VerificationBanner = dynamic(
-  () => import('@/components/layout/VerificationBanner').then(mod => mod.VerificationBanner),
+  () => import('@/components/layout/VerificationBanner')
+    .then(mod => mod.VerificationBanner),
   { ssr: false }
 )
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const { user, loading } = useAuth()
-  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     if (!loading && !user) {
       window.location.href = '/signin'
     }
-  }, [user, loading])
+  }, [user, loading, router])
 
   if (loading) {
     return (
@@ -38,10 +42,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (!user) return null
-
-  if (pathname === '/dashboard/onboarding') {
-    return <>{children}</>
-  }
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">

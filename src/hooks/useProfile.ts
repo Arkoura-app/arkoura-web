@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { auth } from '@/lib/firebase'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
@@ -20,6 +20,7 @@ export interface ProfileData {
     activeQrToken?: string
     qrEnabled?: boolean
     quickGlanceIcons?: string[]
+    onboardingComplete?: boolean
   }
   qrToken: string
   qrUrl: string
@@ -30,32 +31,50 @@ export function useProfile() {
   const [data, setData] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  const fetchProfile = useCallback(async () => {
-    const currentUser = auth?.currentUser
-    if (!currentUser) {
-      setLoading(false)
-      return
-    }
-    try {
-      const token = await currentUser.getIdToken()
-      const res = await fetch(`${CF_FUNCTIONS_BASE}/getProfile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (!res.ok) throw new Error('Failed to fetch profile')
-      const json = await res.json()
-      setData(json)
-    } catch (err) {
-      setError('Failed to load profile')
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const [fetchCount, setFetchCount] = useState(0)
 
   useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
+    // Only fetch once on mount
+    let cancelled = false
 
-  return { data, loading, error, refetch: fetchProfile }
+    async function fetchProfile() {
+      // Wait for Firebase auth to initialize
+      const user = auth?.currentUser
+      if (!user) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const token = await user.getIdToken()
+        const res = await fetch(
+          `${CF_FUNCTIONS_BASE}/getProfile`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        if (cancelled) return
+        if (!res.ok) {
+          setError('Failed to load profile')
+          setLoading(false)
+          return
+        }
+        const json = await res.json()
+        setData(json)
+      } catch (err) {
+        if (!cancelled) {
+          setError('Failed to fetch profile')
+          console.error('useProfile error:', err)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    fetchProfile()
+
+    return () => { cancelled = true }
+  }, [fetchCount]) // fetchCount allows manual refetch
+
+  const refetch = () => setFetchCount(c => c + 1)
+
+  return { data, loading, error, refetch }
 }
