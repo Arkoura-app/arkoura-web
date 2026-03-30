@@ -46,7 +46,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
       <Sidebar />
-      <main className="md:ml-[260px] pb-20 md:pb-0">
+      <main className="md:ml-[260px] pb-24 md:pb-0">
         <VerificationBanner />
         {children}
       </main>

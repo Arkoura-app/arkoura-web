@@ -133,6 +133,14 @@ const navItems = [
   { href: '/dashboard/activity', label: 'Activity Log', icon: IconClock },
 ]
 
+const mobileNavItems = [
+  { href: '/dashboard', label: 'Profile', icon: IconProfile },
+  { href: '/dashboard/emergency', label: 'Emergency', icon: IconShield },
+  { href: '/dashboard/qr', label: 'My QR', icon: IconQR },
+  { href: '/dashboard/journal', label: 'Journal', icon: IconJournal },
+  { href: '/dashboard/settings', label: 'Settings', icon: IconSettings },
+]
+
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
@@ -226,22 +234,42 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* ── Mobile Bottom Tab Bar ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1C2B1E] border-t border-white/10 z-40">
-        <div className="flex items-center justify-around px-2 py-2">
-          {navItems.map(({ href, label, icon: Icon }) => {
+      {/* ── Mobile Bottom Tab Bar — Premium ── */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40"
+        style={{
+          background: 'rgba(28, 43, 30, 0.95)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
+      >
+        <div className="flex items-center justify-around px-2 py-1">
+          {mobileNavItems.map(({ href, label, icon: Icon }) => {
             const isActive =
-              href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href)
+              href === '/dashboard'
+                ? pathname === '/dashboard'
+                : pathname.startsWith(href)
             return (
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-colors ${
-                  isActive ? 'text-[#A8C5A0]' : 'text-white/50'
+                aria-label={label}
+                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-200 ${
+                  isActive ? 'bg-[#4A7A50]/25' : 'hover:bg-white/5'
                 }`}
               >
-                <Icon />
-                <span className="text-[10px] font-medium">{label}</span>
+                <div
+                  className={`transition-all duration-200 ${
+                    isActive ? 'text-[#7DC28A] scale-110' : 'text-white/45'
+                  }`}
+                >
+                  <Icon />
+                </div>
+                {isActive && (
+                  <div className="w-1 h-1 rounded-full bg-[#7DC28A] mt-0.5" />
+                )}
               </Link>
             )
           })}
