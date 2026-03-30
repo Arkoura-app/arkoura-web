@@ -57,24 +57,37 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
     }
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider())
+      // Wait 1.5s for onUserCreated to finish
+      await new Promise(r => setTimeout(r, 1500))
       try {
         const token = await result.user.getIdToken()
         const res = await fetch(
           `${CF_FUNCTIONS_BASE}/getProfile`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
+
+        // 404 = new user, profile not created yet
+        // onboardingComplete not true = needs onboarding
+        if (res.status === 404) {
+          window.location.href = '/dashboard/onboarding'
+          return
+        }
+
         if (res.ok) {
           const data = await res.json()
           const needsOnboarding = !data?.profile?.onboardingComplete
-          if (needsOnboarding) {
-            window.location.href = '/dashboard/onboarding'
-            return
-          }
+          window.location.href = needsOnboarding
+            ? '/dashboard/onboarding'
+            : '/dashboard'
+          return
         }
+
+        // Any other error — go to dashboard normally
+        window.location.href = '/dashboard'
       } catch {
-        // If profile check fails, go to dashboard normally
+        // Network error — go to dashboard
+        window.location.href = '/dashboard'
       }
-      onSuccess()
     } catch {
       setGoogleError('Google sign-in failed. Please try again.')
     }

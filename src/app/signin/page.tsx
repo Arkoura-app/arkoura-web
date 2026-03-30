@@ -53,7 +53,7 @@ const authErrors: Record<string, string> = {
   'auth/too-many-requests': 'Too many attempts. Try again later.',
 }
 
-function GoogleButton({ onSuccess, disabled }: { onSuccess: () => void; disabled: boolean }) {
+function GoogleButton({ disabled }: { disabled: boolean }) {
   const [error, setError] = useState('')
 
   async function handleGoogle() {
@@ -64,24 +64,37 @@ function GoogleButton({ onSuccess, disabled }: { onSuccess: () => void; disabled
     }
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider())
+      // Wait 1.5s for onUserCreated to finish
+      await new Promise(r => setTimeout(r, 1500))
       try {
         const token = await result.user.getIdToken()
         const res = await fetch(
           `${CF_FUNCTIONS_BASE}/getProfile`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
+
+        // 404 = new user, profile not created yet
+        // onboardingComplete not true = needs onboarding
+        if (res.status === 404) {
+          window.location.href = '/dashboard/onboarding'
+          return
+        }
+
         if (res.ok) {
           const data = await res.json()
           const needsOnboarding = !data?.profile?.onboardingComplete
-          if (needsOnboarding) {
-            window.location.href = '/dashboard/onboarding'
-            return
-          }
+          window.location.href = needsOnboarding
+            ? '/dashboard/onboarding'
+            : '/dashboard'
+          return
         }
+
+        // Any other error — go to dashboard normally
+        window.location.href = '/dashboard'
       } catch {
-        // If profile check fails, go to dashboard normally
+        // Network error — go to dashboard
+        window.location.href = '/dashboard'
       }
-      onSuccess()
     } catch {
       setError('Google sign-in failed. Please try again.')
     }
@@ -269,7 +282,7 @@ function SignInContent() {
           {/* ── LOGIN ── */}
           {view === 'login' && (
             <div className="space-y-4">
-              <GoogleButton onSuccess={onSuccess} disabled={loginForm.formState.isSubmitting} />
+              <GoogleButton disabled={loginForm.formState.isSubmitting} />
               <Divider />
               <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-3">
                 <div>
@@ -358,7 +371,6 @@ function SignInContent() {
               ) : (
                 <>
                   <GoogleButton
-                    onSuccess={onSuccess}
                     disabled={registerForm.formState.isSubmitting}
                   />
                   <Divider />
