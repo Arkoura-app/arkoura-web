@@ -16,6 +16,7 @@ export interface ProfileData {
     primaryLanguage?: string
     organDonor?: boolean
     profilePhotoRef?: string
+    profilePhotoUrl?: string
     activeQrToken?: string
     qrEnabled?: boolean
     quickGlanceIcons?: string[]

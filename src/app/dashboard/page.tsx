@@ -139,6 +139,13 @@ export default function DashboardPage() {
     })
   }, [data, reset])
 
+  // ── Initialize photo preview from profile ──
+  useEffect(() => {
+    if (data?.profile?.profilePhotoUrl) {
+      setPhotoPreview(data.profile.profilePhotoUrl)
+    }
+  }, [data])
+
   // ── Initialize icons once ──
   useEffect(() => {
     if (data && !iconsInitialized) {
@@ -184,7 +191,7 @@ export default function DashboardPage() {
         setPhotoUploading(true)
         try {
           const token = await currentUser.getIdToken()
-          await fetch(`${CF_FUNCTIONS_BASE}/uploadProfilePhoto`, {
+          const res = await fetch(`${CF_FUNCTIONS_BASE}/uploadProfilePhoto`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -195,7 +202,16 @@ export default function DashboardPage() {
               mimeType: file.type,
             }),
           })
-        } catch {
+          if (!res.ok) {
+            const err = await res.json()
+            console.error('Photo upload failed:', err)
+            setPhotoError('Failed to upload photo. Please try again.')
+            return
+          }
+          const { signedUrl } = await res.json() as { signedUrl: string }
+          setPhotoPreview(signedUrl)
+        } catch (err) {
+          console.error('Photo upload error:', err)
           setPhotoError('Failed to upload photo. Please try again.')
         } finally {
           setPhotoUploading(false)
@@ -262,13 +278,16 @@ export default function DashboardPage() {
     setSaveSuccess(false)
     try {
       const token = await currentUser.getIdToken()
+      const cleanData = Object.fromEntries(
+        Object.entries(values).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+      )
       const res = await fetch(`${CF_FUNCTIONS_BASE}/updateProfile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(cleanData),
       })
       if (!res.ok) throw new Error('Failed to save profile')
       setSaveSuccess(true)
