@@ -7,6 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
+import { LanguagePicker } from './LanguagePicker'
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -27,6 +30,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: LoginFormProps) {
+  const { lang } = useLang()
   const [firebaseError, setFirebaseError] = useState('')
   const [googleError, setGoogleError] = useState('')
 
@@ -95,6 +99,7 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
 
   return (
     <div className="space-y-4">
+      <LanguagePicker />
       {/* Google */}
       <div>
         <button
@@ -121,7 +126,7 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          Continue with Google
+          {t('auth.continueWithGoogle', lang)}
         </button>
         {googleError && <p className="text-xs text-red-500 text-center mt-2">{googleError}</p>}
       </div>
@@ -142,7 +147,7 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
           <input
             {...register('email')}
             type="email"
-            placeholder="Email"
+            placeholder={t('auth.email', lang)}
             className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
           />
           {formState.errors.email && (
@@ -153,7 +158,7 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
           <input
             {...register('password')}
             type="password"
-            placeholder="Password"
+            placeholder={t('auth.password', lang)}
             className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
           />
           {formState.errors.password && (
@@ -167,7 +172,7 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
             onClick={onForgotPassword}
             className="text-xs text-[#4A7A50] hover:underline"
           >
-            Forgot password?
+            {t('auth.forgotPassword', lang)}
           </button>
         </div>
 
@@ -181,18 +186,18 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
           className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
           style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
         >
-          {formState.isSubmitting ? 'Signing in...' : 'Sign in'}
+          {formState.isSubmitting ? 'Signing in...' : t('auth.signIn', lang)}
         </button>
       </form>
 
       {onRegister && (
         <p className="text-center text-xs text-gray-400">
-          Don&apos;t have an account?{' '}
+          {t('auth.noAccount', lang)}{' '}
           <button
             onClick={onRegister}
             className="text-[#4A7A50] font-medium hover:underline"
           >
-            Create one
+            {t('auth.createAccount', lang)}
           </button>
         </p>
       )}

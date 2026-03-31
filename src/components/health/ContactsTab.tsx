@@ -263,18 +263,18 @@ export function ContactsTab() {
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
-            <label className={LABEL_CLS}>Full name <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('contact.fullName', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('name')}
               type="text"
-              placeholder="e.g. María García"
+              placeholder={t('contact.namePlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
             />
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Relationship <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('contact.relationship', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <select
               value={relSelect}
               onChange={(e) => {
@@ -309,23 +309,23 @@ export function ContactsTab() {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Phone <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('contact.phone', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('phone')}
               type="tel"
-              placeholder="+1 555 000 0000 (include country code)"
+              placeholder={t('contact.phonePlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.phone ? INPUT_ERR_CLS : ''}`}
             />
             {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Alternate phone <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('contact.altPhone', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <input {...register('phoneAlt')} type="tel" placeholder="+1 555 000 0001" className={INPUT_CLS} />
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <input
               {...register('email')}
               type="email"
@@ -346,7 +346,7 @@ export function ContactsTab() {
           </label>
 
           <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <textarea {...register('notes')} rows={2} placeholder="e.g. Best reached after 6pm" className={TEXTAREA_CLS} />
           </div>
 

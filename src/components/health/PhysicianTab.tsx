@@ -198,22 +198,22 @@ export function PhysicianTab() {
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
-            <label className={LABEL_CLS}>Full name <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('physician.fullName', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('name')}
               type="text"
-              placeholder="Dr. Ana Martínez"
+              placeholder={t('physician.namePlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
             />
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Specialty <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('physician.specialty', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('specialty')}
               type="text"
-              placeholder="e.g. Cardiologist, General Practitioner"
+              placeholder={t('physician.specialtyPlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.specialty ? INPUT_ERR_CLS : ''}`}
             />
             {errors.specialty && <p className="text-xs text-red-500 mt-1">{errors.specialty.message}</p>}
@@ -221,7 +221,7 @@ export function PhysicianTab() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={LABEL_CLS}>Country <span className="text-red-400">*</span></label>
+              <label className={LABEL_CLS}>{t('physician.country', lang)} <span className="text-red-400">*</span></label>
               <input
                 {...register('country')}
                 type="text"
@@ -231,7 +231,7 @@ export function PhysicianTab() {
               {errors.country && <p className="text-xs text-red-500 mt-1">{errors.country.message}</p>}
             </div>
             <div>
-              <label className={LABEL_CLS}>City <span className="text-red-400">*</span></label>
+              <label className={LABEL_CLS}>{t('physician.city', lang)} <span className="text-red-400">*</span></label>
               <input
                 {...register('city')}
                 type="text"
@@ -243,7 +243,7 @@ export function PhysicianTab() {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Phone <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('physician.phone', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('phone')}
               type="tel"
@@ -265,9 +265,9 @@ export function PhysicianTab() {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Language</label>
+            <label className={LABEL_CLS}>{t('physician.language', lang)}</label>
             <select {...register('language')} className={SELECT_CLS}>
-              <option value="">Select language...</option>
+              <option value="">{t('lang.selectLanguage', lang)}...</option>
               {LANGUAGES.map((l) => (
                 <option key={l.value} value={l.value}>{l.label}</option>
               ))}
@@ -275,7 +275,7 @@ export function PhysicianTab() {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <textarea
               {...register('notes')}
               rows={3}

@@ -195,36 +195,36 @@ export function ConditionsTab() {
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
-            <label className={LABEL_CLS}>Condition name <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('condition.name', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('name')}
               type="text"
-              placeholder="e.g. Type 2 Diabetes"
+              placeholder={t('condition.namePlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
             />
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>ICD code <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('condition.icdCode', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <input
               {...register('icdCode')}
               type="text"
-              placeholder="e.g. E11"
+              placeholder={t('condition.icdPlaceholder', lang)}
               className={INPUT_CLS}
             />
           </div>
 
           <ToggleField label={t('emergency.critical', lang)} name="isCritical" register={register} />
           <ToggleField label={t('common.showOnEmergency', lang)} name="showOnEmergencyProfile" register={register} />
-          <ToggleField label="Active" name="active" register={register} />
+          <ToggleField label={t('form.active', lang)} name="active" register={register} />
 
           <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <textarea
               {...register('notes')}
               rows={3}
-              placeholder="Additional details..."
+              placeholder={t('form.additionalDetails', lang)}
               className={TEXTAREA_CLS}
             />
             {errors.notes && <p className="text-xs text-red-500 mt-1">{errors.notes.message}</p>}

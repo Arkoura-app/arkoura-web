@@ -201,42 +201,42 @@ export function MedicationsTab() {
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
-            <label className={LABEL_CLS}>Medication name <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('medication.name', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('name')}
               type="text"
-              placeholder="e.g. Metformin"
+              placeholder={t('medication.namePlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
             />
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Generic name <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('medication.genericName', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <input {...register('genericName')} type="text" placeholder="e.g. metformin hydrochloride" className={INPUT_CLS} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={LABEL_CLS}>Dose</label>
-              <input {...register('dose')} type="text" placeholder="e.g. 500mg" className={INPUT_CLS} />
+              <label className={LABEL_CLS}>{t('medication.dose', lang)}</label>
+              <input {...register('dose')} type="text" placeholder={t('medication.dosePlaceholder', lang)} className={INPUT_CLS} />
             </div>
             <div>
-              <label className={LABEL_CLS}>Frequency</label>
-              <input {...register('frequency')} type="text" placeholder="e.g. twice daily" className={INPUT_CLS} />
+              <label className={LABEL_CLS}>{t('medication.frequency', lang)}</label>
+              <input {...register('frequency')} type="text" placeholder={t('medication.frequencyPlaceholder', lang)} className={INPUT_CLS} />
             </div>
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Route</label>
+            <label className={LABEL_CLS}>{t('medication.route', lang)}</label>
             <select {...register('route')} className={SELECT_CLS}>
-              <option value="">Select route...</option>
-              <option value="oral">Oral</option>
-              <option value="topical">Topical</option>
-              <option value="inhaled">Inhaled</option>
-              <option value="injected">Injected</option>
-              <option value="sublingual">Sublingual</option>
-              <option value="other">Other</option>
+              <option value="">{t('medication.selectRoute', lang)}</option>
+              <option value="oral">{t('medication.route.oral', lang)}</option>
+              <option value="topical">{t('medication.route.topical', lang)}</option>
+              <option value="inhaled">{t('medication.route.inhaled', lang)}</option>
+              <option value="injected">{t('medication.route.injected', lang)}</option>
+              <option value="sublingual">{t('medication.route.sublingual', lang)}</option>
+              <option value="other">{t('medication.route.other', lang)}</option>
             </select>
           </div>
 
@@ -261,13 +261,13 @@ export function MedicationsTab() {
           </label>
 
           <div>
-            <label className={LABEL_CLS}>Purpose <span className="text-gray-300 font-normal">(optional)</span></label>
-            <textarea {...register('purpose')} rows={2} placeholder="What is it for?" className={TEXTAREA_CLS} />
+            <label className={LABEL_CLS}>{t('medication.purpose', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
+            <textarea {...register('purpose')} rows={2} placeholder={t('medication.purposePlaceholder', lang)} className={TEXTAREA_CLS} />
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Notes <span className="text-gray-300 font-normal">(optional)</span></label>
-            <textarea {...register('notes')} rows={2} placeholder="Additional details..." className={TEXTAREA_CLS} />
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
+            <textarea {...register('notes')} rows={2} placeholder={t('form.additionalDetails', lang)} className={TEXTAREA_CLS} />
           </div>
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}

@@ -370,7 +370,7 @@ export default function DashboardPage() {
           {/* Completion Ring */}
           <div className={cardCls} style={cardShadow}>
             <h2 className="font-[var(--font-manrope)] text-sm font-bold text-[#1C2B1E] uppercase tracking-wider mb-1">
-              Profile Completion
+              {t('profile.completion', lang)}
             </h2>
             <div className="flex flex-col items-center py-4 gap-2">
               <svg
@@ -450,7 +450,7 @@ export default function DashboardPage() {
           {/* Profile Photo */}
           <div className={cardCls} style={cardShadow}>
             <h2 className="font-[var(--font-manrope)] text-sm font-bold text-[#1C2B1E] uppercase tracking-wider mb-4">
-              Profile Photo
+              {t('profile.profilePhoto', lang)}
             </h2>
             <div className="flex flex-col items-center gap-3">
               <div
@@ -491,7 +491,7 @@ export default function DashboardPage() {
                   <span className="text-[#4A7A50] font-medium">Drop to upload</span>
                 ) : (
                   <>
-                    Tap to upload or drag a photo
+                    {t('profile.uploadPhoto', lang)}
                     <br />
                     <span className="text-gray-300">JPEG, PNG, HEIC · max 5 MB</span>
                   </>
@@ -509,7 +509,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <div className={cardCls} style={cardShadow}>
             <h2 className="font-[var(--font-manrope)] text-sm font-bold text-[#1C2B1E] uppercase tracking-wider mb-5">
-              Personal Information
+              {t('profile.personalInfo', lang)}
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
@@ -632,7 +632,7 @@ export default function DashboardPage() {
                     <div className="w-10 h-6 bg-gray-200 rounded-full transition-colors peer-checked:bg-[#4A7A50] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-5 after:h-5 after:bg-white after:rounded-full after:shadow after:transition-transform peer-checked:after:translate-x-4" />
                   </div>
                   <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-                    I am an organ donor
+                    {t('profile.organDonorLabel', lang)}
                   </span>
                 </label>
               </div>
@@ -714,7 +714,7 @@ export default function DashboardPage() {
                     isSelected ? 'text-[#4A7A50]' : 'text-[#1C2B1E]',
                   ].join(' ')}
                 >
-                  {icon.label}
+                  {t(`icon.${icon.key === 'directive' ? 'dnr' : icon.key}`, lang)}
                 </span>
               </button>
             )

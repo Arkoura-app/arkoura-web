@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
+import { t } from '@/lib/i18n'
+import type { Lang } from '@/lib/i18n'
 
 // ─── Types ────────────────────────────────────────────
 
@@ -83,6 +85,10 @@ const GLANCE_MAP: Record<string, { emoji: string; label: string }> = {
   mobility: { emoji: '♿', label: 'Mobility' },
 }
 
+const ICON_I18N_SUFFIX: Record<string, string> = {
+  directive: 'dnr',
+}
+
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English',
   es: 'Español',
@@ -111,10 +117,10 @@ const LANGUAGES = [
 
 // ─── Sub-components ───────────────────────────────────
 
-function CriticalBadge() {
+function CriticalBadge({ lang }: { lang: Lang }) {
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 flex-shrink-0">
-      ⚠ Critical
+      ⚠ {t('emergency.critical', lang)}
     </span>
   )
 }
@@ -433,7 +439,7 @@ export default function EmergencyProfilePage() {
                     >
                       <span className="text-sm">{item.emoji}</span>
                       <span className="text-white/90 text-xs font-medium whitespace-nowrap">
-                        {item.label}
+                        {t(`icon.${ICON_I18N_SUFFIX[key] ?? key}`, selectedLang as Lang)}
                       </span>
                     </div>
                   )
@@ -474,7 +480,7 @@ export default function EmergencyProfilePage() {
           {hasCritical && (
             <div className="bg-red-600 px-5 py-3 flex items-center gap-2">
               <span className="text-white text-sm font-semibold">
-                ⚠️ Critical health information — read before treating
+                ⚠️ {t('emergency.critical', selectedLang as Lang)} — read before treating
               </span>
             </div>
           )}
@@ -483,7 +489,7 @@ export default function EmergencyProfilePage() {
           <div className="px-5 py-4">
 
             {/* Allergies */}
-            <Section title="Allergies" icon="🚨" empty="No allergies on record">
+            <Section title={t('emergency.allergies', selectedLang as Lang)} icon="🚨" empty={t('emergency.noAllergies', selectedLang as Lang)}>
               {allergies.length > 0 && (
                 <div className="space-y-2">
                   {allergies.map((allergy) => (
@@ -509,7 +515,7 @@ export default function EmergencyProfilePage() {
                             </p>
                           )}
                         </div>
-                        {allergy.isCritical && <CriticalBadge />}
+                        {allergy.isCritical && <CriticalBadge lang={selectedLang as Lang} />}
                       </div>
                     </div>
                   ))}
@@ -518,7 +524,7 @@ export default function EmergencyProfilePage() {
             </Section>
 
             {/* Conditions */}
-            <Section title="Medical Conditions" icon="🏥" empty="No conditions on record">
+            <Section title={t('emergency.conditions', selectedLang as Lang)} icon="🏥" empty={t('emergency.noConditions', selectedLang as Lang)}>
               {conditions.length > 0 && (
                 <div className="space-y-2">
                   {conditions.map((condition) => (
@@ -539,7 +545,7 @@ export default function EmergencyProfilePage() {
                             <p className="text-xs text-gray-600 mt-1">{condition.notes}</p>
                           )}
                         </div>
-                        {condition.isCritical && <CriticalBadge />}
+                        {condition.isCritical && <CriticalBadge lang={selectedLang as Lang} />}
                       </div>
                     </div>
                   ))}
@@ -548,7 +554,7 @@ export default function EmergencyProfilePage() {
             </Section>
 
             {/* Medications */}
-            <Section title="Current Medications" icon="💊" empty="No medications on record">
+            <Section title={t('emergency.medications', selectedLang as Lang)} icon="💊" empty={t('emergency.noMedications', selectedLang as Lang)}>
               {medications.length > 0 && (
                 <div className="space-y-2">
                   {medications.map((med) => (
@@ -567,7 +573,7 @@ export default function EmergencyProfilePage() {
                             {[med.dose, med.frequency, med.route].filter(Boolean).join(' · ')}
                           </p>
                         </div>
-                        {med.isCritical && <CriticalBadge />}
+                        {med.isCritical && <CriticalBadge lang={selectedLang as Lang} />}
                       </div>
                     </div>
                   ))}
@@ -577,9 +583,9 @@ export default function EmergencyProfilePage() {
 
             {/* Emergency Contacts */}
             <Section
-              title="Emergency Contacts"
+              title={t('emergency.contacts', selectedLang as Lang)}
               icon="📞"
-              empty="No emergency contacts listed"
+              empty={t('emergency.noContacts', selectedLang as Lang)}
             >
               {emergencyContacts.length > 0 && (
                 <div className="space-y-2">
@@ -594,7 +600,7 @@ export default function EmergencyProfilePage() {
                             {contact.name}
                             {i === 0 && (
                               <span className="ml-2 text-xs font-normal text-[#4A7A50]">
-                                Primary
+                                {t('common.primary', selectedLang as Lang)}
                               </span>
                             )}
                           </p>
@@ -618,14 +624,14 @@ export default function EmergencyProfilePage() {
                               background: 'linear-gradient(145deg,#44664a,#7a9e7e)',
                             }}
                           >
-                            📞 Call
+                            📞 {t('emergency.call', selectedLang as Lang)}
                           </a>
                           {contact.email && (
                             <a
                               href={`mailto:${contact.email}`}
                               className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-[#4A7A50] border border-[#4A7A50]"
                             >
-                              ✉️ Email
+                              ✉️ {t('emergency.email', selectedLang as Lang)}
                             </a>
                           )}
                         </div>
@@ -638,7 +644,7 @@ export default function EmergencyProfilePage() {
 
             {/* Primary Physician */}
             {primaryPhysician && (
-              <Section title="Primary Physician" icon="👨‍⚕️">
+              <Section title={t('emergency.physician', selectedLang as Lang)} icon="👨‍⚕️">
                 <div className="p-3 rounded-xl bg-white border border-gray-100">
                   <p className="font-semibold text-sm text-[#1C2B1E]">{primaryPhysician.name}</p>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -662,9 +668,7 @@ export default function EmergencyProfilePage() {
             {/* ── Disclaimer footer (inside card) ── */}
             <div className="text-center px-5 py-6 border-t border-[#E8EDE8] mt-1">
               <p className="text-xs text-gray-400 leading-relaxed max-w-sm mx-auto">
-                This is {profile.firstName || 'the profile holder'}&apos;s personal health
-                journal — their own recollection of health events, not a verified clinical
-                record.
+                {t('emergency.disclaimer', selectedLang as Lang)}
               </p>
               <div className="flex items-center justify-center gap-2 mt-3">
                 <Image
@@ -697,12 +701,12 @@ export default function EmergencyProfilePage() {
             className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 active:scale-95 transition-transform"
             style={{ background: 'linear-gradient(145deg,#DC2626,#EF4444)' }}
           >
-            🆘 Emergency
+            {t('emergency.action.emergency', selectedLang as Lang)}
           </button>
 
           {/* Appointment button */}
           <button className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-[#1C2B1E] bg-[#E8F2E6] flex items-center justify-center gap-2 active:scale-95 transition-transform border border-[#C8DEC4]">
-            📅 Appointment
+            {t('emergency.action.appointment', selectedLang as Lang)}
           </button>
 
           {/* Dismiss button */}
@@ -710,7 +714,7 @@ export default function EmergencyProfilePage() {
             className="px-4 py-3.5 rounded-2xl text-sm font-medium text-gray-400 bg-gray-100 active:scale-95 transition-transform"
             onClick={() => window.history.back()}
           >
-            ✕
+            {t('emergency.action.dismiss', selectedLang as Lang)}
           </button>
         </div>
       </div>

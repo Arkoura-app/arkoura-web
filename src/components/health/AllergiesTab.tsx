@@ -222,49 +222,49 @@ export function AllergiesTab() {
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
-            <label className={LABEL_CLS}>Allergen <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('allergy.allergen', lang)} <span className="text-red-400">*</span></label>
             <input
               {...register('allergen')}
               type="text"
-              placeholder="e.g. Penicillin"
+              placeholder={t('allergy.allergenPlaceholder', lang)}
               className={`${INPUT_CLS} ${errors.allergen ? INPUT_ERR_CLS : ''}`}
             />
             {errors.allergen && <p className="text-xs text-red-500 mt-1">{errors.allergen.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Type <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('allergy.type', lang)} <span className="text-red-400">*</span></label>
             <select
               {...register('allergenType')}
               className={`${SELECT_CLS} ${errors.allergenType ? INPUT_ERR_CLS : ''}`}
             >
-              <option value="">Select type...</option>
-              <option value="drug">Drug</option>
-              <option value="food">Food</option>
-              <option value="environmental">Environmental</option>
-              <option value="contact">Contact</option>
-              <option value="other">Other</option>
+              <option value="">{t('allergy.selectType', lang)}</option>
+              <option value="drug">{t('allergy.type.drug', lang)}</option>
+              <option value="food">{t('allergy.type.food', lang)}</option>
+              <option value="environmental">{t('allergy.type.environmental', lang)}</option>
+              <option value="contact">{t('allergy.type.contact', lang)}</option>
+              <option value="other">{t('allergy.type.other', lang)}</option>
             </select>
             {errors.allergenType && <p className="text-xs text-red-500 mt-1">{errors.allergenType.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Severity <span className="text-red-400">*</span></label>
+            <label className={LABEL_CLS}>{t('allergy.severity', lang)} <span className="text-red-400">*</span></label>
             <select
               {...register('severity')}
               className={`${SELECT_CLS} ${errors.severity ? INPUT_ERR_CLS : ''}`}
             >
-              <option value="">Select severity...</option>
-              <option value="mild">Mild</option>
-              <option value="moderate">Moderate</option>
-              <option value="severe">Severe</option>
-              <option value="life_threatening">Life-threatening</option>
+              <option value="">{t('allergy.selectSeverity', lang)}</option>
+              <option value="mild">{t('allergy.severity.mild', lang)}</option>
+              <option value="moderate">{t('allergy.severity.moderate', lang)}</option>
+              <option value="severe">{t('allergy.severity.severe', lang)}</option>
+              <option value="life_threatening">{t('allergy.severity.life_threatening', lang)}</option>
             </select>
             {errors.severity && <p className="text-xs text-red-500 mt-1">{errors.severity.message}</p>}
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Reaction <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('allergy.reaction', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
             <textarea
               {...register('reaction')}
               rows={2}
@@ -284,8 +284,8 @@ export function AllergiesTab() {
           </label>
 
           <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
-            <textarea {...register('notes')} rows={2} placeholder="Additional details..." className={TEXTAREA_CLS} />
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
+            <textarea {...register('notes')} rows={2} placeholder={t('form.additionalDetails', lang)} className={TEXTAREA_CLS} />
           </div>
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
