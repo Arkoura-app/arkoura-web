@@ -16,6 +16,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -55,6 +57,7 @@ const authErrors: Record<string, string> = {
 
 function GoogleButton({ disabled }: { disabled: boolean }) {
   const [error, setError] = useState('')
+  const { lang } = useLang()
 
   async function handleGoogle() {
     setError('')
@@ -126,7 +129,7 @@ function GoogleButton({ disabled }: { disabled: boolean }) {
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        Continue with Google
+        {t('auth.continueWithGoogle', lang)}
       </button>
       {error && <p className="text-xs text-red-500 text-center mt-2">{error}</p>}
     </div>
@@ -151,6 +154,7 @@ function SignInContent() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/dashboard'
   const [view, setView] = useState<View>('login')
+  const { lang } = useLang()
   const [resetSent, setResetSent] = useState(false)
   const [registered, setRegistered] = useState(false)
   const [firebaseError, setFirebaseError] = useState('')
@@ -255,8 +259,8 @@ function SignInContent() {
 
   const titles: Record<View, string> = {
     login: 'Welcome back',
-    register: 'Create your account',
-    forgot: 'Reset your password',
+    register: t('auth.createAccount', lang),
+    forgot: t('auth.resetPassword', lang),
   }
 
   return (
@@ -289,7 +293,7 @@ function SignInContent() {
                   <input
                     {...loginForm.register('email')}
                     type="email"
-                    placeholder="Email"
+                    placeholder={t('auth.email', lang)}
                     className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
                   />
                   {loginForm.formState.errors.email && (
@@ -302,7 +306,7 @@ function SignInContent() {
                   <input
                     {...loginForm.register('password')}
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('auth.password', lang)}
                     className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
                   />
                   {loginForm.formState.errors.password && (
@@ -317,7 +321,7 @@ function SignInContent() {
                     onClick={() => switchView('forgot')}
                     className="text-xs text-[#4A7A50] hover:underline"
                   >
-                    Forgot password?
+                    {t('auth.forgotPassword', lang)}
                   </button>
                 </div>
                 {firebaseError && (
@@ -329,16 +333,16 @@ function SignInContent() {
                   className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                   style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                 >
-                  {loginForm.formState.isSubmitting ? 'Signing in...' : 'Sign in'}
+                  {loginForm.formState.isSubmitting ? 'Signing in...' : t('auth.signIn', lang)}
                 </button>
               </form>
               <p className="text-center text-xs text-gray-400">
-                Don&apos;t have an account?{' '}
+                {t('auth.noAccount', lang)}{' '}
                 <button
                   onClick={() => switchView('register')}
                   className="text-[#4A7A50] font-medium hover:underline"
                 >
-                  Create one
+                  {t('auth.createAccount', lang)}
                 </button>
               </p>
             </div>
@@ -379,7 +383,7 @@ function SignInContent() {
                       <input
                         {...registerForm.register('name')}
                         type="text"
-                        placeholder="Full name"
+                        placeholder={t('auth.fullName', lang)}
                         className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
                       />
                       {registerForm.formState.errors.name && (
@@ -392,7 +396,7 @@ function SignInContent() {
                       <input
                         {...registerForm.register('email')}
                         type="email"
-                        placeholder="Email"
+                        placeholder={t('auth.email', lang)}
                         className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
                       />
                       {registerForm.formState.errors.email && (
@@ -454,16 +458,16 @@ function SignInContent() {
                       className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                       style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                     >
-                      {registerForm.formState.isSubmitting ? 'Creating account...' : 'Create account'}
+                      {registerForm.formState.isSubmitting ? 'Creating account...' : t('auth.createAccount', lang)}
                     </button>
                   </form>
                   <p className="text-center text-xs text-gray-400">
-                    Already have an account?{' '}
+                    {t('auth.alreadyHaveAccount', lang)}{' '}
                     <button
                       onClick={() => switchView('login')}
                       className="text-[#4A7A50] font-medium hover:underline"
                     >
-                      Sign in
+                      {t('auth.signIn', lang)}
                     </button>
                   </p>
                 </>
@@ -512,7 +516,7 @@ function SignInContent() {
                       <input
                         {...forgotForm.register('email')}
                         type="email"
-                        placeholder="Email address"
+                        placeholder={t('auth.email', lang)}
                         className="w-full px-4 py-3 bg-[#F4F6F2] rounded-xl text-sm text-[#1C2B1E] placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
                       />
                       {forgotForm.formState.errors.email && (
@@ -530,7 +534,7 @@ function SignInContent() {
                       className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                       style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                     >
-                      {forgotForm.formState.isSubmitting ? 'Sending...' : 'Send reset link'}
+                      {forgotForm.formState.isSubmitting ? 'Sending...' : t('auth.sendResetLink', lang)}
                     </button>
                   </form>
                   <p className="text-center">

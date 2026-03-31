@@ -7,6 +7,8 @@ import { z } from 'zod'
 import { cfFetch } from '@/lib/api'
 import { RecordCard } from './RecordCard'
 import { SlideDrawer } from './SlideDrawer'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 import {
   INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS, SELECT_CLS,
   LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
@@ -68,6 +70,7 @@ function severityBadge(severity: string) {
 // ─── Component ───────────────────────────────────────
 
 export function AllergiesTab() {
+  const { lang } = useLang()
   const [items, setItems] = useState<Allergy[]>([])
   const [loading, setLoading] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -176,17 +179,17 @@ export function AllergiesTab() {
         {items.length === 0 ? (
           <div className={EMPTY_STATE_CLS}>
             <p className="text-3xl mb-3">🚨</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">No allergies recorded</p>
+            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noAllergies', lang)}</p>
             <p className="text-xs text-gray-400 mb-4">List any allergies, especially critical ones</p>
             <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              Add Allergy
+              {t('emergency.addAllergy', lang)}
             </button>
           </div>
         ) : (
           <>
             <div className="flex justify-end">
               <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + Add
+                + {t('common.add', lang)}
               </button>
             </div>
             {items.map((item) => (
@@ -215,7 +218,7 @@ export function AllergiesTab() {
       <SlideDrawer
         open={drawerOpen}
         onOpenChange={handleDrawerChange}
-        title={editingItem ? 'Edit Allergy' : 'Add Allergy'}
+        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.allergies', lang)}` : t('emergency.addAllergy', lang)}
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
@@ -276,19 +279,19 @@ export function AllergiesTab() {
               <div className={TOGGLE_TRACK_CLS} />
             </div>
             <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              Show on emergency profile
+              {t('common.showOnEmergency', lang)}
             </span>
           </label>
 
           <div>
-            <label className={LABEL_CLS}>Notes <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
             <textarea {...register('notes')} rows={2} placeholder="Additional details..." className={TEXTAREA_CLS} />
           </div>
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
 
           <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? 'Save changes' : 'Add allergy'}
+            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addAllergy', lang)}
           </button>
         </form>
       </SlideDrawer>

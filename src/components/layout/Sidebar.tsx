@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/hooks/useAuth'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 function IconProfile() {
   return (
@@ -125,26 +127,27 @@ function IconSettings() {
   )
 }
 
-const navItems = [
-  { href: '/dashboard', label: 'Profile', icon: IconProfile },
-  { href: '/dashboard/emergency', label: 'Emergency Data', icon: IconShield },
-  { href: '/dashboard/qr', label: 'My QR', icon: IconQR },
-  { href: '/dashboard/journal', label: 'Journal', icon: IconJournal },
-  { href: '/dashboard/activity', label: 'Activity Log', icon: IconClock },
-]
-
-const mobileNavItems = [
-  { href: '/dashboard', label: 'Profile', icon: IconProfile },
-  { href: '/dashboard/emergency', label: 'Emergency', icon: IconShield },
-  { href: '/dashboard/qr', label: 'My QR', icon: IconQR },
-  { href: '/dashboard/journal', label: 'Journal', icon: IconJournal },
-  { href: '/dashboard/settings', label: 'Settings', icon: IconSettings },
-]
-
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const { user } = useAuth()
+  const { lang } = useLang()
+
+  const navItems = [
+    { href: '/dashboard', label: t('nav.profile', lang), icon: IconProfile },
+    { href: '/dashboard/emergency', label: t('nav.emergencyData', lang), icon: IconShield },
+    { href: '/dashboard/qr', label: t('nav.myQr', lang), icon: IconQR },
+    { href: '/dashboard/journal', label: t('nav.journal', lang), icon: IconJournal },
+    { href: '/dashboard/activity', label: t('nav.activity', lang), icon: IconClock },
+  ]
+
+  const mobileNavItems = [
+    { href: '/dashboard', label: t('nav.profile', lang), icon: IconProfile },
+    { href: '/dashboard/emergency', label: t('nav.emergencyData', lang), icon: IconShield },
+    { href: '/dashboard/qr', label: t('nav.myQr', lang), icon: IconQR },
+    { href: '/dashboard/journal', label: t('nav.journal', lang), icon: IconJournal },
+    { href: '/dashboard/settings', label: t('nav.settings', lang), icon: IconSettings },
+  ]
 
   async function handleSignOut() {
     if (auth) await signOut(auth)
@@ -202,7 +205,7 @@ export default function Sidebar() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
           >
             <IconSettings />
-            Settings
+            {t('nav.settings', lang)}
           </Link>
 
           {/* User row */}
@@ -227,7 +230,7 @@ export default function Sidebar() {
                 onClick={handleSignOut}
                 className="text-white/40 text-xs hover:text-white/70 transition-colors"
               >
-                Sign out
+                {t('nav.signOut', lang)}
               </button>
             </div>
           </div>

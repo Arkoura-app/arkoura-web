@@ -7,6 +7,8 @@ import { z } from 'zod'
 import { cfFetch } from '@/lib/api'
 import { RecordCard } from './RecordCard'
 import { SlideDrawer } from './SlideDrawer'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 import {
   INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS, SELECT_CLS,
   LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
@@ -52,6 +54,7 @@ const DEFAULTS: FormValues = {
 }
 
 export function MedicationsTab() {
+  const { lang } = useLang()
   const [items, setItems] = useState<Medication[]>([])
   const [loading, setLoading] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -163,17 +166,17 @@ export function MedicationsTab() {
         {items.length === 0 ? (
           <div className={EMPTY_STATE_CLS}>
             <p className="text-3xl mb-3">💊</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">No medications recorded</p>
+            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noMedications', lang)}</p>
             <p className="text-xs text-gray-400 mb-4">Add medications that responders should know about</p>
             <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              Add Medication
+              {t('emergency.addMedication', lang)}
             </button>
           </div>
         ) : (
           <>
             <div className="flex justify-end">
               <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + Add
+                + {t('common.add', lang)}
               </button>
             </div>
             {items.map((item) => (
@@ -194,7 +197,7 @@ export function MedicationsTab() {
       <SlideDrawer
         open={drawerOpen}
         onOpenChange={handleDrawerChange}
-        title={editingItem ? 'Edit Medication' : 'Add Medication'}
+        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.medications', lang)}` : t('emergency.addMedication', lang)}
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
@@ -243,7 +246,7 @@ export function MedicationsTab() {
               <div className={TOGGLE_TRACK_CLS} />
             </div>
             <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              Critical — must not be missed
+              {t('emergency.critical', lang)} — must not be missed
             </span>
           </label>
 
@@ -253,7 +256,7 @@ export function MedicationsTab() {
               <div className={TOGGLE_TRACK_CLS} />
             </div>
             <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              Show on emergency profile
+              {t('common.showOnEmergency', lang)}
             </span>
           </label>
 
@@ -270,7 +273,7 @@ export function MedicationsTab() {
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
 
           <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? 'Save changes' : 'Add medication'}
+            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addMedication', lang)}
           </button>
         </form>
       </SlideDrawer>

@@ -6,14 +6,8 @@ import { AllergiesTab } from '@/components/health/AllergiesTab'
 import { MedicationsTab } from '@/components/health/MedicationsTab'
 import { ContactsTab } from '@/components/health/ContactsTab'
 import { PhysicianTab } from '@/components/health/PhysicianTab'
-
-const TABS = [
-  { value: 'conditions', label: 'Conditions' },
-  { value: 'allergies', label: 'Allergies' },
-  { value: 'medications', label: 'Medications' },
-  { value: 'contacts', label: 'Contacts' },
-  { value: 'physician', label: 'Physician' },
-]
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 const triggerCls = [
   'flex-shrink-0 px-4 py-2.5 text-sm font-medium transition-colors whitespace-nowrap',
@@ -24,16 +18,26 @@ const triggerCls = [
 ].join(' ')
 
 export default function EmergencyDataPage() {
+  const { lang } = useLang()
+
+  const TABS = [
+    { value: 'conditions', label: t('emergency.conditions', lang) },
+    { value: 'allergies', label: t('emergency.allergies', lang) },
+    { value: 'medications', label: t('emergency.medications', lang) },
+    { value: 'contacts', label: t('emergency.contacts', lang) },
+    { value: 'physician', label: t('emergency.physician', lang) },
+  ]
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 pb-8">
 
       {/* Header */}
       <div className="mb-6">
         <h1 className="font-[var(--font-manrope)] text-2xl font-bold text-[#1C2B1E] tracking-tight">
-          Emergency Data
+          {t('emergency.title', lang)}
         </h1>
         <p className="text-sm text-gray-400 mt-1 leading-relaxed">
-          This information is shown on your public emergency profile when someone scans your QR code
+          {t('emergency.subtitle', lang)}
         </p>
       </div>
 

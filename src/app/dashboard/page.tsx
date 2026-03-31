@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useProfile } from '@/hooks/useProfile'
+import { useProfileLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { cfFetch } from '@/lib/api'
@@ -86,6 +88,7 @@ const cardShadow = { boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }
 export default function DashboardPage() {
   const { user } = useAuth()
   const { data, loading, error, refetch } = useProfile()
+  const { lang } = useProfileLang(data?.profile?.primaryLanguage)
 
   // ── Ring animation state ──
   const [animatedScore, setAnimatedScore] = useState(0)
@@ -161,8 +164,8 @@ export default function DashboardPage() {
       raw === 95 && (data?.profile?.profilePhotoUrl ?? data?.profile?.profilePhotoRef)
         ? 100
         : raw
-    const t = setTimeout(() => setAnimatedScore(adjusted), 100)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => setAnimatedScore(adjusted), 100)
+    return () => clearTimeout(timer)
   }, [data])
 
   // ── Photo drop handler ──
@@ -351,10 +354,10 @@ export default function DashboardPage() {
       {/* ── Page Header ── */}
       <div className="mb-6">
         <h1 className="font-[var(--font-manrope)] text-2xl font-bold text-[#1C2B1E] tracking-tight">
-          My Profile
+          {t('profile.title', lang)}
         </h1>
         <p className="text-sm text-gray-400 mt-1">
-          This information appears on your emergency profile
+          {t('emergency.subtitle', lang)}
         </p>
       </div>
 
@@ -425,12 +428,12 @@ export default function DashboardPage() {
 
               <p className="text-xs text-gray-400 text-center leading-relaxed">
                 {displayScore === 100
-                  ? 'Profile complete ✓'
+                  ? t('profile.complete', lang)
                   : displayScore >= 85
                     ? 'Almost complete'
                     : displayScore >= 60
-                      ? 'Add more info to improve your profile'
-                      : 'Add an emergency contact to activate your profile'}
+                      ? t('profile.addMoreInfo', lang)
+                      : t('profile.addContact', lang)}
               </p>
               {displayScore < 60 && (
                 <a
@@ -515,7 +518,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                    First name <span className="text-red-400">*</span>
+                    {t('profile.firstName', lang)} <span className="text-red-400">*</span>
                   </label>
                   <input
                     {...register('firstName')}
@@ -529,7 +532,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                    Last name <span className="text-red-400">*</span>
+                    {t('profile.lastName', lang)} <span className="text-red-400">*</span>
                   </label>
                   <input
                     {...register('lastName')}
@@ -546,7 +549,7 @@ export default function DashboardPage() {
               {/* Preferred name */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                  Preferred name{' '}
+                  {t('profile.preferredName', lang)}{' '}
                   <span className="font-normal text-gray-300">(optional)</span>
                 </label>
                 <input
@@ -563,7 +566,7 @@ export default function DashboardPage() {
               {/* Date of birth */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                  Date of birth
+                  {t('profile.dateOfBirth', lang)}
                 </label>
                 <input
                   {...register('dateOfBirth')}
@@ -575,7 +578,7 @@ export default function DashboardPage() {
               {/* Biological sex */}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                  Biological sex
+                  {t('profile.biologicalSex', lang)}
                 </label>
                 <select {...register('biologicalSex')} className={selectCls}>
                   <option value="">Select...</option>
@@ -590,7 +593,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                    Blood type
+                    {t('profile.bloodType', lang)}
                   </label>
                   <select {...register('bloodType')} className={selectCls}>
                     <option value="">Select...</option>
@@ -604,7 +607,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                    Primary language
+                    {t('profile.primaryLanguage', lang)}
                   </label>
                   <select {...register('primaryLanguage')} className={selectCls}>
                     <option value="">Select language...</option>
@@ -639,7 +642,7 @@ export default function DashboardPage() {
                 <div className="flex-1">
                   {saveSuccess && (
                     <p className="text-sm text-[#4A7A50] font-medium">
-                      Profile updated ✓
+                      {t('profile.saved', lang)}
                     </p>
                   )}
                   {saveError && (
@@ -652,7 +655,7 @@ export default function DashboardPage() {
                   className="flex-shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-opacity"
                   style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                 >
-                  {saving ? 'Saving…' : 'Save changes'}
+                  {saving ? 'Saving…' : t('profile.saveChanges', lang)}
                 </button>
               </div>
             </form>
@@ -665,10 +668,10 @@ export default function DashboardPage() {
         <div className="flex items-start justify-between gap-4 mb-1">
           <div>
             <h2 className="font-[var(--font-manrope)] text-sm font-bold text-[#1C2B1E] uppercase tracking-wider">
-              Quick-Glance Health Icons
+              {t('profile.quickGlance', lang)}
             </h2>
             <p className="text-sm text-gray-400 mt-1">
-              Select up to 5 icons that appear prominently on your emergency profile
+              {t('profile.quickGlanceSubtitle', lang)}
             </p>
           </div>
           {iconsSaving && (

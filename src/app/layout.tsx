@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Manrope } from 'next/font/google'
 import Script from 'next/script'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 const inter = Inter({
@@ -112,7 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable}`}>
       <body className="font-[var(--font-inter)] antialiased">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         {process.env.NEXT_PUBLIC_CF_ANALYTICS && (
           <Script
             defer

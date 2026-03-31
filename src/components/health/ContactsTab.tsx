@@ -7,6 +7,8 @@ import { z } from 'zod'
 import { cfFetch } from '@/lib/api'
 import { RecordCard } from './RecordCard'
 import { SlideDrawer } from './SlideDrawer'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 import {
   INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS,
   LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
@@ -68,6 +70,7 @@ const DEFAULTS: FormValues = {
 }
 
 export function ContactsTab() {
+  const { lang } = useLang()
   const [items, setItems] = useState<EmergencyContact[]>([])
   const [loading, setLoading] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -219,17 +222,17 @@ export function ContactsTab() {
         {items.length === 0 ? (
           <div className={EMPTY_STATE_CLS}>
             <p className="text-3xl mb-3">📞</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">No emergency contacts</p>
+            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noContacts', lang)}</p>
             <p className="text-xs text-gray-400 mb-4">Add people who should be contacted in an emergency</p>
             <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              Add Contact
+              {t('emergency.addContact', lang)}
             </button>
           </div>
         ) : (
           <>
             <div className="flex justify-end">
               <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + Add
+                + {t('common.add', lang)}
               </button>
             </div>
             {items.map((item) => (
@@ -240,7 +243,7 @@ export function ContactsTab() {
                 badge={
                   item.priority === 1 ? (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#4A7A50]/10 text-[#4A7A50]">
-                      Primary
+                      {t('common.primary', lang)}
                     </span>
                   ) : undefined
                 }
@@ -256,7 +259,7 @@ export function ContactsTab() {
       <SlideDrawer
         open={drawerOpen}
         onOpenChange={handleDrawerChange}
-        title={editingItem ? 'Edit Contact' : 'Add Emergency Contact'}
+        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.contacts', lang)}` : t('emergency.addContact', lang)}
       >
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div>
@@ -338,19 +341,19 @@ export function ContactsTab() {
               <div className={TOGGLE_TRACK_CLS} />
             </div>
             <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              Show on emergency profile
+              {t('common.showOnEmergency', lang)}
             </span>
           </label>
 
           <div>
-            <label className={LABEL_CLS}>Notes <span className="text-gray-300 font-normal">(optional)</span></label>
+            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">(optional)</span></label>
             <textarea {...register('notes')} rows={2} placeholder="e.g. Best reached after 6pm" className={TEXTAREA_CLS} />
           </div>
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
 
           <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? 'Save changes' : 'Add contact'}
+            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addContact', lang)}
           </button>
         </form>
       </SlideDrawer>
