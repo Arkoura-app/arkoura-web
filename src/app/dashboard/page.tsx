@@ -441,7 +441,7 @@ export default function DashboardPage() {
                   className="mt-1 px-4 py-2 rounded-xl text-sm font-semibold text-white text-center"
                   style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                 >
-                  Add Emergency Contact →
+                  {t('profile.addEmergencyContact', lang)}
                 </a>
               )}
             </div>

@@ -261,7 +261,7 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
           </div>
 
           <div>
-            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">(optional — not shown publicly)</span></label>
+            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">({t('physician.emailNote', lang)})</span></label>
             <input
               {...register('email')}
               type="email"

@@ -68,6 +68,23 @@ interface EmergencyProfile {
   }>
 }
 
+// ─── Translation maps ─────────────────────────────────
+
+const ALLERGY_TYPE_KEYS: Record<string, string> = {
+  drug: 'allergy.type.drug',
+  food: 'allergy.type.food',
+  environmental: 'allergy.type.environmental',
+  contact: 'allergy.type.contact',
+  other: 'allergy.type.other',
+}
+
+const SEVERITY_KEYS: Record<string, string> = {
+  mild: 'allergy.severity.mild',
+  moderate: 'allergy.severity.moderate',
+  severe: 'allergy.severity.severe',
+  life_threatening: 'allergy.severity.life_threatening',
+}
+
 // ─── Constants ────────────────────────────────────────
 
 const GLANCE_MAP: Record<string, { emoji: string; label: string }> = {
@@ -351,7 +368,7 @@ export default function EmergencyProfilePage() {
             <div className="flex items-center gap-2 mb-6">
               <Image src="/icon.png" alt="Arkoura" width={20} height={20} className="opacity-70" />
               <span className="text-white/50 text-xs tracking-widest uppercase">
-                Arkoura · Emergency Profile
+                Arkoura · {t('emergency.profileOf', selectedLang as Lang)}
               </span>
             </div>
 
@@ -393,7 +410,7 @@ export default function EmergencyProfilePage() {
               )}
               {profile.dateOfBirth && (
                 <p className="text-white/50 text-xs mt-1">
-                  DOB:{' '}
+                  {t('emergency.dob', selectedLang as Lang)}:{' '}
                   {new Date(profile.dateOfBirth).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -403,11 +420,11 @@ export default function EmergencyProfilePage() {
               )}
               {profile.primaryLanguage && (
                 <p className="text-white/60 text-xs mt-2">
-                  {firstName}&apos;s Language:{' '}
+                  {firstName}&apos;s {t('emergency.languages', selectedLang as Lang)}:{' '}
                   <span className="text-white/90 font-medium">
                     {LANGUAGE_NAMES[profile.primaryLanguage] ?? profile.primaryLanguage}
                   </span>{' '}
-                  Primary
+                  — {t('emergency.languagePrimary', selectedLang as Lang)}
                 </p>
               )}
             </div>
@@ -507,11 +524,17 @@ export default function EmergencyProfilePage() {
                             {allergy.allergen}
                           </p>
                           <p className="text-xs text-gray-500 capitalize mt-0.5">
-                            {allergy.allergenType} · {allergy.severity.replace(/_/g, ' ')}
+                            {(() => {
+                              const typeKey = ALLERGY_TYPE_KEYS[allergy.allergenType]
+                              const typeLabel = typeKey ? t(typeKey, selectedLang as Lang) : allergy.allergenType
+                              const sevKey = SEVERITY_KEYS[allergy.severity]
+                              const sevLabel = sevKey ? t(sevKey, selectedLang as Lang) : allergy.severity.replace(/_/g, ' ')
+                              return `${typeLabel} · ${sevLabel}`
+                            })()}
                           </p>
                           {allergy.reaction && (
                             <p className="text-xs text-gray-600 mt-1">
-                              Reaction: {allergy.reaction}
+                              {allergy.reaction}
                             </p>
                           )}
                         </div>

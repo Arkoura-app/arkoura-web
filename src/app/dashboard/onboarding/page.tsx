@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import { cfFetch } from '@/lib/api'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
@@ -74,6 +76,7 @@ function ProgressDots({ step }: { step: number }) {
 }
 
 export default function OnboardingPage() {
+  const { lang } = useLang()
   const [step, setStep] = useState(1)
 
   // Step 1
@@ -177,10 +180,9 @@ export default function OnboardingPage() {
           <div className="flex flex-col items-center text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icon.png" alt="Arkoura" className="w-16 h-16 mb-4" />
-            <h1 className="text-2xl font-bold text-[#1C2B1E] mb-3">Welcome to Arkoura 🌿</h1>
+            <h1 className="text-2xl font-bold text-[#1C2B1E] mb-3">{t('onboarding.welcome', lang)}</h1>
             <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-              Your health profile is ready to build. Let&apos;s take 2 minutes so your emergency
-              profile is ready when it matters most.
+              {t('onboarding.welcomeBody', lang)}
             </p>
 
             {/* QR preview */}
@@ -205,7 +207,7 @@ export default function OnboardingPage() {
               className={`${PRIMARY_BTN} mt-6`}
               style={PRIMARY_BTN_STYLE}
             >
-              Get started →
+              {t('onboarding.getStarted', lang)}
             </button>
           </div>
         )}
@@ -218,7 +220,7 @@ export default function OnboardingPage() {
             </h2>
 
             <div className="mb-5">
-              <label className={LABEL_CLS}>Primary language</label>
+              <label className={LABEL_CLS}>{t('profile.primaryLanguage', lang)}</label>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
@@ -275,7 +277,7 @@ export default function OnboardingPage() {
               className={PRIMARY_BTN}
               style={PRIMARY_BTN_STYLE}
             >
-              {savingStep2 ? 'Saving…' : 'Next →'}
+              {savingStep2 ? 'Saving…' : t('onboarding.next', lang)}
             </button>
           </div>
         )}
@@ -284,7 +286,7 @@ export default function OnboardingPage() {
         {step === 3 && (
           <div>
             <h2 className="text-xl font-bold text-[#1C2B1E] mb-2 text-center">
-              Add someone who can help
+              {t('onboarding.addSomeone', lang)}
             </h2>
             <p className="text-sm text-gray-500 text-center mb-6">
               This person will be notified when someone scans your QR code.
@@ -346,7 +348,7 @@ export default function OnboardingPage() {
               className={PRIMARY_BTN}
               style={PRIMARY_BTN_STYLE}
             >
-              {savingContact ? 'Saving…' : 'Save contact'}
+              {savingContact ? 'Saving…' : t('onboarding.complete', lang)}
             </button>
 
             <p className="text-center mt-3">
@@ -354,7 +356,7 @@ export default function OnboardingPage() {
                 onClick={() => void completeOnboarding()}
                 className="text-sm text-gray-400 underline"
               >
-                Skip for now
+                {t('onboarding.skip', lang)}
               </button>
             </p>
           </div>

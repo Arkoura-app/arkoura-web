@@ -15,22 +15,20 @@ import {
 } from './formStyles'
 
 const RELATIONSHIPS = [
-  'Spouse / Partner',
-  'Parent',
-  'Child',
-  'Sibling',
-  'Grandparent',
-  'Aunt / Uncle',
-  'Cousin',
-  'Friend',
-  'Caretaker',
-  'Legal Guardian',
-  'Neighbour',
-  'Colleague',
-  'Doctor',
-  'Nurse',
-  'Social Worker',
-  'Other',
+  { value: 'Spouse / Partner', labelKey: 'contact.rel.spouse' },
+  { value: 'Parent', labelKey: 'contact.rel.parent' },
+  { value: 'Child', labelKey: 'contact.rel.child' },
+  { value: 'Sibling', labelKey: 'contact.rel.sibling' },
+  { value: 'Grandparent', labelKey: 'contact.rel.grandparent' },
+  { value: 'Aunt / Uncle', labelKey: 'contact.rel.aunt_uncle' },
+  { value: 'Cousin', labelKey: 'contact.rel.cousin' },
+  { value: 'Friend', labelKey: 'contact.rel.friend' },
+  { value: 'Caretaker', labelKey: 'contact.rel.caretaker' },
+  { value: 'Legal Guardian', labelKey: 'contact.rel.legal_guardian' },
+  { value: 'Neighbour', labelKey: 'contact.rel.neighbour' },
+  { value: 'Colleague', labelKey: 'contact.rel.colleague' },
+  { value: 'Doctor', labelKey: 'contact.rel.doctor' },
+  { value: 'Other', labelKey: 'contact.rel.other' },
 ]
 
 export interface EmergencyContact {
@@ -125,7 +123,7 @@ export function ContactsTab({ initialData }: ContactsTabProps) {
   }
 
   function openEdit(item: EmergencyContact) {
-    const isKnown = RELATIONSHIPS.includes(item.relationship)
+    const isKnown = RELATIONSHIPS.some((r) => r.value === item.relationship)
     const sel = isKnown ? item.relationship : (item.relationship ? 'Other' : '')
     const custom = isKnown ? '' : (item.relationship ?? '')
     reset({
@@ -296,9 +294,9 @@ export function ContactsTab({ initialData }: ContactsTabProps) {
               }}
               className={INPUT_CLS}
             >
-              <option value="">— select relationship —</option>
-              {RELATIONSHIPS.map((r) => (
-                <option key={r} value={r}>{r}</option>
+              <option value="">{t('contact.selectRelationship', lang)}</option>
+              {RELATIONSHIPS.map((rel) => (
+                <option key={rel.value} value={rel.value}>{t(rel.labelKey, lang)}</option>
               ))}
             </select>
             {relSelect === 'Other' && (
@@ -354,7 +352,7 @@ export function ContactsTab({ initialData }: ContactsTabProps) {
 
           <div>
             <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea {...register('notes')} rows={2} placeholder="e.g. Best reached after 6pm" className={TEXTAREA_CLS} />
+            <textarea {...register('notes')} rows={2} placeholder={t('contact.notesPlaceholder', lang)} className={TEXTAREA_CLS} />
           </div>
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}

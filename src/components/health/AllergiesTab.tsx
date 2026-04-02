@@ -273,7 +273,7 @@ export function AllergiesTab({ initialData }: AllergiesTabProps) {
             <textarea
               {...register('reaction')}
               rows={2}
-              placeholder="e.g. Anaphylaxis, hives..."
+              placeholder={t('allergy.reactionPlaceholder', lang)}
               className={TEXTAREA_CLS}
             />
           </div>

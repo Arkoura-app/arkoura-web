@@ -1,6 +1,8 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 interface RecordCardProps {
   title: string
@@ -21,6 +23,8 @@ export function RecordCard({
   onDelete,
   isDeleting,
 }: RecordCardProps) {
+  const { lang } = useLang()
+
   return (
     <div
       className={`p-4 rounded-2xl border transition-colors ${
@@ -34,7 +38,7 @@ export function RecordCard({
             <p className="font-semibold text-sm text-[#1C2B1E]">{title}</p>
             {isCritical && (
               <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
-                ⚠ Critical
+                ⚠ {t('emergency.critical', lang)}
               </span>
             )}
             {badge}
@@ -50,7 +54,7 @@ export function RecordCard({
             onClick={onEdit}
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:text-[#4A7A50] hover:bg-[#4A7A50]/8 transition-colors"
           >
-            Edit
+            {t('form.edit', lang)}
           </button>
           <button
             type="button"
@@ -58,7 +62,7 @@ export function RecordCard({
             disabled={isDeleting}
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-40"
           >
-            {isDeleting ? '…' : 'Delete'}
+            {isDeleting ? '…' : t('form.delete', lang)}
           </button>
         </div>
       </div>
