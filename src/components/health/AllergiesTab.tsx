@@ -16,7 +16,7 @@ import {
 
 // ─── Types ───────────────────────────────────────────
 
-interface Allergy {
+export interface Allergy {
   id: string
   allergen: string
   allergenType: string
@@ -69,10 +69,14 @@ function severityBadge(severity: string) {
 
 // ─── Component ───────────────────────────────────────
 
-export function AllergiesTab() {
+interface AllergiesTabProps {
+  initialData?: Allergy[]
+}
+
+export function AllergiesTab({ initialData }: AllergiesTabProps) {
   const { lang } = useLang()
-  const [items, setItems] = useState<Allergy[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState<Allergy[]>(initialData ?? [])
+  const [loading, setLoading] = useState(!initialData)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Allergy | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -101,8 +105,9 @@ export function AllergiesTab() {
   }, [])
 
   useEffect(() => {
+    if (initialData !== undefined) return
     void fetchItems()
-  }, [fetchItems])
+  }, [fetchItems, initialData])
 
   function openAdd() {
     reset(DEFAULTS)

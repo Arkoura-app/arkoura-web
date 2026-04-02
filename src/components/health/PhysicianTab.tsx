@@ -26,7 +26,7 @@ const LANGUAGES = [
   { value: 'sv', label: 'Svenska' },
 ]
 
-interface PrimaryPhysician {
+export interface PrimaryPhysician {
   id: string
   name: string
   specialty: string
@@ -65,10 +65,16 @@ const DEFAULTS: FormValues = {
   showOnEmergencyProfile: true,
 }
 
-export function PhysicianTab() {
+interface PhysicianTabProps {
+  initialData?: PrimaryPhysician | null
+}
+
+export function PhysicianTab({ initialData }: PhysicianTabProps) {
   const { lang } = useLang()
-  const [physician, setPhysician] = useState<PrimaryPhysician | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [physician, setPhysician] = useState<PrimaryPhysician | null>(
+    initialData !== undefined ? initialData : null
+  )
+  const [loading, setLoading] = useState(initialData === undefined)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -95,8 +101,9 @@ export function PhysicianTab() {
   }, [])
 
   useEffect(() => {
+    if (initialData !== undefined) return
     void fetchPhysician()
-  }, [fetchPhysician])
+  }, [fetchPhysician, initialData])
 
   function openAdd() {
     reset(DEFAULTS)

@@ -33,7 +33,7 @@ const RELATIONSHIPS = [
   'Other',
 ]
 
-interface EmergencyContact {
+export interface EmergencyContact {
   id: string
   name: string
   relationship: string
@@ -69,10 +69,16 @@ const DEFAULTS: FormValues = {
   notes: '',
 }
 
-export function ContactsTab() {
+interface ContactsTabProps {
+  initialData?: EmergencyContact[]
+}
+
+export function ContactsTab({ initialData }: ContactsTabProps) {
   const { lang } = useLang()
-  const [items, setItems] = useState<EmergencyContact[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState<EmergencyContact[]>(
+    initialData ? [...initialData].sort((a, b) => a.priority - b.priority) : []
+  )
+  const [loading, setLoading] = useState(!initialData)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<EmergencyContact | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -105,8 +111,9 @@ export function ContactsTab() {
   }, [])
 
   useEffect(() => {
+    if (initialData !== undefined) return
     void fetchItems()
-  }, [fetchItems])
+  }, [fetchItems, initialData])
 
   function openAdd() {
     reset(DEFAULTS)

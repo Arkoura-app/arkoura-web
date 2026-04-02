@@ -16,7 +16,7 @@ import {
 
 // ─── Types ───────────────────────────────────────────
 
-interface Condition {
+export interface Condition {
   id: string
   name: string
   icdCode?: string
@@ -50,10 +50,14 @@ const DEFAULTS: FormValues = {
 
 // ─── Component ───────────────────────────────────────
 
-export function ConditionsTab() {
+interface ConditionsTabProps {
+  initialData?: Condition[]
+}
+
+export function ConditionsTab({ initialData }: ConditionsTabProps) {
   const { lang } = useLang()
-  const [items, setItems] = useState<Condition[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState<Condition[]>(initialData ?? [])
+  const [loading, setLoading] = useState(!initialData)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Condition | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -82,8 +86,9 @@ export function ConditionsTab() {
   }, [])
 
   useEffect(() => {
+    if (initialData !== undefined) return
     void fetchItems()
-  }, [fetchItems])
+  }, [fetchItems, initialData])
 
   function openAdd() {
     reset(DEFAULTS)

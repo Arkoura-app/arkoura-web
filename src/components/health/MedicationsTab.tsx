@@ -14,7 +14,7 @@ import {
   LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
 } from './formStyles'
 
-interface Medication {
+export interface Medication {
   id: string
   name: string
   genericName?: string
@@ -53,10 +53,14 @@ const DEFAULTS: FormValues = {
   notes: '',
 }
 
-export function MedicationsTab() {
+interface MedicationsTabProps {
+  initialData?: Medication[]
+}
+
+export function MedicationsTab({ initialData }: MedicationsTabProps) {
   const { lang } = useLang()
-  const [items, setItems] = useState<Medication[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState<Medication[]>(initialData ?? [])
+  const [loading, setLoading] = useState(!initialData)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Medication | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -85,8 +89,9 @@ export function MedicationsTab() {
   }, [])
 
   useEffect(() => {
+    if (initialData !== undefined) return
     void fetchItems()
-  }, [fetchItems])
+  }, [fetchItems, initialData])
 
   function openAdd() {
     reset(DEFAULTS)

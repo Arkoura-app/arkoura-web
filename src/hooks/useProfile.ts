@@ -37,6 +37,20 @@ export function useProfile() {
     if (!user) return
     setLoading(true)
     setError(null)
+
+    const cacheKey = `arkoura_profile_${user.uid}`
+    const cached = sessionStorage.getItem(cacheKey)
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached)
+        if (Date.now() - parsed._cachedAt < 60000) {
+          setData(parsed)
+          setLoading(false)
+          return
+        }
+      } catch {}
+    }
+
     try {
       const token = await user.getIdToken()
       const res = await fetch(
@@ -48,6 +62,12 @@ export function useProfile() {
         return
       }
       const json = await res.json()
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          ...json,
+          _cachedAt: Date.now(),
+        }))
+      } catch {}
       setData(json)
     } catch (err) {
       setError('Failed to fetch profile')
@@ -67,10 +87,17 @@ export function useProfile() {
     fetchProfile()
   }, [user, authLoading, fetchProfile])
 
+  const refetch = useCallback(() => {
+    try {
+      if (user?.uid) sessionStorage.removeItem(`arkoura_profile_${user.uid}`)
+    } catch {}
+    void fetchProfile()
+  }, [fetchProfile, user])
+
   return {
     data,
     loading: authLoading || loading,
     error,
-    refetch: fetchProfile
+    refetch,
   }
 }
