@@ -32,6 +32,7 @@ interface FormState {
   isCritical: boolean
   showOnEmergencyProfile: boolean
   notes: string
+  nameFromCatalog: boolean
 }
 
 // ─── Constants ───────────────────────────────────────
@@ -48,6 +49,7 @@ const DEFAULT_FORM: FormState = {
   isCritical: false,
   showOnEmergencyProfile: true,
   notes: '',
+  nameFromCatalog: false,
 }
 
 const SAVE_BTN_STYLE = {
@@ -102,15 +104,16 @@ export function MedicationsTab() {
 
   function startEdit(med: Medication) {
     setForm({
-      name: med.name,
+      name: med.name ?? '',
       catalogRef: med.catalogRef ?? null,
-      genericName: med.genericName,
-      dose: med.dose,
-      frequency: med.frequency,
-      route: med.route,
-      isCritical: med.isCritical,
-      showOnEmergencyProfile: med.showOnEmergencyProfile,
-      notes: med.notes,
+      genericName: med.genericName ?? '',
+      dose: med.dose ?? '',
+      frequency: med.frequency ?? '',
+      route: med.route ?? 'oral',
+      isCritical: med.isCritical ?? false,
+      showOnEmergencyProfile: med.showOnEmergencyProfile ?? true,
+      notes: med.notes ?? '',
+      nameFromCatalog: false,
     })
     setEditingId(med.id)
     setShowForm(true)
@@ -134,26 +137,31 @@ export function MedicationsTab() {
       }
 
       if (editingId) {
-        await cfFetch('updateMedication', {
+        const res = await cfFetch('updateMedication', {
           method: 'PUT',
           body: JSON.stringify({ id: editingId, ...payload }),
         })
-        setMedications(prev =>
-          prev.map(m => (m.id === editingId ? { ...m, ...payload, id: editingId } : m))
-        )
+        if (res.ok) {
+          setMedications(prev =>
+            prev.map(m => (m.id === editingId ? { ...m, ...payload, id: editingId } : m))
+          )
+          setEditingId(null)
+          setShowForm(false)
+          setForm(DEFAULT_FORM)
+        }
       } else {
         const res = await cfFetch('createMedication', {
           method: 'POST',
           body: JSON.stringify(payload),
         })
-        const data = await res.json() as { id?: string; medicationId?: string; docId?: string }
-        const newId = data.id ?? data.medicationId ?? data.docId ?? ''
-        setMedications(prev => [...prev, { ...payload, id: newId } as Medication])
+        if (res.ok) {
+          const data = await res.json() as { id?: string; medicationId?: string; docId?: string }
+          const newId = data.id ?? data.medicationId ?? data.docId ?? ''
+          setMedications(prev => [...prev, { ...payload, id: newId } as Medication])
+          setShowForm(false)
+          setForm(DEFAULT_FORM)
+        }
       }
-
-      setForm(DEFAULT_FORM)
-      setEditingId(null)
-      setShowForm(false)
     } catch (err) {
       console.error('Medication save error:', err)
     } finally {
@@ -162,7 +170,10 @@ export function MedicationsTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!id) return
+    if (!id) {
+      console.error('handleDelete called with undefined id')
+      return
+    }
     setDeleting(id)
     try {
       await cfFetch('deleteMedication', { method: 'DELETE', body: JSON.stringify({ id }) })
@@ -205,7 +216,7 @@ export function MedicationsTab() {
                 {t('medication.name', lang)} *
               </label>
               <CatalogSearchInput
-                key={editingId ?? 'new'}
+                key={editingId ?? 'new-medication'}
                 type="medication"
                 lang={lang}
                 placeholder={t('medication.namePlaceholder', lang)}

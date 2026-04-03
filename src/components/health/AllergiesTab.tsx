@@ -108,14 +108,14 @@ export function AllergiesTab() {
 
   function startEdit(allergy: Allergy) {
     setForm({
-      allergen: allergy.allergen,
+      allergen: allergy.allergen ?? '',
       catalogRef: allergy.catalogRef ?? null,
-      allergenType: allergy.allergenType,
-      severity: allergy.severity,
-      reaction: allergy.reaction,
+      allergenType: allergy.allergenType ?? '',
+      severity: allergy.severity ?? '',
+      reaction: allergy.reaction ?? '',
       epipenPrescribed: allergy.epipenPrescribed ?? false,
-      showOnEmergencyProfile: allergy.showOnEmergencyProfile,
-      notes: allergy.notes,
+      showOnEmergencyProfile: allergy.showOnEmergencyProfile ?? true,
+      notes: allergy.notes ?? '',
       typeFromCatalog: false,
     })
     setEditingId(allergy.id)
@@ -140,26 +140,31 @@ export function AllergiesTab() {
       }
 
       if (editingId) {
-        await cfFetch('updateAllergy', {
+        const res = await cfFetch('updateAllergy', {
           method: 'PUT',
           body: JSON.stringify({ id: editingId, ...payload }),
         })
-        setAllergies(prev =>
-          prev.map(a => (a.id === editingId ? { ...a, ...payload, id: editingId } : a))
-        )
+        if (res.ok) {
+          setAllergies(prev =>
+            prev.map(a => (a.id === editingId ? { ...a, ...payload, id: editingId } : a))
+          )
+          setEditingId(null)
+          setShowForm(false)
+          setForm(DEFAULT_FORM)
+        }
       } else {
         const res = await cfFetch('createAllergy', {
           method: 'POST',
           body: JSON.stringify(payload),
         })
-        const data = await res.json() as { id?: string; allergyId?: string; docId?: string }
-        const newId = data.id ?? data.allergyId ?? data.docId ?? ''
-        setAllergies(prev => [...prev, { ...payload, id: newId } as Allergy])
+        if (res.ok) {
+          const data = await res.json() as { id?: string; allergyId?: string; docId?: string }
+          const newId = data.id ?? data.allergyId ?? data.docId ?? ''
+          setAllergies(prev => [...prev, { ...payload, id: newId } as Allergy])
+          setShowForm(false)
+          setForm(DEFAULT_FORM)
+        }
       }
-
-      setForm(DEFAULT_FORM)
-      setEditingId(null)
-      setShowForm(false)
     } catch (err) {
       console.error('Allergy save error:', err)
     } finally {
@@ -168,7 +173,10 @@ export function AllergiesTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!id) return
+    if (!id) {
+      console.error('handleDelete called with undefined id')
+      return
+    }
     setDeleting(id)
     try {
       await cfFetch('deleteAllergy', { method: 'DELETE', body: JSON.stringify({ id }) })
@@ -211,7 +219,7 @@ export function AllergiesTab() {
                 {t('allergy.allergen', lang)} *
               </label>
               <CatalogSearchInput
-                key={editingId ?? 'new'}
+                key={editingId ?? 'new-allergy'}
                 type="allergen"
                 lang={lang}
                 placeholder={t('allergy.allergenPlaceholder', lang)}
