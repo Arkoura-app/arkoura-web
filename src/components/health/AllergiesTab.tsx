@@ -19,7 +19,7 @@ interface Allergy {
   epipenPrescribed?: boolean
   showOnEmergencyProfile: boolean
   notes: string
-  catalogRef?: string
+  catalogRef?: string | null
 }
 
 interface FormState {
