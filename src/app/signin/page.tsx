@@ -159,6 +159,7 @@ function SignInContent() {
   const [registered, setRegistered] = useState(false)
   const [firebaseError, setFirebaseError] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   const strength = passwordValue.length > 0 ? zxcvbn(passwordValue).score : -1
 
@@ -255,6 +256,7 @@ function SignInContent() {
     setResetSent(false)
     setRegistered(false)
     setPasswordValue('')
+    setTermsAccepted(false)
   }
 
   const titles: Record<View, string> = {
@@ -375,7 +377,7 @@ function SignInContent() {
               ) : (
                 <>
                   <GoogleButton
-                    disabled={registerForm.formState.isSubmitting}
+                    disabled={!termsAccepted || registerForm.formState.isSubmitting}
                   />
                   <Divider />
                   <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-3">
@@ -452,14 +454,34 @@ function SignInContent() {
                     {firebaseError && (
                       <p className="text-xs text-red-500 text-center">{firebaseError}</p>
                     )}
+                    <label className="flex items-start gap-2.5 cursor-pointer mt-3">
+                      <input
+                        type="checkbox"
+                        checked={termsAccepted}
+                        onChange={e => setTermsAccepted(e.target.checked)}
+                        className="mt-0.5 accent-[#4A7A50] w-4 h-4 flex-shrink-0"
+                      />
+                      <span className="text-xs text-gray-600">
+                        {t('terms.iAccept', lang)}{' '}
+                        <a href="/terms" target="_blank" className="underline text-[#4A7A50]">
+                          {t('terms.title', lang)}
+                        </a>
+                      </span>
+                    </label>
                     <button
                       type="submit"
-                      disabled={registerForm.formState.isSubmitting}
+                      disabled={!termsAccepted || registerForm.formState.isSubmitting}
                       className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                       style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                     >
                       {registerForm.formState.isSubmitting ? 'Creating account...' : t('auth.createAccount', lang)}
                     </button>
+                    <p className="text-xs text-gray-400 text-center mt-2">
+                      {t('terms.byRegistering', lang)}{' '}
+                      <a href="/terms" target="_blank" className="underline hover:text-[#4A7A50]">
+                        {t('terms.title', lang)}
+                      </a>
+                    </p>
                   </form>
                   <p className="text-center text-xs text-gray-400">
                     {t('auth.alreadyHaveAccount', lang)}{' '}
