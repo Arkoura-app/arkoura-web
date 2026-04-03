@@ -134,9 +134,9 @@ export function MedicationsTab() {
       }
 
       if (editingId) {
-        await cfFetch(`updateMedication/${editingId}`, {
+        await cfFetch('updateMedication', {
           method: 'PUT',
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ id: editingId, ...payload }),
         })
         setMedications(prev =>
           prev.map(m => (m.id === editingId ? { ...m, ...payload, id: editingId } : m))
@@ -165,7 +165,7 @@ export function MedicationsTab() {
     if (!id) return
     setDeleting(id)
     try {
-      await cfFetch(`deleteMedication/${id}`, { method: 'DELETE' })
+      await cfFetch('deleteMedication', { method: 'DELETE', body: JSON.stringify({ id }) })
       setMedications(prev => prev.filter(m => m.id !== id))
     } catch (err) {
       console.error('Medication delete error:', err)
@@ -205,6 +205,7 @@ export function MedicationsTab() {
                 {t('medication.name', lang)} *
               </label>
               <CatalogSearchInput
+                key={editingId ?? 'new'}
                 type="medication"
                 lang={lang}
                 placeholder={t('medication.namePlaceholder', lang)}

@@ -140,9 +140,9 @@ export function AllergiesTab() {
       }
 
       if (editingId) {
-        await cfFetch(`updateAllergy/${editingId}`, {
+        await cfFetch('updateAllergy', {
           method: 'PUT',
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ id: editingId, ...payload }),
         })
         setAllergies(prev =>
           prev.map(a => (a.id === editingId ? { ...a, ...payload, id: editingId } : a))
@@ -171,7 +171,7 @@ export function AllergiesTab() {
     if (!id) return
     setDeleting(id)
     try {
-      await cfFetch(`deleteAllergy/${id}`, { method: 'DELETE' })
+      await cfFetch('deleteAllergy', { method: 'DELETE', body: JSON.stringify({ id }) })
       setAllergies(prev => prev.filter(a => a.id !== id))
     } catch (err) {
       console.error('Allergy delete error:', err)
@@ -211,6 +211,7 @@ export function AllergiesTab() {
                 {t('allergy.allergen', lang)} *
               </label>
               <CatalogSearchInput
+                key={editingId ?? 'new'}
                 type="allergen"
                 lang={lang}
                 placeholder={t('allergy.allergenPlaceholder', lang)}
