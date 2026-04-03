@@ -146,8 +146,9 @@ export function MedicationsTab() {
           method: 'POST',
           body: JSON.stringify(payload),
         })
-        const data = await res.json()
-        setMedications(prev => [...prev, { ...payload, id: data.id } as Medication])
+        const data = await res.json() as { id?: string; medicationId?: string; docId?: string }
+        const newId = data.id ?? data.medicationId ?? data.docId ?? ''
+        setMedications(prev => [...prev, { ...payload, id: newId } as Medication])
       }
 
       setForm(DEFAULT_FORM)
@@ -161,6 +162,7 @@ export function MedicationsTab() {
   }
 
   async function handleDelete(id: string) {
+    if (!id) return
     setDeleting(id)
     try {
       await cfFetch(`deleteMedication/${id}`, { method: 'DELETE' })
@@ -363,6 +365,7 @@ export function MedicationsTab() {
           {medications.map(med => (
             <RecordCardNew
               key={med.id}
+              lang={lang}
               title={med.name}
               subtitle={[med.dose, med.frequency ? med.frequency : '']
                 .filter(Boolean)

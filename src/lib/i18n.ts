@@ -576,6 +576,12 @@ const translations: TranslationMap = {
     ru: 'Показать в экстренном профиле',
     sv: 'Visa på nödprofil',
   },
+  'common.privateOnly': {
+    en: 'Private only', es: 'Solo privado',
+    fr: 'Privé uniquement', de: 'Nur privat',
+    pt: 'Apenas privado', zh: '仅私人', ja: 'プライベートのみ',
+    it: 'Solo privato', ru: 'Только приватно', sv: 'Enbart privat',
+  },
 
   // ─── Profile page ────────────────────────────
   'profile.completion': {
@@ -707,6 +713,12 @@ const translations: TranslationMap = {
     fr: 'Supprimer', de: 'Löschen',
     pt: 'Excluir', zh: '删除', ja: '削除',
     it: 'Elimina', ru: 'Удалить', sv: 'Ta bort',
+  },
+  'form.confirm': {
+    en: 'Confirm', es: 'Confirmar',
+    fr: 'Confirmer', de: 'Bestätigen',
+    pt: 'Confirmar', zh: '确认', ja: '確認',
+    it: 'Conferma', ru: 'Подтвердить', sv: 'Bekräfta',
   },
   'form.optional': {
     en: '(optional)', es: '(opcional)',
@@ -1252,6 +1264,42 @@ const translations: TranslationMap = {
   },
 
   // ─── Physician ───────────────────────────────
+  'physician.noPhysician': {
+    en: 'No primary physician added yet',
+    es: 'Aún no se ha agregado médico principal',
+    fr: 'Aucun médecin traitant ajouté',
+    de: 'Noch kein Hausarzt hinzugefügt',
+    pt: 'Nenhum médico principal adicionado',
+    zh: '尚未添加主治医生',
+    ja: 'かかりつけ医がまだ登録されていません',
+    it: 'Nessun medico di base aggiunto',
+    ru: 'Лечащий врач ещё не добавлен',
+    sv: 'Ingen läkare har lagts till ännu',
+  },
+  'physician.addPhysician': {
+    en: 'Add Primary Physician',
+    es: 'Agregar Médico Principal',
+    fr: 'Ajouter un médecin traitant',
+    de: 'Hausarzt hinzufügen',
+    pt: 'Adicionar Médico Principal',
+    zh: '添加主治医生',
+    ja: 'かかりつけ医を追加',
+    it: 'Aggiungi medico di base',
+    ru: 'Добавить лечащего врача',
+    sv: 'Lägg till läkare',
+  },
+  'physician.clinicName': {
+    en: 'Clinic / Hospital', es: 'Clínica / Hospital',
+    fr: 'Clinique / Hôpital', de: 'Klinik / Krankenhaus',
+    pt: 'Clínica / Hospital', zh: '诊所 / 医院', ja: 'クリニック / 病院',
+    it: 'Clinica / Ospedale', ru: 'Клиника / Больница', sv: 'Klinik / Sjukhus',
+  },
+  'physician.address': {
+    en: 'Address', es: 'Dirección',
+    fr: 'Adresse', de: 'Adresse',
+    pt: 'Endereço', zh: '地址', ja: '住所',
+    it: 'Indirizzo', ru: 'Адрес', sv: 'Adress',
+  },
   'physician.emailNote': {
     en: 'optional — not shown publicly',
     es: 'opcional — no se muestra públicamente',
@@ -1369,6 +1417,50 @@ const translations: TranslationMap = {
     fr: 'Oui, régénérer', de: 'Ja, neu generieren',
     pt: 'Sim, regenerar', zh: '是的，重新生成', ja: 'はい、再生成',
     it: 'Sì, rigenera', ru: 'Да, пересоздать', sv: 'Ja, regenerera',
+  },
+
+  // ─── Conditions ──────────────────────────────
+  'conditions.search': {
+    en: 'Search conditions...', es: 'Buscar condiciones...',
+    fr: 'Rechercher des conditions...', de: 'Erkrankungen suchen...',
+    pt: 'Buscar condições...', zh: '搜索病症...', ja: '症状を検索...',
+    it: 'Cerca condizioni...', ru: 'Поиск состояний...', sv: 'Sök tillstånd...',
+  },
+  'conditions.notFound': {
+    en: 'not found in catalog', es: 'no encontrado en el catálogo',
+    fr: 'introuvable dans le catalogue', de: 'nicht im Katalog gefunden',
+    pt: 'não encontrado no catálogo', zh: '在目录中未找到', ja: 'カタログに見つかりません',
+    it: 'non trovato nel catalogo', ru: 'не найдено в каталоге', sv: 'hittades inte i katalogen',
+  },
+  'conditions.addCustom': {
+    en: 'Add custom condition to your profile',
+    es: 'Agregar condición personalizada a su perfil',
+    fr: 'Ajouter une condition personnalisée à votre profil',
+    de: 'Eigene Erkrankung zum Profil hinzufügen',
+    pt: 'Adicionar condição personalizada ao perfil',
+    zh: '添加自定义病症到您的档案',
+    ja: 'カスタム症状をプロフィールに追加',
+    it: 'Aggiungi condizione personalizzata al profilo',
+    ru: 'Добавить собственное состояние в профиль',
+    sv: 'Lägg till eget tillstånd i din profil',
+  },
+  'conditions.customCondition': {
+    en: 'Custom Condition', es: 'Condición Personalizada',
+    fr: 'Condition personnalisée', de: 'Eigene Erkrankung',
+    pt: 'Condição Personalizada', zh: '自定义病症', ja: 'カスタム症状',
+    it: 'Condizione personalizzata', ru: 'Собственное состояние', sv: 'Eget tillstånd',
+  },
+  'conditions.customCategory': {
+    en: 'My Custom Conditions', es: 'Mis Condiciones Personalizadas',
+    fr: 'Mes conditions personnalisées', de: 'Meine eigenen Erkrankungen',
+    pt: 'Minhas Condições Personalizadas', zh: '我的自定义病症', ja: '私のカスタム症状',
+    it: 'Le mie condizioni personalizzate', ru: 'Мои собственные состояния', sv: 'Mina egna tillstånd',
+  },
+  'conditions.conditionName': {
+    en: 'Condition name', es: 'Nombre de la condición',
+    fr: 'Nom de la condition', de: 'Name der Erkrankung',
+    pt: 'Nome da condição', zh: '病症名称', ja: '症状名',
+    it: 'Nome della condizione', ru: 'Название состояния', sv: 'Tillståndets namn',
   },
 
   // ─── Health Catalog Categories ───────────────────────────────

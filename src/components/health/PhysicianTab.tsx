@@ -1,17 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { cfFetch } from '@/lib/api'
-import { SlideDrawer } from './SlideDrawer'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
-import {
-  INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS, SELECT_CLS,
-  LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
-} from './formStyles'
+import type { Lang } from '@/lib/i18n'
+import { SAVE_BTN_STYLE } from './formStyles'
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
@@ -39,21 +33,19 @@ export interface PrimaryPhysician {
   showOnEmergencyProfile: boolean
 }
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  specialty: z.string().min(1, 'Specialty is required'),
-  country: z.string().min(1, 'Country is required'),
-  city: z.string().min(1, 'City is required'),
-  phone: z.string().min(7, 'Phone is required'),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  language: z.string().optional(),
-  notes: z.string().optional(),
-  showOnEmergencyProfile: z.boolean(),
-})
+interface FormState {
+  name: string
+  specialty: string
+  country: string
+  city: string
+  phone: string
+  email: string
+  language: string
+  notes: string
+  showOnEmergencyProfile: boolean
+}
 
-type FormValues = z.infer<typeof schema>
-
-const DEFAULTS: FormValues = {
+const DEFAULT_FORM: FormState = {
   name: '',
   specialty: '',
   country: '',
@@ -65,6 +57,9 @@ const DEFAULTS: FormValues = {
   showOnEmergencyProfile: true,
 }
 
+const INPUT_CLS =
+  'w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50] focus:ring-1 focus:ring-[#4A7A50]/20'
+
 interface PhysicianTabProps {
   initialData?: PrimaryPhysician | null
 }
@@ -75,16 +70,12 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
     initialData !== undefined ? initialData : null
   )
   const [loading, setLoading] = useState(initialData === undefined)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState<FormState>(DEFAULT_FORM)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const fetchPhysician = useCallback(async () => {
     setLoading(true)
@@ -106,14 +97,15 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
   }, [fetchPhysician, initialData])
 
   function openAdd() {
-    reset(DEFAULTS)
-    setSubmitError(null)
-    setDrawerOpen(true)
+    setForm(DEFAULT_FORM)
+    setSaveError(null)
+    setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function openEdit() {
     if (!physician) return
-    reset({
+    setForm({
       name: physician.name,
       specialty: physician.specialty,
       country: physician.country,
@@ -124,25 +116,51 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
       notes: physician.notes ?? '',
       showOnEmergencyProfile: physician.showOnEmergencyProfile,
     })
-    setSubmitError(null)
-    setDrawerOpen(true)
+    setSaveError(null)
+    setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  async function onSubmit(values: FormValues) {
-    setSubmitting(true)
-    setSubmitError(null)
+  async function handleSave() {
+    if (!form.name || !form.specialty || !form.country || !form.city || !form.phone) return
+    setSaving(true)
+    setSaveError(null)
     try {
       const res = await cfFetch('upsertPrimaryPhysician', {
         method: 'POST',
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          name: form.name,
+          specialty: form.specialty,
+          country: form.country,
+          city: form.city,
+          phone: form.phone,
+          email: form.email || undefined,
+          language: form.language || undefined,
+          notes: form.notes || undefined,
+          showOnEmergencyProfile: form.showOnEmergencyProfile,
+        }),
       })
       if (!res.ok) throw new Error()
-      setDrawerOpen(false)
+      setShowForm(false)
       await fetchPhysician()
     } catch {
-      setSubmitError('Failed to save. Please try again.')
+      setSaveError('Failed to save. Please try again.')
     } finally {
-      setSubmitting(false)
+      setSaving(false)
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true)
+    try {
+      await cfFetch('deletePrimaryPhysician', { method: 'DELETE' })
+      setPhysician(null)
+      setConfirmDelete(false)
+    } catch {
+      setPhysician(null)
+      setConfirmDelete(false)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -155,159 +173,278 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
   }
 
   return (
-    <>
-      {!physician ? (
-        <div className={EMPTY_STATE_CLS}>
-          <p className="text-3xl mb-3">👨‍⚕️</p>
-          <p className="text-sm font-medium text-[#1C2B1E] mb-1">No primary physician set</p>
-          <p className="text-xs text-gray-400 mb-4">Add your primary care physician or specialist</p>
-          <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-            {t('emergency.physician', lang)}
-          </button>
-        </div>
-      ) : (
+    <div className="space-y-4">
+      {/* Add / Edit form */}
+      {showForm && (
         <div
-          className="p-5 rounded-2xl border border-gray-100 bg-white"
-          style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
+          className="bg-white rounded-2xl p-5"
+          style={{ boxShadow: '0 2px 8px rgba(28,43,30,0.08)', border: '2px solid #4A7A50' }}
         >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <p className="font-semibold text-sm text-[#1C2B1E]">{physician.name}</p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                {physician.specialty} · {physician.city}, {physician.country}
-              </p>
-              <a
-                href={`tel:${physician.phone}`}
-                className="inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+          <h3 className="font-semibold text-sm text-[#1C2B1E] mb-4">
+            {physician ? t('form.edit', lang as Lang) : t('physician.addPhysician', lang as Lang)}
+          </h3>
+
+          <div className="space-y-3">
+            {/* Name */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('physician.fullName', lang as Lang)} *
+              </label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
+                placeholder={t('physician.namePlaceholder', lang as Lang)}
+                className={INPUT_CLS}
+              />
+            </div>
+
+            {/* Specialty */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('physician.specialty', lang as Lang)} *
+              </label>
+              <input
+                type="text"
+                value={form.specialty}
+                onChange={e => setForm(p => ({ ...p, specialty: e.target.value }))}
+                placeholder={t('physician.specialtyPlaceholder', lang as Lang)}
+                className={INPUT_CLS}
+              />
+            </div>
+
+            {/* Country + City */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                  {t('physician.country', lang as Lang)} *
+                </label>
+                <input
+                  type="text"
+                  value={form.country}
+                  onChange={e => setForm(p => ({ ...p, country: e.target.value }))}
+                  placeholder="Costa Rica"
+                  className={INPUT_CLS}
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                  {t('physician.city', lang as Lang)} *
+                </label>
+                <input
+                  type="text"
+                  value={form.city}
+                  onChange={e => setForm(p => ({ ...p, city: e.target.value }))}
+                  placeholder="San José"
+                  className={INPUT_CLS}
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('physician.phone', lang as Lang)} *
+              </label>
+              <input
+                type="tel"
+                value={form.phone}
+                onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
+                placeholder="+506 2222 3333"
+                className={INPUT_CLS}
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                Email{' '}
+                <span className="text-gray-400 font-normal">
+                  ({t('physician.emailNote', lang as Lang)})
+                </span>
+              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+                placeholder="dr.martinez@clinic.com"
+                className={INPUT_CLS}
+              />
+            </div>
+
+            {/* Language */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('physician.language', lang as Lang)}
+              </label>
+              <select
+                value={form.language}
+                onChange={e => setForm(p => ({ ...p, language: e.target.value }))}
+                className={`${INPUT_CLS} bg-white`}
+              >
+                <option value="">{t('lang.selectLanguage', lang as Lang)}...</option>
+                {LANGUAGES.map(l => (
+                  <option key={l.value} value={l.value}>{l.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('emergency.notes', lang as Lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang as Lang)}</span>
+              </label>
+              <input
+                type="text"
+                value={form.notes}
+                onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
+                placeholder="e.g. Clínica Santa Fe · Mon–Fri 8am–5pm"
+                className={INPUT_CLS}
+              />
+            </div>
+
+            {/* Show on emergency */}
+            <label className="flex items-center gap-2 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.showOnEmergencyProfile}
+                onChange={e => setForm(p => ({ ...p, showOnEmergencyProfile: e.target.checked }))}
+                className="accent-[#4A7A50] w-4 h-4"
+              />
+              <span className="text-gray-700">{t('common.showOnEmergency', lang as Lang)}</span>
+            </label>
+
+            {saveError && <p className="text-xs text-red-500">{saveError}</p>}
+
+            {/* Buttons */}
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => void handleSave()}
+                disabled={saving || !form.name || !form.specialty || !form.country || !form.city || !form.phone}
+                className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-opacity"
                 style={SAVE_BTN_STYLE}
               >
-                📞 {physician.phone}
-              </a>
-              {physician.notes && (
-                <p className="text-xs text-gray-400 mt-2">{physician.notes}</p>
-              )}
+                {saving ? '...' : t('common.save', lang as Lang)}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2.5 rounded-xl text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t('common.cancel', lang as Lang)}
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={openEdit}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:text-[#4A7A50] hover:bg-[#4A7A50]/8 transition-colors flex-shrink-0"
-            >
-              {t('common.edit', lang)}
-            </button>
           </div>
         </div>
       )}
 
-      <SlideDrawer
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        title={physician ? `${t('common.edit', lang)} ${t('emergency.physician', lang)}` : t('emergency.physician', lang)}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          <div>
-            <label className={LABEL_CLS}>{t('physician.fullName', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('name')}
-              type="text"
-              placeholder={t('physician.namePlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('physician.specialty', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('specialty')}
-              type="text"
-              placeholder={t('physician.specialtyPlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.specialty ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.specialty && <p className="text-xs text-red-500 mt-1">{errors.specialty.message}</p>}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={LABEL_CLS}>{t('physician.country', lang)} <span className="text-red-400">*</span></label>
-              <input
-                {...register('country')}
-                type="text"
-                placeholder="Costa Rica"
-                className={`${INPUT_CLS} ${errors.country ? INPUT_ERR_CLS : ''}`}
-              />
-              {errors.country && <p className="text-xs text-red-500 mt-1">{errors.country.message}</p>}
-            </div>
-            <div>
-              <label className={LABEL_CLS}>{t('physician.city', lang)} <span className="text-red-400">*</span></label>
-              <input
-                {...register('city')}
-                type="text"
-                placeholder="San José"
-                className={`${INPUT_CLS} ${errors.city ? INPUT_ERR_CLS : ''}`}
-              />
-              {errors.city && <p className="text-xs text-red-500 mt-1">{errors.city.message}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('physician.phone', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('phone')}
-              type="tel"
-              placeholder="+506 2222 3333"
-              className={`${INPUT_CLS} ${errors.phone ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">({t('physician.emailNote', lang)})</span></label>
-            <input
-              {...register('email')}
-              type="email"
-              placeholder="dr.martinez@clinic.com"
-              className={`${INPUT_CLS} ${errors.email ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('physician.language', lang)}</label>
-            <select {...register('language')} className={SELECT_CLS}>
-              <option value="">{t('lang.selectLanguage', lang)}...</option>
-              {LANGUAGES.map((l) => (
-                <option key={l.value} value={l.value}>{l.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea
-              {...register('notes')}
-              rows={3}
-              placeholder="e.g. Clínica Santa Fe · Mon–Fri 8am–5pm"
-              className={TEXTAREA_CLS}
-            />
-          </div>
-
-          <label className="flex items-center gap-3 cursor-pointer group w-fit">
-            <div className="relative flex-shrink-0">
-              <input type="checkbox" {...register('showOnEmergencyProfile')} className="sr-only peer" />
-              <div className={TOGGLE_TRACK_CLS} />
-            </div>
-            <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              {t('common.showOnEmergency', lang)}
-            </span>
-          </label>
-
-          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
-
-          <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : physician ? t('profile.saveChanges', lang) : t('emergency.physician', lang)}
+      {/* Physician card or empty state */}
+      {!showForm && !physician && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-3xl mb-3">🩺</p>
+          <p className="text-sm text-gray-500 mb-4">
+            {t('physician.noPhysician', lang as Lang)}
+          </p>
+          <button
+            type="button"
+            onClick={openAdd}
+            className="w-full py-3 rounded-2xl border-2 border-dashed border-[#C8DEC4] text-[#4A7A50] text-sm font-medium hover:bg-[#E8F2E6] transition-colors"
+          >
+            + {t('physician.addPhysician', lang as Lang)}
           </button>
-        </form>
-      </SlideDrawer>
-    </>
+        </div>
+      )}
+
+      {!showForm && physician && (
+        <div
+          className="bg-white rounded-2xl overflow-hidden border border-[#F0F4EE]"
+          style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
+        >
+          {/* Card header */}
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-semibold text-sm text-[#1C2B1E]">
+                    {physician.name}
+                  </p>
+                  {physician.specialty && (
+                    <span className="px-2 py-0.5 rounded-full bg-[#E8F2E6] text-[#4A7A50] text-xs font-medium">
+                      {physician.specialty}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {physician.city}, {physician.country}
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={openEdit}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#4A7A50] border border-[#4A7A50]/30 hover:bg-[#E8F2E6] transition-colors"
+                >
+                  ✏️ {t('form.edit', lang as Lang)}
+                </button>
+                {confirmDelete ? (
+                  <div className="flex gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => void handleDelete()}
+                      disabled={deleting}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium bg-red-500 text-white hover:bg-red-600 transition-colors"
+                    >
+                      {deleting ? '...' : t('form.confirm', lang as Lang)}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDelete(false)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
+                    >
+                      {t('common.cancel', lang as Lang)}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDelete(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 border border-red-200 hover:bg-red-50 transition-colors"
+                  >
+                    🗑️ {t('form.delete', lang as Lang)}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Contact details */}
+            <div className="mt-3 space-y-2">
+              <a
+                href={`tel:${physician.phone}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                style={SAVE_BTN_STYLE}
+              >
+                📞 {physician.phone}
+              </a>
+              {physician.email && (
+                <div>
+                  <a
+                    href={`mailto:${physician.email}`}
+                    className="text-xs text-[#4A7A50] hover:underline"
+                  >
+                    ✉️ {physician.email}
+                  </a>
+                </div>
+              )}
+              {physician.notes && (
+                <p className="text-xs text-gray-500">{physician.notes}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
   )
 }

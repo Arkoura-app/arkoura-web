@@ -152,8 +152,9 @@ export function AllergiesTab() {
           method: 'POST',
           body: JSON.stringify(payload),
         })
-        const data = await res.json()
-        setAllergies(prev => [...prev, { ...payload, id: data.id } as Allergy])
+        const data = await res.json() as { id?: string; allergyId?: string; docId?: string }
+        const newId = data.id ?? data.allergyId ?? data.docId ?? ''
+        setAllergies(prev => [...prev, { ...payload, id: newId } as Allergy])
       }
 
       setForm(DEFAULT_FORM)
@@ -167,6 +168,7 @@ export function AllergiesTab() {
   }
 
   async function handleDelete(id: string) {
+    if (!id) return
     setDeleting(id)
     try {
       await cfFetch(`deleteAllergy/${id}`, { method: 'DELETE' })
@@ -364,6 +366,7 @@ export function AllergiesTab() {
             return (
               <RecordCardNew
                 key={allergy.id}
+                lang={lang}
                 title={allergy.allergen}
                 subtitle={[
                   allergy.allergenType

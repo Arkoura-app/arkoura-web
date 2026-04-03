@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
+import { t } from '@/lib/i18n'
+import type { Lang } from '@/lib/i18n'
 
 interface Props {
   title: string
@@ -12,6 +14,7 @@ interface Props {
   onEdit: () => void
   onDelete: () => void
   isDeleting?: boolean
+  lang?: string
 }
 
 export function RecordCardNew({
@@ -23,6 +26,7 @@ export function RecordCardNew({
   onEdit,
   onDelete,
   isDeleting,
+  lang = 'en',
 }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -94,7 +98,7 @@ export function RecordCardNew({
               onClick={onEdit}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#4A7A50] border border-[#4A7A50]/30 hover:bg-[#E8F2E6] transition-colors"
             >
-              ✏️ Edit
+              ✏️ {t('form.edit', lang as Lang)}
             </button>
             {confirmDelete ? (
               <div className="flex gap-1.5">
@@ -104,14 +108,14 @@ export function RecordCardNew({
                   disabled={isDeleting}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium bg-red-500 text-white hover:bg-red-600 transition-colors"
                 >
-                  {isDeleting ? '...' : 'Confirm'}
+                  {isDeleting ? '...' : t('form.confirm', lang as Lang)}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(false)}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel', lang as Lang)}
                 </button>
               </div>
             ) : (
@@ -120,7 +124,7 @@ export function RecordCardNew({
                 onClick={() => setConfirmDelete(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 border border-red-200 hover:bg-red-50 transition-colors"
               >
-                🗑️ Delete
+                🗑️ {t('form.delete', lang as Lang)}
               </button>
             )}
           </div>
