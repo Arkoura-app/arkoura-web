@@ -285,11 +285,6 @@ export default function TermsPage() {
           Effective date: April 3, 2026 &nbsp;·&nbsp; Last revised: April 3, 2026
         </p>
 
-        {/* Draft notice */}
-        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-10 text-amber-800 text-sm">
-          <span className="text-base leading-5">⚠️</span>
-          <span>{t('terms.draftNotice', lang)}</span>
-        </div>
 
         {/* Sections */}
         <div className="space-y-10">
