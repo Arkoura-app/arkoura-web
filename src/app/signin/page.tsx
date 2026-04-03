@@ -463,7 +463,7 @@ function SignInContent() {
                       />
                       <span className="text-xs text-gray-600">
                         {t('terms.iAccept', lang)}{' '}
-                        <a href="/terms" target="_blank" className="underline text-[#4A7A50]">
+                        <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline text-[#4A7A50]">
                           {t('terms.title', lang)}
                         </a>
                       </span>

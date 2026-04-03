@@ -1550,6 +1550,18 @@ const translations: TranslationMap = {
   },
 
   // ─── Settings ────────────────────────────────────────────────
+  'settings.moreComingSoon': {
+    en: 'More settings coming soon',
+    es: 'Más ajustes próximamente',
+    fr: 'Plus de paramètres bientôt',
+    de: 'Weitere Einstellungen demnächst',
+    pt: 'Mais configurações em breve',
+    zh: '更多设置即将推出',
+    ja: 'その他の設定は近日公開',
+    it: 'Altre impostazioni in arrivo',
+    ru: 'Дополнительные настройки скоро',
+    sv: 'Fler inställningar kommer snart',
+  },
   'settings.legal': {
     en: 'Legal',
     es: 'Legal',
