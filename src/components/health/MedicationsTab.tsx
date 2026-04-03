@@ -1,287 +1,396 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { cfFetch } from '@/lib/api'
-import { RecordCard } from './RecordCard'
-import { SlideDrawer } from './SlideDrawer'
+import { useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
-import {
-  INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS, SELECT_CLS,
-  LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
-} from './formStyles'
+import { cfFetch } from '@/lib/api'
+import { CatalogSearchInput } from './CatalogSearchInput'
+import { RecordCardNew } from './RecordCardNew'
 
-export interface Medication {
+// ─── Types ───────────────────────────────────────────
+
+interface Medication {
   id: string
   name: string
-  genericName?: string
-  dose?: string
-  frequency?: string
-  route?: string
+  genericName: string
+  dose: string
+  frequency: string
+  route: string
   isCritical: boolean
   showOnEmergencyProfile: boolean
-  purpose?: string
-  notes?: string
+  notes: string
+  catalogRef?: string
 }
 
-const schema = z.object({
-  name: z.string().min(1, 'Medication name is required'),
-  genericName: z.string().optional(),
-  dose: z.string().optional(),
-  frequency: z.string().optional(),
-  route: z.string().optional(),
-  isCritical: z.boolean(),
-  showOnEmergencyProfile: z.boolean(),
-  purpose: z.string().optional(),
-  notes: z.string().optional(),
-})
+interface FormState {
+  name: string
+  catalogRef: string | null
+  genericName: string
+  dose: string
+  frequency: string
+  route: string
+  isCritical: boolean
+  showOnEmergencyProfile: boolean
+  notes: string
+}
 
-type FormValues = z.infer<typeof schema>
+// ─── Constants ───────────────────────────────────────
 
-const DEFAULTS: FormValues = {
+const ROUTE_OPTIONS = ['oral', 'topical', 'inhaled', 'injected', 'sublingual', 'other']
+
+const DEFAULT_FORM: FormState = {
   name: '',
+  catalogRef: null,
   genericName: '',
   dose: '',
   frequency: '',
   route: '',
   isCritical: false,
   showOnEmergencyProfile: true,
-  purpose: '',
   notes: '',
 }
 
-interface MedicationsTabProps {
-  initialData?: Medication[]
+const SAVE_BTN_STYLE = {
+  background: 'linear-gradient(145deg,#44664a,#7a9e7e)',
 }
 
-export function MedicationsTab({ initialData }: MedicationsTabProps) {
+// ─── Component ───────────────────────────────────────
+
+export function MedicationsTab() {
   const { lang } = useLang()
-  const [items, setItems] = useState<Medication[]>(initialData ?? [])
-  const [loading, setLoading] = useState(!initialData)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Medication | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [medications, setMedications] = useState<Medication[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [form, setForm] = useState<FormState>(DEFAULT_FORM)
+  const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
+  useEffect(() => {
+    void load()
+  }, [])
 
-  const fetchItems = useCallback(async () => {
+  async function load() {
     setLoading(true)
     try {
       const res = await cfFetch('getMedications')
-      if (!res.ok) throw new Error()
-      const json = (await res.json()) as { medications: Medication[] }
-      setItems(json.medications ?? [])
-    } catch {
-      setItems([])
+      const data = await res.json()
+      setMedications(data.medications ?? [])
+    } catch (err) {
+      console.error('MedicationsTab load error:', err)
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  useEffect(() => {
-    if (initialData !== undefined) return
-    void fetchItems()
-  }, [fetchItems, initialData])
-
-  function openAdd() {
-    reset(DEFAULTS)
-    setEditingItem(null)
-    setSubmitError(null)
-    setDrawerOpen(true)
   }
 
-  function openEdit(item: Medication) {
-    reset({
-      name: item.name,
-      genericName: item.genericName ?? '',
-      dose: item.dose ?? '',
-      frequency: item.frequency ?? '',
-      route: item.route ?? '',
-      isCritical: item.isCritical,
-      showOnEmergencyProfile: item.showOnEmergencyProfile,
-      purpose: item.purpose ?? '',
-      notes: item.notes ?? '',
+  function handleCatalogSelect(entry: {
+    id: string | null
+    name: string
+    genericName?: string
+    route?: string
+    isCritical?: boolean
+  }) {
+    setForm(prev => ({
+      ...prev,
+      name: entry.name,
+      catalogRef: entry.id,
+      genericName: entry.genericName ?? prev.genericName,
+      route: entry.route ?? prev.route,
+      isCritical: entry.isCritical ?? prev.isCritical,
+    }))
+  }
+
+  function startEdit(med: Medication) {
+    setForm({
+      name: med.name,
+      catalogRef: med.catalogRef ?? null,
+      genericName: med.genericName,
+      dose: med.dose,
+      frequency: med.frequency,
+      route: med.route,
+      isCritical: med.isCritical,
+      showOnEmergencyProfile: med.showOnEmergencyProfile,
+      notes: med.notes,
     })
-    setEditingItem(item)
-    setSubmitError(null)
-    setDrawerOpen(true)
+    setEditingId(med.id)
+    setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  async function handleSave() {
+    if (!form.name) return
+    setSaving(true)
+    try {
+      const payload = {
+        name: form.name,
+        catalogRef: form.catalogRef,
+        genericName: form.genericName,
+        dose: form.dose,
+        frequency: form.frequency,
+        route: form.route,
+        isCritical: form.isCritical,
+        showOnEmergencyProfile: form.showOnEmergencyProfile,
+        notes: form.notes,
+      }
+
+      if (editingId) {
+        await cfFetch(`updateMedication/${editingId}`, {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+        })
+        setMedications(prev =>
+          prev.map(m => (m.id === editingId ? { ...m, ...payload, id: editingId } : m))
+        )
+      } else {
+        const res = await cfFetch('createMedication', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        })
+        const data = await res.json()
+        setMedications(prev => [...prev, { ...payload, id: data.id } as Medication])
+      }
+
+      setForm(DEFAULT_FORM)
+      setEditingId(null)
+      setShowForm(false)
+    } catch (err) {
+      console.error('Medication save error:', err)
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleDelete(id: string) {
-    setDeletingId(id)
+    setDeleting(id)
     try {
       await cfFetch(`deleteMedication/${id}`, { method: 'DELETE' })
-      await fetchItems()
-    } catch {
-      // silent
+      setMedications(prev => prev.filter(m => m.id !== id))
+    } catch (err) {
+      console.error('Medication delete error:', err)
     } finally {
-      setDeletingId(null)
+      setDeleting(null)
     }
-  }
-
-  async function onSubmit(values: FormValues) {
-    setSubmitting(true)
-    setSubmitError(null)
-    try {
-      const res = editingItem
-        ? await cfFetch(`updateMedication/${editingItem.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(values),
-          })
-        : await cfFetch('createMedication', {
-            method: 'POST',
-            body: JSON.stringify(values),
-          })
-      if (!res.ok) throw new Error()
-      setDrawerOpen(false)
-      await fetchItems()
-    } catch {
-      setSubmitError('Failed to save. Please try again.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  function handleDrawerChange(open: boolean) {
-    setDrawerOpen(open)
-    if (!open) setEditingItem(null)
-  }
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-12">
-        <div className="w-5 h-5 border-2 border-[#4A7A50] border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
   }
 
   return (
-    <>
-      <div className="space-y-3">
-        {items.length === 0 ? (
-          <div className={EMPTY_STATE_CLS}>
-            <p className="text-3xl mb-3">💊</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noMedications', lang)}</p>
-            <p className="text-xs text-gray-400 mb-4">Add medications that responders should know about</p>
-            <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              {t('emergency.addMedication', lang)}
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-end">
-              <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + {t('common.add', lang)}
+    <div className="space-y-4">
+      {/* Add / Edit form */}
+      {!showForm ? (
+        <button
+          type="button"
+          onClick={() => {
+            setForm(DEFAULT_FORM)
+            setEditingId(null)
+            setShowForm(true)
+          }}
+          className="w-full py-3 rounded-2xl border-2 border-dashed border-[#C8DEC4] text-[#4A7A50] text-sm font-medium hover:bg-[#E8F2E6] transition-colors"
+        >
+          + {t('emergency.addMedication', lang)}
+        </button>
+      ) : (
+        <div
+          className="bg-white rounded-2xl p-5"
+          style={{ boxShadow: '0 2px 8px rgba(28,43,30,0.08)', border: '2px solid #4A7A50' }}
+        >
+          <h3 className="font-semibold text-sm text-[#1C2B1E] mb-4">
+            {editingId ? t('form.edit', lang) : t('emergency.addMedication', lang)}
+          </h3>
+
+          <div className="space-y-3">
+            {/* Medication search */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('medication.name', lang)} *
+              </label>
+              <CatalogSearchInput
+                type="medication"
+                lang={lang}
+                placeholder={t('medication.namePlaceholder', lang)}
+                value={form.name}
+                onSelect={handleCatalogSelect}
+              />
+            </div>
+
+            {/* Generic name */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('medication.genericName', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <input
+                type="text"
+                value={form.genericName}
+                onChange={e => setForm(p => ({ ...p, genericName: e.target.value }))}
+                placeholder="e.g. metformin hydrochloride"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {/* Dose + Frequency row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                  {t('medication.dose', lang)}
+                </label>
+                <input
+                  type="text"
+                  value={form.dose}
+                  onChange={e => setForm(p => ({ ...p, dose: e.target.value }))}
+                  placeholder={t('medication.dosePlaceholder', lang)}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                  {t('medication.frequency', lang)}
+                </label>
+                <input
+                  type="text"
+                  value={form.frequency}
+                  onChange={e => setForm(p => ({ ...p, frequency: e.target.value }))}
+                  placeholder={t('medication.frequencyPlaceholder', lang)}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                />
+              </div>
+            </div>
+
+            {/* Route */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('medication.route', lang)}
+              </label>
+              <select
+                value={form.route}
+                onChange={e => setForm(p => ({ ...p, route: e.target.value }))}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              >
+                <option value="">{t('medication.selectRoute', lang)}</option>
+                {ROUTE_OPTIONS.map(r => (
+                  <option key={r} value={r}>
+                    {t(`medication.route.${r}`, lang)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Toggles */}
+            <div className="flex gap-4 flex-wrap">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.isCritical}
+                  onChange={e => setForm(p => ({ ...p, isCritical: e.target.checked }))}
+                  className="accent-[#4A7A50] w-4 h-4"
+                />
+                <span className="text-gray-700">
+                  {t('emergency.critical', lang)}
+                </span>
+              </label>
+
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.showOnEmergencyProfile}
+                  onChange={e =>
+                    setForm(p => ({ ...p, showOnEmergencyProfile: e.target.checked }))
+                  }
+                  className="accent-[#4A7A50] w-4 h-4"
+                />
+                <span className="text-gray-700">{t('common.showOnEmergency', lang)}</span>
+              </label>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('emergency.notes', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <input
+                type="text"
+                value={form.notes}
+                onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
+                placeholder={t('form.additionalDetails', lang)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {/* Form buttons */}
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => void handleSave()}
+                disabled={saving || !form.name}
+                className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-opacity"
+                style={SAVE_BTN_STYLE}
+              >
+                {saving ? '...' : t('common.save', lang)}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(false)
+                  setEditingId(null)
+                  setForm(DEFAULT_FORM)
+                }}
+                className="px-4 py-2.5 rounded-xl text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t('common.cancel', lang)}
               </button>
             </div>
-            {items.map((item) => (
-              <RecordCard
-                key={item.id}
-                title={item.name}
-                subtitle={[item.dose, item.frequency, item.route].filter(Boolean).join(' · ')}
-                isCritical={item.isCritical}
-                onEdit={() => openEdit(item)}
-                onDelete={() => void handleDelete(item.id)}
-                isDeleting={deletingId === item.id}
-              />
-            ))}
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
 
-      <SlideDrawer
-        open={drawerOpen}
-        onOpenChange={handleDrawerChange}
-        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.medications', lang)}` : t('emergency.addMedication', lang)}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          <div>
-            <label className={LABEL_CLS}>{t('medication.name', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('name')}
-              type="text"
-              placeholder={t('medication.namePlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
+      {/* Records list */}
+      {loading ? (
+        <div className="space-y-2">
+          {[1, 2].map(i => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl p-4 animate-pulse h-16"
+              style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
             />
-            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('medication.genericName', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <input {...register('genericName')} type="text" placeholder="e.g. metformin hydrochloride" className={INPUT_CLS} />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={LABEL_CLS}>{t('medication.dose', lang)}</label>
-              <input {...register('dose')} type="text" placeholder={t('medication.dosePlaceholder', lang)} className={INPUT_CLS} />
-            </div>
-            <div>
-              <label className={LABEL_CLS}>{t('medication.frequency', lang)}</label>
-              <input {...register('frequency')} type="text" placeholder={t('medication.frequencyPlaceholder', lang)} className={INPUT_CLS} />
-            </div>
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('medication.route', lang)}</label>
-            <select {...register('route')} className={SELECT_CLS}>
-              <option value="">{t('medication.selectRoute', lang)}</option>
-              <option value="oral">{t('medication.route.oral', lang)}</option>
-              <option value="topical">{t('medication.route.topical', lang)}</option>
-              <option value="inhaled">{t('medication.route.inhaled', lang)}</option>
-              <option value="injected">{t('medication.route.injected', lang)}</option>
-              <option value="sublingual">{t('medication.route.sublingual', lang)}</option>
-              <option value="other">{t('medication.route.other', lang)}</option>
-            </select>
-          </div>
-
-          <label className="flex items-center gap-3 cursor-pointer group w-fit">
-            <div className="relative flex-shrink-0">
-              <input type="checkbox" {...register('isCritical')} className="sr-only peer" />
-              <div className={TOGGLE_TRACK_CLS} />
-            </div>
-            <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              {t('emergency.critical', lang)} — must not be missed
-            </span>
-          </label>
-
-          <label className="flex items-center gap-3 cursor-pointer group w-fit">
-            <div className="relative flex-shrink-0">
-              <input type="checkbox" {...register('showOnEmergencyProfile')} className="sr-only peer" />
-              <div className={TOGGLE_TRACK_CLS} />
-            </div>
-            <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              {t('common.showOnEmergency', lang)}
-            </span>
-          </label>
-
-          <div>
-            <label className={LABEL_CLS}>{t('medication.purpose', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea {...register('purpose')} rows={2} placeholder={t('medication.purposePlaceholder', lang)} className={TEXTAREA_CLS} />
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea {...register('notes')} rows={2} placeholder={t('form.additionalDetails', lang)} className={TEXTAREA_CLS} />
-          </div>
-
-          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
-
-          <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addMedication', lang)}
-          </button>
-        </form>
-      </SlideDrawer>
-    </>
+          ))}
+        </div>
+      ) : medications.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-3xl mb-3">💊</p>
+          <p className="text-gray-500 text-sm">{t('emergency.noMedications', lang)}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {medications.map(med => (
+            <RecordCardNew
+              key={med.id}
+              title={med.name}
+              subtitle={[med.dose, med.frequency ? med.frequency : '']
+                .filter(Boolean)
+                .join(' · ')}
+              isCritical={med.isCritical}
+              onEdit={() => startEdit(med)}
+              onDelete={() => void handleDelete(med.id)}
+              isDeleting={deleting === med.id}
+            >
+              {med.genericName && (
+                <p className="text-xs text-gray-600">
+                  <span className="font-medium">{t('medication.genericName', lang)}:</span>{' '}
+                  {med.genericName}
+                </p>
+              )}
+              {med.route && (
+                <p className="text-xs text-gray-600">
+                  <span className="font-medium">{t('medication.route', lang)}:</span>{' '}
+                  {t(`medication.route.${med.route}`, lang)}
+                </p>
+              )}
+              {med.notes && (
+                <p className="text-xs text-gray-500">{med.notes}</p>
+              )}
+            </RecordCardNew>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

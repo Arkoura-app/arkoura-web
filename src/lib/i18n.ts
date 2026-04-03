@@ -1370,6 +1370,24 @@ const translations: TranslationMap = {
     pt: 'Sim, regenerar', zh: '是的，重新生成', ja: 'はい、再生成',
     it: 'Sì, rigenera', ru: 'Да, пересоздать', sv: 'Ja, regenerera',
   },
+
+  // ─── Health Catalog Categories ───────────────────────────────
+  'cat.cardiovascular': { en: 'Cardiovascular', es: 'Cardiovascular', fr: 'Cardiovasculaire', de: 'Herz-Kreislauf', pt: 'Cardiovascular', zh: '心血管', ja: '心臓・循環器', it: 'Cardiovascolare', ru: 'Сердечно-сосудистые', sv: 'Hjärt-kärl' },
+  'cat.neurological': { en: 'Neurological', es: 'Neurológico', fr: 'Neurologique', de: 'Neurologisch', pt: 'Neurológico', zh: '神经系统', ja: '神経', it: 'Neurologico', ru: 'Неврологические', sv: 'Neurologisk' },
+  'cat.metabolic': { en: 'Metabolic & Endocrine', es: 'Metabólico y Endocrino', fr: 'Métabolique et endocrinien', de: 'Stoffwechsel & Endokrin', pt: 'Metabólico e Endócrino', zh: '代谢与内分泌', ja: '代謝・内分泌', it: 'Metabolico ed endocrino', ru: 'Обмен веществ и эндокринная', sv: 'Metabolisk och endokrin' },
+  'cat.respiratory': { en: 'Respiratory', es: 'Respiratorio', fr: 'Respiratoire', de: 'Atemwege', pt: 'Respiratório', zh: '呼吸系统', ja: '呼吸器', it: 'Respiratorio', ru: 'Дыхательная система', sv: 'Andningsvägar' },
+  'cat.hematological': { en: 'Blood & Hematological', es: 'Sangre y Hematológico', fr: 'Sang et hématologie', de: 'Blut & Hämatologie', pt: 'Sangue e Hematológico', zh: '血液系统', ja: '血液・造血器', it: 'Sangue ed ematologico', ru: 'Кровь и гематология', sv: 'Blod och hematologi' },
+  'cat.cognitive': { en: 'Cognitive & Neurodevelopmental', es: 'Cognitivo y Neurodesarrollo', fr: 'Cognitif et neurodéveloppemental', de: 'Kognitiv & Neuroentwicklung', pt: 'Cognitivo e Neurodesenvolvimento', zh: '认知与神经发育', ja: '認知・神経発達', it: 'Cognitivo e neurosviluppo', ru: 'Когнитивные и нейроразвитие', sv: 'Kognitiv och neuroutveckling' },
+  'cat.movement': { en: 'Movement & Neuromuscular', es: 'Movimiento y Neuromuscular', fr: 'Mouvement et neuromusculaire', de: 'Bewegung & Neuromuskulär', pt: 'Movimento e Neuromuscular', zh: '运动与神经肌肉', ja: '運動・神経筋', it: 'Movimento e neuromuscolare', ru: 'Двигательные и нервно-мышечные', sv: 'Rörelse och neuromuskulär' },
+  'cat.renal': { en: 'Renal & Urological', es: 'Renal y Urológico', fr: 'Rénal et urologique', de: 'Niere & Urologie', pt: 'Renal e Urológico', zh: '肾脏与泌尿系统', ja: '腎・泌尿器', it: 'Renale e urologico', ru: 'Почечная и урология', sv: 'Renal och urologisk' },
+  'cat.hepatic': { en: 'Liver & Gastrointestinal', es: 'Hígado y Gastrointestinal', fr: 'Foie et gastro-intestinal', de: 'Leber & Magen-Darm', pt: 'Fígado e Gastrointestinal', zh: '肝脏与消化系统', ja: '肝臓・消化器', it: 'Fegato e gastrointestinale', ru: 'Печень и ЖКТ', sv: 'Lever och gastrointestinal' },
+  'cat.immune': { en: 'Immune & Autoimmune', es: 'Inmune y Autoinmune', fr: 'Immunitaire et auto-immun', de: 'Immun & Autoimmun', pt: 'Imune e Autoimune', zh: '免疫与自身免疫', ja: '免疫・自己免疫', it: 'Immunitario e autoimmune', ru: 'Иммунные и аутоиммунные', sv: 'Immunsystem och autoimmun' },
+  'cat.endocrine': { en: 'Endocrine Crises', es: 'Crisis Endocrinas', fr: 'Crises endocriniennes', de: 'Endokrine Krisen', pt: 'Crises Endócrinas', zh: '内分泌危象', ja: '内分泌クリーゼ', it: 'Crisi endocrine', ru: 'Эндокринные кризы', sv: 'Endokrina kriser' },
+  'cat.oncological': { en: 'Oncological', es: 'Oncológico', fr: 'Oncologique', de: 'Onkologisch', pt: 'Oncológico', zh: '肿瘤', ja: '腫瘍', it: 'Oncologico', ru: 'Онкологические', sv: 'Onkologisk' },
+  'cat.genetic': { en: 'Genetic & Rare', es: 'Genético y Raras', fr: 'Génétique et maladies rares', de: 'Genetisch & Selten', pt: 'Genético e Raras', zh: '遗传与罕见病', ja: '遺伝性・希少疾患', it: 'Genetico e raro', ru: 'Генетические и редкие', sv: 'Genetisk och sällsynt' },
+  'cat.mental_health': { en: 'Mental Health', es: 'Salud Mental', fr: 'Santé mentale', de: 'Psychische Gesundheit', pt: 'Saúde Mental', zh: '心理健康', ja: 'メンタルヘルス', it: 'Salute mentale', ru: 'Психическое здоровье', sv: 'Psykisk hälsa' },
+  'cat.devices': { en: 'Medical Devices & Implants', es: 'Dispositivos Médicos e Implantes', fr: 'Dispositifs médicaux et implants', de: 'Medizinische Geräte & Implantate', pt: 'Dispositivos Médicos e Implantes', zh: '医疗设备与植入物', ja: '医療機器・インプラント', it: 'Dispositivi medici e impianti', ru: 'Медицинские устройства и импланты', sv: 'Medicinska enheter och implantat' },
+  'cat.critical': { en: 'Critical Contraindications', es: 'Contraindicaciones Críticas', fr: 'Contre-indications critiques', de: 'Kritische Kontraindikationen', pt: 'Contraindicações Críticas', zh: '关键禁忌症', ja: '重要な禁忌', it: 'Controindicazioni critiche', ru: 'Критические противопоказания', sv: 'Kritiska kontraindikationer' },
 }
 
 export function t(key: string, lang: Lang = 'en'): string {

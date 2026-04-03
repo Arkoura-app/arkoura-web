@@ -1,271 +1,375 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { cfFetch } from '@/lib/api'
-import { RecordCard } from './RecordCard'
-import { SlideDrawer } from './SlideDrawer'
+import { useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
-import {
-  INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS,
-  LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
-} from './formStyles'
+import { cfFetch } from '@/lib/api'
+import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 
 // ─── Types ───────────────────────────────────────────
 
-export interface Condition {
+interface CatalogEntry {
   id: string
-  name: string
-  icdCode?: string
+  category: string
+  categoryEmoji: string
   isCritical: boolean
+  icdCode: string
+  names: Record<string, string>
+  emergencyNote: string
+}
+
+interface SavedCondition {
+  id: string
+  catalogRef: string
+  name: string
+  notes: string
+  isCritical: boolean
+  isActive: boolean
   showOnEmergencyProfile: boolean
-  active: boolean
-  notes?: string
 }
 
-// ─── Schema ──────────────────────────────────────────
+// ─── Constants ───────────────────────────────────────
 
-const schema = z.object({
-  name: z.string().min(1, 'Condition name is required'),
-  icdCode: z.string().optional(),
-  isCritical: z.boolean(),
-  showOnEmergencyProfile: z.boolean(),
-  active: z.boolean(),
-  notes: z.string().max(2000, 'Max 2000 characters').optional(),
-})
+const CATALOG_URL = `${CF_FUNCTIONS_BASE}/getCatalog`
 
-type FormValues = z.infer<typeof schema>
-
-const DEFAULTS: FormValues = {
-  name: '',
-  icdCode: '',
-  isCritical: false,
-  showOnEmergencyProfile: true,
-  active: true,
-  notes: '',
-}
+const CATEGORY_ORDER = [
+  'cardiovascular',
+  'neurological',
+  'metabolic_endocrine',
+  'respiratory',
+  'hematological',
+  'cognitive_neurodevelopmental',
+  'movement_neuromuscular',
+  'renal',
+  'hepatic_gi',
+  'immune_autoimmune',
+  'endocrine_crises',
+  'oncological',
+  'genetic_rare',
+  'mental_health',
+  'medical_devices',
+  'critical_contraindications',
+]
 
 // ─── Component ───────────────────────────────────────
 
-interface ConditionsTabProps {
-  initialData?: Condition[]
-}
-
-export function ConditionsTab({ initialData }: ConditionsTabProps) {
+export function ConditionsTab() {
   const { lang } = useLang()
-  const [items, setItems] = useState<Condition[]>(initialData ?? [])
-  const [loading, setLoading] = useState(!initialData)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Condition | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [catalog, setCatalog] = useState<CatalogEntry[]>([])
+  const [saved, setSaved] = useState<SavedCondition[]>([])
+  const [loading, setLoading] = useState(true)
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+  const [saving, setSaving] = useState<Set<string>>(new Set())
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
+  useEffect(() => {
+    load()
+  }, [])
 
-  const fetchItems = useCallback(async () => {
+  async function load() {
     setLoading(true)
     try {
-      const res = await cfFetch('getConditions')
-      if (!res.ok) throw new Error()
-      const json = (await res.json()) as { conditions: Condition[] }
-      setItems(json.conditions ?? [])
-    } catch {
-      setItems([])
+      const [catalogRes, savedRes] = await Promise.all([
+        fetch(`${CATALOG_URL}?type=condition`),
+        cfFetch('getConditions'),
+      ])
+      const catalogData = await catalogRes.json()
+      const savedData = await savedRes.json()
+      setCatalog(catalogData.entries ?? [])
+      setSaved(savedData.conditions ?? [])
+    } catch (err) {
+      console.error('ConditionsTab load error:', err)
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  useEffect(() => {
-    if (initialData !== undefined) return
-    void fetchItems()
-  }, [fetchItems, initialData])
-
-  function openAdd() {
-    reset(DEFAULTS)
-    setEditingItem(null)
-    setSubmitError(null)
-    setDrawerOpen(true)
   }
 
-  function openEdit(item: Condition) {
-    reset({
-      name: item.name,
-      icdCode: item.icdCode ?? '',
-      isCritical: item.isCritical,
-      showOnEmergencyProfile: item.showOnEmergencyProfile,
-      active: item.active,
-      notes: item.notes ?? '',
+  function isSaved(catalogId: string): SavedCondition | undefined {
+    return saved.find(s => s.catalogRef === catalogId)
+  }
+
+  async function handleCheck(entry: CatalogEntry, checked: boolean) {
+    const existing = isSaved(entry.id)
+    setSaving(prev => new Set(prev).add(entry.id))
+
+    try {
+      if (checked && !existing) {
+        const res = await cfFetch('createCondition', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: entry.names['en'],
+            catalogRef: entry.id,
+            icdCode: entry.icdCode ?? '',
+            isCritical: entry.isCritical,
+            isActive: true,
+            showOnEmergencyProfile: true,
+            notes: '',
+          }),
+        })
+        const data = await res.json()
+        setSaved(prev => [...prev, {
+          id: data.id,
+          catalogRef: entry.id,
+          name: entry.names['en'],
+          notes: '',
+          isCritical: entry.isCritical,
+          isActive: true,
+          showOnEmergencyProfile: true,
+        }])
+      } else if (!checked && existing) {
+        await cfFetch(`deleteCondition/${existing.id}`, { method: 'DELETE' })
+        setSaved(prev => prev.filter(s => s.id !== existing.id))
+      }
+    } catch (err) {
+      console.error('Condition toggle error:', err)
+    } finally {
+      setSaving(prev => {
+        const next = new Set(prev)
+        next.delete(entry.id)
+        return next
+      })
+    }
+  }
+
+  async function handleNotes(savedId: string, notes: string) {
+    try {
+      await cfFetch(`updateCondition/${savedId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ notes }),
+      })
+      setSaved(prev => prev.map(s => s.id === savedId ? { ...s, notes } : s))
+    } catch (err) {
+      console.error('Notes save error:', err)
+    }
+  }
+
+  const grouped = catalog.reduce((acc, entry) => {
+    const cat = entry.category
+    if (!acc[cat]) acc[cat] = []
+    acc[cat].push(entry)
+    return acc
+  }, {} as Record<string, CatalogEntry[]>)
+
+  const toggleCategory = (cat: string) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev)
+      if (next.has(cat)) next.delete(cat)
+      else next.add(cat)
+      return next
     })
-    setEditingItem(item)
-    setSubmitError(null)
-    setDrawerOpen(true)
-  }
-
-  async function handleDelete(id: string) {
-    setDeletingId(id)
-    try {
-      await cfFetch(`deleteCondition/${id}`, { method: 'DELETE' })
-      await fetchItems()
-    } catch {
-      // silent
-    } finally {
-      setDeletingId(null)
-    }
-  }
-
-  async function onSubmit(values: FormValues) {
-    setSubmitting(true)
-    setSubmitError(null)
-    try {
-      const res = editingItem
-        ? await cfFetch(`updateCondition/${editingItem.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(values),
-          })
-        : await cfFetch('createCondition', {
-            method: 'POST',
-            body: JSON.stringify(values),
-          })
-      if (!res.ok) throw new Error()
-      setDrawerOpen(false)
-      await fetchItems()
-    } catch {
-      setSubmitError('Failed to save. Please try again.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  function handleDrawerChange(open: boolean) {
-    setDrawerOpen(open)
-    if (!open) setEditingItem(null)
   }
 
   if (loading) {
     return (
-      <div className="flex justify-center py-12">
-        <div className="w-5 h-5 border-2 border-[#4A7A50] border-t-transparent rounded-full animate-spin" />
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map(i => (
+          <div
+            key={i}
+            className="bg-white rounded-2xl p-4 animate-pulse h-14"
+            style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
+          />
+        ))}
       </div>
     )
   }
 
+  const selectedCount = saved.length
+
+  const sortedCategories = Object.keys(grouped).sort((a, b) => {
+    const ai = CATEGORY_ORDER.indexOf(a)
+    const bi = CATEGORY_ORDER.indexOf(b)
+    if (ai === -1 && bi === -1) return a.localeCompare(b)
+    if (ai === -1) return 1
+    if (bi === -1) return -1
+    return ai - bi
+  })
+
+  const CATEGORY_DISPLAY: Record<string, { label: string; emoji: string }> = {
+    cardiovascular: { label: t('cat.cardiovascular', lang), emoji: '🫀' },
+    neurological: { label: t('cat.neurological', lang), emoji: '🧠' },
+    metabolic_endocrine: { label: t('cat.metabolic', lang), emoji: '🩸' },
+    respiratory: { label: t('cat.respiratory', lang), emoji: '🫁' },
+    hematological: { label: t('cat.hematological', lang), emoji: '🧬' },
+    cognitive_neurodevelopmental: { label: t('cat.cognitive', lang), emoji: '🧩' },
+    movement_neuromuscular: { label: t('cat.movement', lang), emoji: '🏃' },
+    renal: { label: t('cat.renal', lang), emoji: '🫘' },
+    hepatic_gi: { label: t('cat.hepatic', lang), emoji: '🍀' },
+    immune_autoimmune: { label: t('cat.immune', lang), emoji: '🦠' },
+    endocrine_crises: { label: t('cat.endocrine', lang), emoji: '⚡' },
+    oncological: { label: t('cat.oncological', lang), emoji: '🧪' },
+    genetic_rare: { label: t('cat.genetic', lang), emoji: '🔬' },
+    mental_health: { label: t('cat.mental_health', lang), emoji: '💙' },
+    medical_devices: { label: t('cat.devices', lang), emoji: '🏥' },
+    critical_contraindications: { label: t('cat.critical', lang), emoji: '⚠️' },
+  }
+
   return (
-    <>
-      <div className="space-y-3">
-        {items.length === 0 ? (
-          <div className={EMPTY_STATE_CLS}>
-            <p className="text-3xl mb-3">🏥</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noConditions', lang)}</p>
-            <p className="text-xs text-gray-400 mb-4">Add any medical conditions a responder should know about</p>
-            <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              {t('emergency.addCondition', lang)}
+    <div className="space-y-2">
+      {selectedCount > 0 && (
+        <div className="bg-[#E8F2E6] rounded-2xl px-4 py-2.5 flex items-center gap-2 mb-3">
+          <span className="text-[#4A7A50] text-sm font-medium">
+            {selectedCount} condition{selectedCount !== 1 ? 's' : ''} selected
+          </span>
+        </div>
+      )}
+
+      {sortedCategories.map(cat => {
+        const entries = grouped[cat]
+        const display = CATEGORY_DISPLAY[cat] ?? { label: cat, emoji: '📋' }
+        const isExpanded = expandedCategories.has(cat)
+        const selectedInCat = entries.filter(e => isSaved(e.id)).length
+
+        return (
+          <div
+            key={cat}
+            className="bg-white rounded-2xl overflow-hidden"
+            style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
+          >
+            <button
+              onClick={() => toggleCategory(cat)}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-[#FAFAF8] transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-lg">{display.emoji}</span>
+                <span className="font-semibold text-sm text-[#1C2B1E]">
+                  {display.label}
+                </span>
+                {selectedInCat > 0 && (
+                  <span className="px-2 py-0.5 rounded-full bg-[#4A7A50] text-white text-xs font-medium">
+                    {selectedInCat}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400">
+                  {entries.length} conditions
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className={`text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                >
+                  <path
+                    d="M4 6l4 4 4-4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             </button>
+
+            {isExpanded && (
+              <div className="border-t border-[#F0F4EE]">
+                {entries.map(entry => {
+                  const savedEntry = isSaved(entry.id)
+                  const isChecked = !!savedEntry
+                  const isSavingThis = saving.has(entry.id)
+                  const name = entry.names[lang] ?? entry.names['en']
+
+                  return (
+                    <div
+                      key={entry.id}
+                      className={`border-b border-[#F8FAF8] last:border-0 transition-colors ${isChecked ? 'bg-[#F4FAF4]' : ''}`}
+                    >
+                      <div className="flex items-start gap-3 px-4 py-3">
+                        <div className="mt-0.5 flex-shrink-0">
+                          {isSavingThis ? (
+                            <div className="w-5 h-5 rounded border-2 border-[#4A7A50] flex items-center justify-center">
+                              <div className="w-3 h-3 rounded-full border-2 border-[#4A7A50] border-t-transparent animate-spin" />
+                            </div>
+                          ) : (
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={e => handleCheck(entry, e.target.checked)}
+                              className="w-5 h-5 rounded accent-[#4A7A50] cursor-pointer"
+                            />
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className={`text-sm ${isChecked ? 'font-semibold text-[#1C2B1E]' : 'text-gray-700'}`}>
+                              {name}
+                            </span>
+                            {entry.isCritical && (
+                              <span className="px-1.5 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-medium">
+                                ⚠️ Critical
+                              </span>
+                            )}
+                          </div>
+
+                          {entry.icdCode && (
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              ICD: {entry.icdCode}
+                            </p>
+                          )}
+
+                          {entry.isCritical && entry.emergencyNote && (
+                            <p className="text-xs text-red-500 mt-0.5">
+                              {entry.emergencyNote}
+                            </p>
+                          )}
+
+                          {isChecked && savedEntry && (
+                            <div className="mt-2">
+                              <NoteInput
+                                value={savedEntry.notes}
+                                savedId={savedEntry.id}
+                                onSave={handleNotes}
+                                lang={lang}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
-        ) : (
-          <>
-            <div className="flex justify-end">
-              <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + {t('common.add', lang)}
-              </button>
-            </div>
-            {items.map((item) => (
-              <RecordCard
-                key={item.id}
-                title={item.name}
-                subtitle={[item.icdCode, item.notes].filter(Boolean).join(' · ')}
-                isCritical={item.isCritical}
-                onEdit={() => openEdit(item)}
-                onDelete={() => void handleDelete(item.id)}
-                isDeleting={deletingId === item.id}
-              />
-            ))}
-          </>
-        )}
-      </div>
-
-      <SlideDrawer
-        open={drawerOpen}
-        onOpenChange={handleDrawerChange}
-        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.conditions', lang)}` : t('emergency.addCondition', lang)}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          <div>
-            <label className={LABEL_CLS}>{t('condition.name', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('name')}
-              type="text"
-              placeholder={t('condition.namePlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('condition.icdCode', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <input
-              {...register('icdCode')}
-              type="text"
-              placeholder={t('condition.icdPlaceholder', lang)}
-              className={INPUT_CLS}
-            />
-          </div>
-
-          <ToggleField label={t('emergency.critical', lang)} name="isCritical" register={register} />
-          <ToggleField label={t('common.showOnEmergency', lang)} name="showOnEmergencyProfile" register={register} />
-          <ToggleField label={t('form.active', lang)} name="active" register={register} />
-
-          <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea
-              {...register('notes')}
-              rows={3}
-              placeholder={t('form.additionalDetails', lang)}
-              className={TEXTAREA_CLS}
-            />
-            {errors.notes && <p className="text-xs text-red-500 mt-1">{errors.notes.message}</p>}
-          </div>
-
-          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
-
-          <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addCondition', lang)}
-          </button>
-        </form>
-      </SlideDrawer>
-    </>
+        )
+      })}
+    </div>
   )
 }
 
-// ─── Shared toggle within this file ──────────────────
+// ─── Debounced notes input ────────────────────────────
 
-function ToggleField({
-  label,
-  name,
-  register,
+function NoteInput({
+  value,
+  savedId,
+  onSave,
+  lang,
 }: {
-  label: string
-  name: 'isCritical' | 'showOnEmergencyProfile' | 'active'
-  register: ReturnType<typeof useForm<FormValues>>['register']
+  value: string
+  savedId: string
+  onSave: (id: string, notes: string) => void
+  lang: string
 }) {
+  const [localValue, setLocalValue] = useState(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localValue !== value) {
+        onSave(savedId, localValue)
+      }
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [localValue])
+
   return (
-    <label className="flex items-center gap-3 cursor-pointer group w-fit">
-      <div className="relative flex-shrink-0">
-        <input type="checkbox" {...register(name)} className="sr-only peer" />
-        <div className={TOGGLE_TRACK_CLS} />
-      </div>
-      <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-        {label}
-      </span>
-    </label>
+    <input
+      type="text"
+      value={localValue}
+      onChange={e => setLocalValue(e.target.value)}
+      placeholder={t('form.additionalDetails', lang as Parameters<typeof t>[1])}
+      className="w-full text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white focus:outline-none focus:border-[#4A7A50] focus:ring-1 focus:ring-[#4A7A50]/20"
+      onClick={e => e.stopPropagation()}
+    />
   )
 }

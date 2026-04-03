@@ -1,18 +1,38 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { cfFetch } from '@/lib/api'
-import { RecordCard } from './RecordCard'
-import { SlideDrawer } from './SlideDrawer'
+import { useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
-import {
-  INPUT_CLS, INPUT_ERR_CLS, TEXTAREA_CLS,
-  LABEL_CLS, TOGGLE_TRACK_CLS, SAVE_BTN_CLS, SAVE_BTN_STYLE, EMPTY_STATE_CLS,
-} from './formStyles'
+import { cfFetch } from '@/lib/api'
+import { RecordCardNew } from './RecordCardNew'
+
+// ─── Types ───────────────────────────────────────────
+
+export interface EmergencyContact {
+  id: string
+  name: string
+  relationship: string
+  phone: string
+  phoneAlt?: string
+  email?: string
+  priority: number
+  showOnEmergencyProfile: boolean
+  notes?: string
+}
+
+interface FormState {
+  name: string
+  relationship: string
+  customRelationship: string
+  relSelect: string
+  phone: string
+  phoneAlt: string
+  email: string
+  showOnEmergencyProfile: boolean
+  notes: string
+}
+
+// ─── Constants ───────────────────────────────────────
 
 const RELATIONSHIPS = [
   { value: 'Spouse / Partner', labelKey: 'contact.rel.spouse' },
@@ -31,337 +51,429 @@ const RELATIONSHIPS = [
   { value: 'Other', labelKey: 'contact.rel.other' },
 ]
 
-export interface EmergencyContact {
-  id: string
-  name: string
-  relationship: string
-  phone: string
-  phoneAlt?: string
-  email?: string
-  priority: number
-  showOnEmergencyProfile: boolean
-  notes?: string
-}
-
-const schema = z.object({
-  name: z.string().min(1, 'Full name is required'),
-  relationship: z.string().optional(),
-  phone: z.string().min(7, 'Phone number is required'),
-  phoneAlt: z.string().optional(),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  canAccessJournal: z.boolean().optional(),
-  showOnEmergencyProfile: z.boolean(),
-  notes: z.string().optional(),
-})
-
-type FormValues = z.infer<typeof schema>
-
-const DEFAULTS: FormValues = {
+const DEFAULT_FORM: FormState = {
   name: '',
   relationship: '',
+  customRelationship: '',
+  relSelect: '',
   phone: '',
   phoneAlt: '',
   email: '',
-  canAccessJournal: false,
   showOnEmergencyProfile: true,
   notes: '',
 }
 
-interface ContactsTabProps {
-  initialData?: EmergencyContact[]
+const SAVE_BTN_STYLE = {
+  background: 'linear-gradient(145deg,#44664a,#7a9e7e)',
 }
 
-export function ContactsTab({ initialData }: ContactsTabProps) {
+// ─── Component ───────────────────────────────────────
+
+export function ContactsTab() {
   const { lang } = useLang()
-  const [items, setItems] = useState<EmergencyContact[]>(
-    initialData ? [...initialData].sort((a, b) => a.priority - b.priority) : []
-  )
-  const [loading, setLoading] = useState(!initialData)
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<EmergencyContact | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [relSelect, setRelSelect] = useState('')
-  const [customRel, setCustomRel] = useState('')
+  const [contacts, setContacts] = useState<EmergencyContact[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [form, setForm] = useState<FormState>(DEFAULT_FORM)
+  const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: DEFAULTS })
+  useEffect(() => {
+    void load()
+  }, [])
 
-  const fetchItems = useCallback(async () => {
+  async function load() {
     setLoading(true)
     try {
       const res = await cfFetch('getEmergencyContacts')
-      if (!res.ok) throw new Error()
-      const json = (await res.json()) as { emergencyContacts: EmergencyContact[] }
-      const sorted = (json.emergencyContacts ?? []).sort((a, b) => a.priority - b.priority)
-      setItems(sorted)
-    } catch {
-      setItems([])
+      const data = await res.json()
+      const sorted = (data.emergencyContacts ?? []).sort(
+        (a: EmergencyContact, b: EmergencyContact) => a.priority - b.priority
+      )
+      setContacts(sorted)
+    } catch (err) {
+      console.error('ContactsTab load error:', err)
     } finally {
       setLoading(false)
     }
-  }, [])
-
-  useEffect(() => {
-    if (initialData !== undefined) return
-    void fetchItems()
-  }, [fetchItems, initialData])
-
-  function openAdd() {
-    reset(DEFAULTS)
-    setEditingItem(null)
-    setSubmitError(null)
-    setRelSelect('')
-    setCustomRel('')
-    setDrawerOpen(true)
   }
 
-  function openEdit(item: EmergencyContact) {
-    const isKnown = RELATIONSHIPS.some((r) => r.value === item.relationship)
-    const sel = isKnown ? item.relationship : (item.relationship ? 'Other' : '')
-    const custom = isKnown ? '' : (item.relationship ?? '')
-    reset({
-      name: item.name,
-      relationship: item.relationship,
-      phone: item.phone,
-      phoneAlt: item.phoneAlt ?? '',
-      email: item.email ?? '',
-      canAccessJournal: false,
-      showOnEmergencyProfile: item.showOnEmergencyProfile,
-      notes: item.notes ?? '',
+  function startEdit(contact: EmergencyContact) {
+    const isKnown = RELATIONSHIPS.some(r => r.value === contact.relationship)
+    const relSelect = isKnown ? contact.relationship : contact.relationship ? 'Other' : ''
+    const customRelationship = isKnown ? '' : contact.relationship ?? ''
+    setForm({
+      name: contact.name,
+      relationship: contact.relationship,
+      customRelationship,
+      relSelect,
+      phone: contact.phone,
+      phoneAlt: contact.phoneAlt ?? '',
+      email: contact.email ?? '',
+      showOnEmergencyProfile: contact.showOnEmergencyProfile,
+      notes: contact.notes ?? '',
     })
-    setRelSelect(sel)
-    setCustomRel(custom)
-    setEditingItem(item)
-    setSubmitError(null)
-    setDrawerOpen(true)
+    setEditingId(contact.id)
+    setSaveError(null)
+    setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  async function handleDelete(id: string) {
-    setDeletingId(id)
-    try {
-      await cfFetch(`deleteEmergencyContact/${id}`, { method: 'DELETE' })
-      await fetchItems()
-    } catch {
-      // silent
-    } finally {
-      setDeletingId(null)
+  function handleRelSelect(value: string) {
+    if (value === 'Other') {
+      setForm(p => ({
+        ...p,
+        relSelect: value,
+        relationship: p.customRelationship,
+      }))
+    } else {
+      setForm(p => ({
+        ...p,
+        relSelect: value,
+        relationship: value,
+        customRelationship: '',
+      }))
     }
   }
 
-  async function onSubmit(values: FormValues) {
-    setSubmitting(true)
-    setSubmitError(null)
+  async function handleSave() {
+    if (!form.name || !form.phone) return
+    setSaving(true)
+    setSaveError(null)
     try {
-      const cleanData = Object.fromEntries(
-        Object.entries(values).filter(([, v]) => v !== '' && v !== null && v !== undefined)
-      )
+      const payload: Record<string, unknown> = {
+        name: form.name,
+        relationship: form.relationship || undefined,
+        phone: form.phone,
+        showOnEmergencyProfile: form.showOnEmergencyProfile,
+      }
+      if (form.phoneAlt) payload.phoneAlt = form.phoneAlt
+      if (form.email) payload.email = form.email
+      if (form.notes) payload.notes = form.notes
 
-      if (editingItem) {
-        const res = await cfFetch(`updateEmergencyContact/${editingItem.id}`, {
+      if (editingId) {
+        const res = await cfFetch(`updateEmergencyContact/${editingId}`, {
           method: 'PUT',
-          body: JSON.stringify(cleanData),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) {
-          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[]; error?: string }
-          setSubmitError(
-            errorBody.issues
-              ? errorBody.issues.map((i) => i.message).join(', ')
-              : `Error ${res.status}: ${errorBody.error ?? 'Failed to save contact. Please try again.'}`
-          )
+          const err = await res.json().catch(() => ({})) as { error?: string }
+          setSaveError(err.error ?? 'Failed to save. Please try again.')
           return
         }
+        setContacts(prev =>
+          prev.map(c =>
+            c.id === editingId
+              ? {
+                  ...c,
+                  name: form.name,
+                  relationship: form.relationship,
+                  phone: form.phone,
+                  phoneAlt: form.phoneAlt || undefined,
+                  email: form.email || undefined,
+                  showOnEmergencyProfile: form.showOnEmergencyProfile,
+                  notes: form.notes || undefined,
+                }
+              : c
+          )
+        )
       } else {
         const res = await cfFetch('createEmergencyContact', {
           method: 'POST',
-          body: JSON.stringify(cleanData),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) {
-          const errorBody = await res.json().catch(() => ({})) as { issues?: { message: string }[]; error?: string }
-          console.error('createEmergencyContact failed:', res.status, errorBody)
-          setSubmitError(
-            errorBody.issues
-              ? errorBody.issues.map((i) => i.message).join(', ')
-              : `Error ${res.status}: ${errorBody.error ?? 'Failed to save contact. Please try again.'}`
-          )
+          const err = await res.json().catch(() => ({})) as { error?: string }
+          setSaveError(err.error ?? 'Failed to save. Please try again.')
           return
         }
+        const data = await res.json()
+        setContacts(prev => [
+          ...prev,
+          {
+            id: data.id,
+            name: form.name,
+            relationship: form.relationship,
+            phone: form.phone,
+            phoneAlt: form.phoneAlt || undefined,
+            email: form.email || undefined,
+            priority: data.priority ?? prev.length + 1,
+            showOnEmergencyProfile: form.showOnEmergencyProfile,
+            notes: form.notes || undefined,
+          },
+        ])
       }
 
-      reset(DEFAULTS)
-      setRelSelect('')
-      setCustomRel('')
-      setSubmitError(null)
-      setDrawerOpen(false)
-      await fetchItems()
+      setForm(DEFAULT_FORM)
+      setEditingId(null)
+      setShowForm(false)
     } catch (err) {
-      console.error('Emergency contact submit error:', err)
-      setSubmitError('Unexpected error. Please try again.')
+      console.error('Contact save error:', err)
+      setSaveError('Unexpected error. Please try again.')
     } finally {
-      setSubmitting(false)
+      setSaving(false)
     }
   }
 
-  function handleDrawerChange(open: boolean) {
-    setDrawerOpen(open)
-    if (!open) setEditingItem(null)
-  }
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-12">
-        <div className="w-5 h-5 border-2 border-[#4A7A50] border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
+  async function handleDelete(id: string) {
+    setDeleting(id)
+    try {
+      await cfFetch(`deleteEmergencyContact/${id}`, { method: 'DELETE' })
+      setContacts(prev => prev.filter(c => c.id !== id))
+    } catch (err) {
+      console.error('Contact delete error:', err)
+    } finally {
+      setDeleting(null)
+    }
   }
 
   return (
-    <>
-      <div className="space-y-3">
-        {items.length === 0 ? (
-          <div className={EMPTY_STATE_CLS}>
-            <p className="text-3xl mb-3">📞</p>
-            <p className="text-sm font-medium text-[#1C2B1E] mb-1">{t('emergency.noContacts', lang)}</p>
-            <p className="text-xs text-gray-400 mb-4">Add people who should be contacted in an emergency</p>
-            <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-              {t('emergency.addContact', lang)}
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-end">
-              <button type="button" onClick={openAdd} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={SAVE_BTN_STYLE}>
-                + {t('common.add', lang)}
-              </button>
-            </div>
-            {items.map((item) => (
-              <RecordCard
-                key={item.id}
-                title={item.name}
-                subtitle={`${item.relationship} · ${item.phone}`}
-                badge={
-                  item.priority === 1 ? (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#4A7A50]/10 text-[#4A7A50]">
-                      {t('common.primary', lang)}
-                    </span>
-                  ) : undefined
-                }
-                onEdit={() => openEdit(item)}
-                onDelete={() => void handleDelete(item.id)}
-                isDeleting={deletingId === item.id}
-              />
-            ))}
-          </>
-        )}
-      </div>
+    <div className="space-y-4">
+      {/* Add / Edit form */}
+      {!showForm ? (
+        <button
+          type="button"
+          onClick={() => {
+            setForm(DEFAULT_FORM)
+            setEditingId(null)
+            setSaveError(null)
+            setShowForm(true)
+          }}
+          className="w-full py-3 rounded-2xl border-2 border-dashed border-[#C8DEC4] text-[#4A7A50] text-sm font-medium hover:bg-[#E8F2E6] transition-colors"
+        >
+          + {t('emergency.addContact', lang)}
+        </button>
+      ) : (
+        <div
+          className="bg-white rounded-2xl p-5"
+          style={{ boxShadow: '0 2px 8px rgba(28,43,30,0.08)', border: '2px solid #4A7A50' }}
+        >
+          <h3 className="font-semibold text-sm text-[#1C2B1E] mb-4">
+            {editingId ? t('form.edit', lang) : t('emergency.addContact', lang)}
+          </h3>
 
-      <SlideDrawer
-        open={drawerOpen}
-        onOpenChange={handleDrawerChange}
-        title={editingItem ? `${t('common.edit', lang)} ${t('emergency.contacts', lang)}` : t('emergency.addContact', lang)}
-      >
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          <div>
-            <label className={LABEL_CLS}>{t('contact.fullName', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('name')}
-              type="text"
-              placeholder={t('contact.namePlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.name ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('contact.relationship', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <select
-              value={relSelect}
-              onChange={(e) => {
-                const val = e.target.value
-                setRelSelect(val)
-                if (val !== 'Other') {
-                  setCustomRel('')
-                  setValue('relationship', val)
-                } else {
-                  setValue('relationship', customRel)
-                }
-              }}
-              className={INPUT_CLS}
-            >
-              <option value="">{t('contact.selectRelationship', lang)}</option>
-              {RELATIONSHIPS.map((rel) => (
-                <option key={rel.value} value={rel.value}>{t(rel.labelKey, lang)}</option>
-              ))}
-            </select>
-            {relSelect === 'Other' && (
+          <div className="space-y-3">
+            {/* Name */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('contact.fullName', lang)} *
+              </label>
               <input
                 type="text"
-                value={customRel}
-                onChange={(e) => {
-                  setCustomRel(e.target.value)
-                  setValue('relationship', e.target.value)
-                }}
-                placeholder="Describe the relationship"
-                className={`${INPUT_CLS} mt-2`}
+                value={form.name}
+                onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
+                placeholder={t('contact.namePlaceholder', lang)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
               />
-            )}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('contact.phone', lang)} <span className="text-red-400">*</span></label>
-            <input
-              {...register('phone')}
-              type="tel"
-              placeholder={t('contact.phonePlaceholder', lang)}
-              className={`${INPUT_CLS} ${errors.phone ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone.message}</p>}
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>{t('contact.altPhone', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <input {...register('phoneAlt')} type="tel" placeholder="+1 555 000 0001" className={INPUT_CLS} />
-          </div>
-
-          <div>
-            <label className={LABEL_CLS}>Email <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <input
-              {...register('email')}
-              type="email"
-              placeholder="contact@example.com"
-              className={`${INPUT_CLS} ${errors.email ? INPUT_ERR_CLS : ''}`}
-            />
-            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
-          </div>
-
-          <label className="flex items-center gap-3 cursor-pointer group w-fit">
-            <div className="relative flex-shrink-0">
-              <input type="checkbox" {...register('showOnEmergencyProfile')} className="sr-only peer" />
-              <div className={TOGGLE_TRACK_CLS} />
             </div>
-            <span className="text-sm text-[#1C2B1E] group-hover:text-[#4A7A50] transition-colors">
-              {t('common.showOnEmergency', lang)}
-            </span>
-          </label>
 
-          <div>
-            <label className={LABEL_CLS}>{t('emergency.notes', lang)} <span className="text-gray-300 font-normal">{t('form.optional', lang)}</span></label>
-            <textarea {...register('notes')} rows={2} placeholder={t('contact.notesPlaceholder', lang)} className={TEXTAREA_CLS} />
+            {/* Relationship */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('contact.relationship', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <select
+                value={form.relSelect}
+                onChange={e => handleRelSelect(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              >
+                <option value="">{t('contact.selectRelationship', lang)}</option>
+                {RELATIONSHIPS.map(rel => (
+                  <option key={rel.value} value={rel.value}>
+                    {t(rel.labelKey, lang)}
+                  </option>
+                ))}
+              </select>
+              {form.relSelect === 'Other' && (
+                <input
+                  type="text"
+                  value={form.customRelationship}
+                  onChange={e =>
+                    setForm(p => ({
+                      ...p,
+                      customRelationship: e.target.value,
+                      relationship: e.target.value,
+                    }))
+                  }
+                  placeholder="Describe the relationship"
+                  className="mt-2 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                />
+              )}
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('contact.phone', lang)} *
+              </label>
+              <input
+                type="tel"
+                value={form.phone}
+                onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
+                placeholder={t('contact.phonePlaceholder', lang)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {/* Alt phone */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('contact.altPhone', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <input
+                type="tel"
+                value={form.phoneAlt}
+                onChange={e => setForm(p => ({ ...p, phoneAlt: e.target.value }))}
+                placeholder="+1 555 000 0001"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('auth.email', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+                placeholder="contact@example.com"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {/* Show on emergency toggle */}
+            <label className="flex items-center gap-2 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.showOnEmergencyProfile}
+                onChange={e =>
+                  setForm(p => ({ ...p, showOnEmergencyProfile: e.target.checked }))
+                }
+                className="accent-[#4A7A50] w-4 h-4"
+              />
+              <span className="text-gray-700">{t('common.showOnEmergency', lang)}</span>
+            </label>
+
+            {/* Notes */}
+            <div>
+              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                {t('emergency.notes', lang)}{' '}
+                <span className="text-gray-400">{t('form.optional', lang)}</span>
+              </label>
+              <input
+                type="text"
+                value={form.notes}
+                onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
+                placeholder={t('contact.notesPlaceholder', lang)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+              />
+            </div>
+
+            {saveError && <p className="text-xs text-red-500">{saveError}</p>}
+
+            {/* Form buttons */}
+            <div className="flex gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => void handleSave()}
+                disabled={saving || !form.name || !form.phone}
+                className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 transition-opacity"
+                style={SAVE_BTN_STYLE}
+              >
+                {saving ? '...' : t('common.save', lang)}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(false)
+                  setEditingId(null)
+                  setForm(DEFAULT_FORM)
+                  setSaveError(null)
+                }}
+                className="px-4 py-2.5 rounded-xl text-sm font-medium text-gray-500 border border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                {t('common.cancel', lang)}
+              </button>
+            </div>
           </div>
+        </div>
+      )}
 
-          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
-
-          <button type="submit" disabled={submitting} className={SAVE_BTN_CLS} style={SAVE_BTN_STYLE}>
-            {submitting ? 'Saving…' : editingItem ? t('profile.saveChanges', lang) : t('emergency.addContact', lang)}
-          </button>
-        </form>
-      </SlideDrawer>
-    </>
+      {/* Records list */}
+      {loading ? (
+        <div className="space-y-2">
+          {[1, 2].map(i => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl p-4 animate-pulse h-16"
+              style={{ boxShadow: '0 1px 3px rgba(28,43,30,0.06)' }}
+            />
+          ))}
+        </div>
+      ) : contacts.length === 0 ? (
+        <div className="text-center py-10">
+          <p className="text-3xl mb-3">📞</p>
+          <p className="text-gray-500 text-sm">{t('emergency.noContacts', lang)}</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {contacts.map(contact => (
+            <RecordCardNew
+              key={contact.id}
+              title={contact.name}
+              subtitle={contact.relationship}
+              badge={
+                contact.priority === 1
+                  ? {
+                      label: t('common.primary', lang),
+                      bg: 'rgba(74,122,80,0.1)',
+                      color: '#4A7A50',
+                    }
+                  : undefined
+              }
+              onEdit={() => startEdit(contact)}
+              onDelete={() => void handleDelete(contact.id)}
+              isDeleting={deleting === contact.id}
+            >
+              <a
+                href={`tel:${contact.phone}`}
+                className="text-xs text-[#4A7A50] font-medium hover:underline"
+                onClick={e => e.stopPropagation()}
+              >
+                📞 {contact.phone}
+              </a>
+              {contact.phoneAlt && (
+                <a
+                  href={`tel:${contact.phoneAlt}`}
+                  className="block text-xs text-gray-500 hover:underline"
+                  onClick={e => e.stopPropagation()}
+                >
+                  📞 {contact.phoneAlt}
+                </a>
+              )}
+              {contact.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="block text-xs text-gray-500 hover:underline"
+                  onClick={e => e.stopPropagation()}
+                >
+                  ✉️ {contact.email}
+                </a>
+              )}
+              {contact.notes && (
+                <p className="text-xs text-gray-500">{contact.notes}</p>
+              )}
+            </RecordCardNew>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
