@@ -82,8 +82,12 @@ export function AllergiesTab() {
     setLoading(true)
     try {
       const res = await cfFetch('getAllergies')
-      const data = await res.json()
-      setAllergies(data.allergies ?? [])
+      const data = await res.json() as { allergies?: (Allergy & { allergyId?: string; docId?: string })[] }
+      const allergies = (data.allergies ?? []).map(a => ({
+        ...a,
+        id: a.id ?? a.allergyId ?? a.docId ?? '',
+      }))
+      setAllergies(allergies)
     } catch (err) {
       console.error('AllergiesTab load error:', err)
     } finally {
@@ -129,14 +133,14 @@ export function AllergiesTab() {
     try {
       const payload = {
         allergen: form.allergen,
-        catalogRef: form.catalogRef,
-        allergenType: form.allergenType,
         severity: form.severity,
-        reaction: form.reaction,
-        epipenPrescribed: form.epipenPrescribed,
-        showOnEmergencyProfile: form.showOnEmergencyProfile,
-        notes: form.notes,
+        allergenType: form.allergenType || '',
+        reaction: form.reaction || '',
+        epipenPrescribed: form.epipenPrescribed ?? false,
+        showOnEmergencyProfile: form.showOnEmergencyProfile ?? true,
+        notes: form.notes || '',
         isCritical: form.severity === 'life_threatening',
+        catalogRef: form.catalogRef ?? null,
       }
 
       if (editingId) {
@@ -174,15 +178,22 @@ export function AllergiesTab() {
 
   async function handleDelete(id: string) {
     if (!id) {
-      console.error('handleDelete called with undefined id')
+      console.error('Delete called with no id')
       return
     }
     setDeleting(id)
     try {
-      await cfFetch('deleteAllergy', { method: 'DELETE', body: JSON.stringify({ id }) })
-      setAllergies(prev => prev.filter(a => a.id !== id))
+      const res = await cfFetch('deleteAllergy', {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+      })
+      if (res.ok) {
+        setAllergies(prev => prev.filter(a => a.id !== id))
+      } else {
+        console.error('deleteAllergy failed:', res.status)
+      }
     } catch (err) {
-      console.error('Allergy delete error:', err)
+      console.error('deleteAllergy error:', err)
     } finally {
       setDeleting(null)
     }

@@ -76,8 +76,12 @@ export function MedicationsTab() {
     setLoading(true)
     try {
       const res = await cfFetch('getMedications')
-      const data = await res.json()
-      setMedications(data.medications ?? [])
+      const data = await res.json() as { medications?: (Medication & { medicationId?: string; docId?: string })[] }
+      const medications = (data.medications ?? []).map(m => ({
+        ...m,
+        id: m.id ?? m.medicationId ?? m.docId ?? '',
+      }))
+      setMedications(medications)
     } catch (err) {
       console.error('MedicationsTab load error:', err)
     } finally {
@@ -126,14 +130,14 @@ export function MedicationsTab() {
     try {
       const payload = {
         name: form.name,
-        catalogRef: form.catalogRef,
-        genericName: form.genericName,
-        dose: form.dose,
-        frequency: form.frequency,
-        route: form.route,
-        isCritical: form.isCritical,
-        showOnEmergencyProfile: form.showOnEmergencyProfile,
-        notes: form.notes,
+        genericName: form.genericName || '',
+        dose: form.dose || '',
+        frequency: form.frequency || '',
+        route: form.route || 'oral',
+        isCritical: form.isCritical ?? false,
+        showOnEmergencyProfile: form.showOnEmergencyProfile ?? true,
+        notes: form.notes || '',
+        catalogRef: form.catalogRef ?? null,
       }
 
       if (editingId) {
@@ -170,16 +174,16 @@ export function MedicationsTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!id) {
-      console.error('handleDelete called with undefined id')
-      return
-    }
+    if (!id) return
     setDeleting(id)
     try {
-      await cfFetch('deleteMedication', { method: 'DELETE', body: JSON.stringify({ id }) })
-      setMedications(prev => prev.filter(m => m.id !== id))
-    } catch (err) {
-      console.error('Medication delete error:', err)
+      const res = await cfFetch('deleteMedication', {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+      })
+      if (res.ok) {
+        setMedications(prev => prev.filter(m => m.id !== id))
+      }
     } finally {
       setDeleting(null)
     }

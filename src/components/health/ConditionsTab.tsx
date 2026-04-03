@@ -465,7 +465,7 @@ export function ConditionsTab() {
                         : 'bg-white text-gray-500 border-gray-200'
                     }`}
                   >
-                    🏥 {t('common.showOnEmergency', lang as Lang)}
+                    🏥 {t('common.emergencyProfile', lang as Lang)}
                   </button>
                   <button
                     type="button"
@@ -476,7 +476,7 @@ export function ConditionsTab() {
                         : 'bg-white text-gray-500 border-gray-200'
                     }`}
                   >
-                    👁 {t('common.privateOnly', lang as Lang)}
+                    🔒 {t('common.private', lang as Lang)}
                   </button>
                 </div>
               </div>
@@ -612,7 +612,7 @@ export function ConditionsTab() {
                                       : 'bg-white text-gray-500 border-gray-200 hover:border-[#4A7A50]'
                                   }`}
                                 >
-                                  🏥 {t('common.showOnEmergency', lang as Lang)}
+                                  🏥 {t('common.emergencyProfile', lang as Lang)}
                                 </button>
                                 <button
                                   type="button"
@@ -623,7 +623,7 @@ export function ConditionsTab() {
                                       : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
                                   }`}
                                 >
-                                  👁 {t('common.privateOnly', lang as Lang)}
+                                  🔒 {t('common.private', lang as Lang)}
                                 </button>
                               </div>
                               {/* Notes */}
