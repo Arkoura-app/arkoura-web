@@ -360,7 +360,7 @@ function NoteInput({
       }
     }, 800)
     return () => clearTimeout(timer)
-  }, [localValue])
+  }, [localValue, onSave, savedId, value])
 
   return (
     <input
