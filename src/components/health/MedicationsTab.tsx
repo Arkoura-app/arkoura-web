@@ -226,6 +226,7 @@ export function MedicationsTab() {
                 placeholder={t('medication.namePlaceholder', lang)}
                 value={form.name}
                 onSelect={handleCatalogSelect}
+                disabled={!!editingId}
               />
             </div>
 
