@@ -20,9 +20,10 @@ interface Props {
   placeholder: string
   value: string
   onSelect: (entry: SelectionResult) => void
+  disabled?: boolean
 }
 
-export function CatalogSearchInput({ type, lang, placeholder, value, onSelect }: Props) {
+export function CatalogSearchInput({ type, lang, placeholder, value, onSelect, disabled }: Props) {
   const [inputValue, setInputValue] = useState(value)
   const [open, setOpen] = useState(false)
   const { results, searching, search } = useCatalogSearch(type)
@@ -80,7 +81,8 @@ export function CatalogSearchInput({ type, lang, placeholder, value, onSelect }:
         onChange={e => handleInput(e.target.value)}
         onFocus={() => { if (inputValue.length >= 2) setOpen(true) }}
         placeholder={placeholder}
-        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#4A7A50] focus:ring-1 focus:ring-[#4A7A50]/20"
+        disabled={disabled}
+        className={`w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#4A7A50] focus:ring-1 focus:ring-[#4A7A50]/20 ${disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''}`}
       />
 
       {open && inputValue.length >= 2 && (

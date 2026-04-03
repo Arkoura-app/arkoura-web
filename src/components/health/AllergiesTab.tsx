@@ -236,6 +236,7 @@ export function AllergiesTab() {
                 placeholder={t('allergy.allergenPlaceholder', lang)}
                 value={form.allergen}
                 onSelect={handleCatalogSelect}
+                disabled={!!editingId}
               />
             </div>
 
