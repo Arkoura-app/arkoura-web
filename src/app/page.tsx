@@ -1645,240 +1645,49 @@ function HeroSection({ lang, onGetStarted }: { lang: string; onGetStarted: () =>
 
 // ─── Section 2 — Problem (Carousel) ──────────────────────────────────────────
 
-// ─── Scenario icons ───────────────────────────────────────────────────────────
-
-function IconBicycle() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 48 48"
-         fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round"
-         className="text-[#4A7A50]">
-      <circle cx="12" cy="34" r="8"/>
-      <circle cx="36" cy="34" r="8"/>
-      <path d="M12,34 L22,16 L36,16"/>
-      <path d="M22,16 L30,34"/>
-      <path d="M18,16 L26,16"/>
-      <path d="M34,10 L34,6 M32,8 L36,8"/>
-    </svg>
-  )
-}
-
-function IconAirplane() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 48 48"
-         fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round"
-         className="text-[#4A7A50]">
-      <circle cx="24" cy="24" r="16"/>
-      <path d="M24,8 C18,14 18,34 24,40"/>
-      <path d="M24,8 C30,14 30,34 24,40"/>
-      <path d="M8,24 C12,20 36,20 40,24"/>
-      <path d="M8,24 C12,28 36,28 40,24"/>
-      <path d="M30,12 L38,12 L38,20 L34,20 L30,24 L30,20 L30,12 Z"/>
-      <path d="M33,15 L35,17 M35,15 L33,17"/>
-    </svg>
-  )
-}
-
-function IconElderly() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 48 48"
-         fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round"
-         className="text-[#4A7A50]">
-      <circle cx="24" cy="12" r="6"/>
-      <path d="M24,18 L24,32"/>
-      <path d="M14,24 L24,20 L34,24"/>
-      <path d="M18,32 L24,32 L30,42"/>
-      <path d="M24,32 L20,42"/>
-      <path d="M30,42 L36,42 C36,42 38,42 38,40 L38,30"/>
-      <path d="M40,14 C40,11 43,10 43,13 C43,15 41,15 41,17"/>
-      <circle cx="41" cy="19" r="0.8" fill="currentColor"/>
-    </svg>
-  )
-}
-
-function IconChild() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round"
-         className="text-[#4A7A50]">
-      <circle cx="12" cy="5" r="3"/>
-      <path d="M12,8 L12,16"/>
-      <path d="M7,11 L12,9 L17,11"/>
-      <path d="M9,16 L12,16 L15,21"/>
-      <path d="M12,16 L10,21"/>
-      <path d="M17,7 C18,6 20,6 20,8 C20,9 19,10 18,9"/>
-      <circle cx="18" cy="10" r="0.8" fill="currentColor"/>
-    </svg>
-  )
-}
-
-function IconSession() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round"
-         className="text-[#4A7A50]">
-      <rect x="7" y="2" width="10" height="16" rx="2"/>
-      <line x1="10" y1="7" x2="14" y2="7"/>
-      <line x1="10" y1="10" x2="14" y2="10"/>
-      <line x1="10" y1="13" x2="12" y2="13"/>
-      <circle cx="10" cy="16" r="1" fill="currentColor"/>
-      <circle cx="12" cy="16" r="1" fill="currentColor"/>
-      <circle cx="14" cy="16" r="1" fill="currentColor"/>
-      <path d="M17,14 L20,17 L17,20"/>
-      <path d="M11,22 L20,17"/>
-    </svg>
-  )
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SCENARIOS = [
   {
-    id: 1,
+    image: '/case01.png',
+    title: 'The cyclist who could not speak',
+    body: 'He collapsed mid-route. No ID. Responders had no way to know about his penicillin allergy. The treatment they gave him nearly ended his life.',
     tag: 'Happens every day',
-    tagColor: '#E8F2E6',
-    tagText: '#4A7A50',
-    accentBg: '#F0F7F0',
-    title: "The cyclist who couldn't speak",
-    body: 'Collapsed mid-route. No ID. Responders had no way to know about his penicillin allergy. The treatment nearly ended his life.',
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <circle cx="12" cy="34" r="8"/>
-        <circle cx="36" cy="34" r="8"/>
-        <path d="M12,34 L22,16 L36,16"/>
-        <path d="M22,16 L30,34"/>
-        <path d="M18,16 L26,16"/>
-        <path d="M34,10 L34,6 M32,8 L36,8"/>
-      </svg>
-    ),
   },
   {
-    id: 2,
-    tag: 'In every country',
-    tagColor: '#DBEAFE',
-    tagText: '#1E40AF',
-    accentBg: '#EFF6FF',
+    image: '/case02.png',
     title: 'The tourist and the language barrier',
-    body: "Anaphylactic reaction in Tokyo. Her allergy history was in English. The doctors were brilliant — but twenty minutes was lost to translation.",
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <circle cx="24" cy="24" r="16"/>
-        <path d="M24,8 C18,14 18,34 24,40"/>
-        <path d="M24,8 C30,14 30,34 24,40"/>
-        <path d="M8,24 C12,20 36,20 40,24"/>
-        <path d="M8,24 C12,28 36,28 40,24"/>
-        <path d="M30,12 L38,12 L38,20 L34,20 L30,24 L30,20 L30,12 Z"/>
-        <path d="M33,15 L35,17 M35,15 L33,17"/>
-      </svg>
-    ),
+    body: 'Anaphylactic reaction in Tokyo. Her allergy history was in English. The doctors were brilliant — but twenty minutes was lost to translation.',
+    tag: 'In every country',
   },
   {
-    id: 3,
-    tag: 'Closer than you think',
-    tagColor: '#FEF3C7',
-    tagText: '#92400E',
-    accentBg: '#FFFBEB',
+    image: '/case03.png',
     title: 'The parent who forgot',
-    body: "Dementia. He wandered from home. No medications list, no doctor's name remembered. The ER started from zero.",
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <circle cx="24" cy="12" r="6"/>
-        <path d="M24,18 L24,32"/>
-        <path d="M14,24 L24,20 L34,24"/>
-        <path d="M18,32 L24,32 L30,42"/>
-        <path d="M24,32 L20,42"/>
-        <path d="M30,42 L36,42 C36,42 38,42 38,40 L38,30"/>
-        <path d="M40,14 C40,11 43,10 43,13 C43,15 41,15 41,17"/>
-        <circle cx="41" cy="19" r="0.8" fill="#4A7A50"/>
-      </svg>
-    ),
+    body: 'Dementia. He wandered from home. No medications list, no doctor name remembered. The ER started from zero.',
+    tag: 'Closer than you think',
   },
   {
-    id: 4,
-    tag: '1 in 4 emergencies involve a language barrier',
-    tagColor: '#FCE7F3',
-    tagText: '#9D174D',
-    accentBg: '#FDF2F8',
+    image: '/case04.png',
     title: 'Abroad and unable to communicate',
     body: 'Severe chest pain in a foreign market. No shared language with locals. Twelve minutes passed before anyone understood what he needed.',
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <path d="M24,38 C24,38 8,28 8,18 C8,12 13,8 18,8 C21,8 23,10 24,12 C25,10 27,8 30,8 C35,8 40,12 40,18 C40,28 24,38 24,38 Z"/>
-        <path d="M13,20 L17,20 L19,14 L22,26 L25,18 L27,20 L35,20"/>
-      </svg>
-    ),
+    tag: '1 in 4 emergencies involve a language barrier',
   },
   {
-    id: 5,
+    image: '/case05.png',
+    title: 'The child who couldn\'t say his name',
+    body: 'Non-verbal and lost at a crowded festival. No name, no parents\' contacts, no sensory needs communicated. Responders had nothing to go on.',
     tag: '1 in 36 children is autistic globally',
-    tagColor: '#EDE9FE',
-    tagText: '#5B21B6',
-    accentBg: '#F5F3FF',
-    title: "The child who couldn't say his name",
-    body: "Non-verbal and lost at a crowded festival. No name, no parents' contacts, no sensory needs communicated. Responders had nothing to go on.",
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <circle cx="24" cy="11" r="5"/>
-        <path d="M24,16 L24,28"/>
-        <path d="M16,22 L24,19 L32,22"/>
-        <path d="M19,28 L24,28 L29,38"/>
-        <path d="M24,28 L21,38"/>
-        <path d="M33,8 C33,6 35,5 37,5 C39,5 40,6 40,8 C40,10 39,11 37,11 C35,11 33,10 33,8 Z"/>
-        <path d="M37,8 C37,6 39,5 41,5 C43,5 44,6 44,8 C44,10 43,11 41,11 C39,11 37,10 37,8 Z"/>
-      </svg>
-    ),
   },
   {
-    id: 6,
-    tag: 'When words come back — more is possible',
-    tagColor: '#ECFDF5',
-    tagText: '#065F46',
-    accentBg: '#F0FDF4',
+    image: '/case06.png',
     title: 'He fainted. He recovered. He opened a session.',
     body: 'Regained consciousness surrounded by paramedics. He opened a timed session, handed them a code — and they accessed his full journal and history in seconds.',
-    icon: (
-      <svg viewBox="0 0 48 48" width="48" height="48" fill="none"
-           stroke="#4A7A50" strokeWidth="2.2" strokeLinecap="round"
-           strokeLinejoin="round">
-        <rect x="14" y="6" width="20" height="32" rx="4"/>
-        <line x1="19" y1="14" x2="29" y2="14"/>
-        <line x1="19" y1="19" x2="29" y2="19"/>
-        <line x1="19" y1="24" x2="25" y2="24"/>
-        <circle cx="19" cy="30" r="1.5" fill="#4A7A50"/>
-        <circle cx="24" cy="30" r="1.5" fill="#4A7A50"/>
-        <circle cx="29" cy="30" r="1.5" fill="#4A7A50"/>
-        <path d="M36,16 L40,20 L46,12"/>
-      </svg>
-    ),
+    tag: 'When words come back — more becomes possible',
   },
 ]
 
 function ProblemSection({ lang }: { lang: string }) {
-  const scenarios = [
-    { icon: <IconBicycle />,  titleKey: 's1title', bodyKey: 's1body', tagKey: 's1tag' },
-    { icon: <IconAirplane />, titleKey: 's2title', bodyKey: 's2body', tagKey: 's2tag' },
-    { icon: <IconElderly />,  titleKey: 's3title', bodyKey: 's3body', tagKey: 's3tag' },
-    { icon: <IconGlobe />,    titleKey: 's4title', bodyKey: 's4body', tagKey: 's4tag' },
-    { icon: <IconChild />,    titleKey: 's5title', bodyKey: 's5body', tagKey: 's5tag' },
-    { icon: <IconSession />,  titleKey: 's6title', bodyKey: 's6body', tagKey: 's6tag' },
-  ]
   return (
-    <section className="relative overflow-hidden bg-white py-28">
-      <LeafDecor className="pointer-events-none absolute -bottom-20 -left-10 w-[250px] -rotate-12 text-[#7A9E7E] opacity-[0.04]" />
-      <div className="relative mx-auto max-w-6xl px-6">
+    <section className="py-24 px-6" style={{ background: '#FAFAF8' }}>
+      <div className="mx-auto max-w-6xl">
         <motion.div
           variants={stagger()}
           initial="hidden"
@@ -1899,31 +1708,57 @@ function ProblemSection({ lang }: { lang: string }) {
           </motion.h2>
         </motion.div>
         <motion.div
-          variants={stagger(0.12)}
+          variants={stagger(0.1)}
           initial="hidden"
           whileInView="show"
           viewport={vp}
-          className="grid gap-6 md:grid-cols-3"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
-          {scenarios.map((s) => (
+          {SCENARIOS.map((scenario, i) => (
             <motion.div
-              key={s.titleKey}
+              key={i}
               variants={fadeUp}
-              className="flex flex-col rounded-2xl bg-[#F0F2EE] p-8"
-              style={{ boxShadow: 'none' }}
+              className="flex flex-col overflow-hidden rounded-[2rem] bg-white"
+              style={{
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03)',
+              }}
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                {s.icon}
+              {/* Header image */}
+              <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={scenario.image}
+                  alt={scenario.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
               </div>
-              <h3 className="mt-5 font-[var(--font-manrope)] text-lg font-semibold text-[#1C2B1E]">
-                {getText(lang, s.titleKey)}
-              </h3>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-[#6B7280]">
-                {getText(lang, s.bodyKey)}
-              </p>
-              <span className="mt-4 text-xs font-medium text-[#4A7A50]">
-                {getText(lang, s.tagKey)}
-              </span>
+
+              {/* Content */}
+              <div className="flex flex-1 flex-col p-8">
+                <h3
+                  className="mb-3 text-xl font-bold leading-snug"
+                  style={{
+                    fontFamily: 'var(--font-manrope), sans-serif',
+                    color: '#1C2B1E',
+                  }}
+                >
+                  {scenario.title}
+                </h3>
+                <p
+                  className="flex-1 text-sm leading-relaxed"
+                  style={{ color: '#4B5563' }}
+                >
+                  {scenario.body}
+                </p>
+                <div className="mt-6">
+                  <span
+                    className="inline-block rounded-full px-3 py-1 text-xs font-medium"
+                    style={{ background: '#E8F2E6', color: '#4A7A50' }}
+                  >
+                    {scenario.tag}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
