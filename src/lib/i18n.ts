@@ -1662,6 +1662,44 @@ const translations: TranslationMap = {
     ru: 'Получить доступ к дневнику здоровья',
     sv: 'Öppna hälsodagbok',
   },
+
+  // ─── Terms signature ─────────────────────────────────────
+  'terms.signatureName': {
+    en: 'Type your full name to confirm acceptance',
+    es: 'Escriba su nombre completo para confirmar la aceptación',
+    fr: "Tapez votre nom complet pour confirmer l'acceptation",
+    de: 'Geben Sie Ihren vollständigen Namen zur Bestätigung ein',
+    pt: 'Digite seu nome completo para confirmar a aceitação',
+    zh: '输入您的全名以确认接受',
+    ja: '承認を確認するためにフルネームを入力してください',
+    it: "Digita il tuo nome completo per confermare l'accettazione",
+    ru: 'Введите полное имя для подтверждения принятия',
+    sv: 'Skriv ditt fullständiga namn för att bekräfta godkännandet',
+  },
+  'terms.signaturePlaceholder': {
+    en: 'e.g. Ronald Granados',
+    es: 'ej. Ronald Granados',
+    fr: 'ex. Ronald Granados',
+    de: 'z.B. Ronald Granados',
+    pt: 'ex. Ronald Granados',
+    zh: '例：Ronald Granados',
+    ja: '例：Ronald Granados',
+    it: 'es. Ronald Granados',
+    ru: 'напр. Ronald Granados',
+    sv: 't.ex. Ronald Granados',
+  },
+  'terms.signatureGuardianNote': {
+    en: 'If you are registering on behalf of a minor or someone in your care, enter your own name as their guardian or caretaker.',
+    es: 'Si se registra en nombre de un menor o de alguien a su cargo, ingrese su propio nombre como tutor o cuidador.',
+    fr: "Si vous vous inscrivez au nom d'un mineur ou d'une personne dont vous avez la charge, entrez votre propre nom en tant que tuteur ou soignant.",
+    de: 'Wenn Sie sich im Namen einer minderjährigen oder betreuten Person anmelden, geben Sie Ihren eigenen Namen als Vormund oder Betreuer ein.',
+    pt: 'Se você está se registrando em nome de um menor ou de alguém sob seus cuidados, insira seu próprio nome como guardião ou cuidador.',
+    zh: '如果您代表未成年人或您照顾的人注册，请以监护人或照顾者身份输入您自己的姓名。',
+    ja: '未成年者またはあなたが世話をしている人の代わりに登録する場合は、後見人または介護者としてご自身の名前を入力してください。',
+    it: 'Se ti stai registrando per conto di un minore o di qualcuno a tuo carico, inserisci il tuo nome come tutore o caregiver.',
+    ru: 'Если вы регистрируетесь от имени несовершеннолетнего или человека, находящегося под вашей опекой, введите своё имя в качестве опекуна или попечителя.',
+    sv: 'Om du registrerar dig på uppdrag av en minderårig eller någon du tar hand om, ange ditt eget namn som förmyndare eller vårdgivare.',
+  },
 }
 
 export function t(key: string, lang: Lang = 'en'): string {

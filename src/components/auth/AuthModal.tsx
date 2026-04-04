@@ -70,6 +70,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
   const [passwordValue, setPasswordValue] = useState('')
   const [googleError, setGoogleError] = useState('')
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [agreerName, setAgreerName] = useState("")
 
   useEffect(() => {
     if (open) {
@@ -80,6 +81,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       setPasswordValue('')
       setGoogleError('')
       setTermsAccepted(false)
+      setAgreerName("")
     }
   }, [open, defaultView])
 
@@ -107,6 +109,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
     setPasswordValue('')
     setGoogleError('')
     setTermsAccepted(false)
+    setAgreerName("")
   }
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -142,6 +145,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password)
       await updateProfile(cred.user, { displayName: data.name })
       await sendEmailVerification(cred.user)
+      localStorage.setItem("arkoura_agreer_name", agreerName.trim())
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
       onSuccess('/dashboard/onboarding')
@@ -176,6 +180,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       return
     }
     try {
+      localStorage.setItem("arkoura_agreer_name", agreerName.trim())
       const result = await signInWithPopup(auth, new GoogleAuthProvider())
       try {
         const token = await result.user.getIdToken()
@@ -334,7 +339,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                     <button
                       type="button"
                       onClick={handleGoogle}
-                      disabled={!termsAccepted || registerForm.formState.isSubmitting}
+                      disabled={!termsAccepted || agreerName.trim().length < 2}
                       className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 text-sm font-medium text-[#1C2B1E] hover:bg-[#F4F6F2] transition-colors disabled:opacity-50"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -420,7 +425,10 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                         <input
                           type="checkbox"
                           checked={termsAccepted}
-                          onChange={e => setTermsAccepted(e.target.checked)}
+                          onChange={e => {
+                            setTermsAccepted(e.target.checked)
+                            if (!e.target.checked) setAgreerName("")
+                          }}
                           style={{marginTop:'2px',width:'16px',height:'16px',flexShrink:0,accentColor:'#4A7A50'}}
                         />
                         <span style={{fontSize:'12px',color:'#6B7280'}}>
@@ -431,9 +439,28 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                         </span>
                       </label>
                     </div>
+                    {termsAccepted && (
+                      <div className="mt-3">
+                        <label className="text-xs font-medium text-gray-600 mb-1 block">
+                          {t("terms.signatureName", lang)}
+                        </label>
+                        <input
+                          type="text"
+                          value={agreerName}
+                          onChange={e => setAgreerName(e.target.value)}
+                          placeholder={t("terms.signaturePlaceholder", lang)}
+                          maxLength={100}
+                          autoComplete="name"
+                          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#4A7A50] focus:ring-1 focus:ring-[#4A7A50]/20"
+                        />
+                        <p className="text-xs text-gray-400 mt-1.5 leading-relaxed">
+                          {t("terms.signatureGuardianNote", lang)}
+                        </p>
+                      </div>
+                    )}
                     <button
                       type="submit"
-                      disabled={!termsAccepted || registerForm.formState.isSubmitting}
+                      disabled={registerForm.formState.isSubmitting || !termsAccepted || agreerName.trim().length < 2}
                       className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                       style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                     >
