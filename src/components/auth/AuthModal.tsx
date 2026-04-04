@@ -69,6 +69,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
   const [firebaseError, setFirebaseError] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
   const [googleError, setGoogleError] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   useEffect(() => {
     if (open) {
@@ -78,6 +79,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       setRegistered(false)
       setPasswordValue('')
       setGoogleError('')
+      setTermsAccepted(false)
     }
   }, [open, defaultView])
 
@@ -104,6 +106,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
     setRegistered(false)
     setPasswordValue('')
     setGoogleError('')
+    setTermsAccepted(false)
   }
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -331,7 +334,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                     <button
                       type="button"
                       onClick={handleGoogle}
-                      disabled={registerForm.formState.isSubmitting}
+                      disabled={!termsAccepted || registerForm.formState.isSubmitting}
                       className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 text-sm font-medium text-[#1C2B1E] hover:bg-[#F4F6F2] transition-colors disabled:opacity-50"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -412,9 +415,25 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                       )}
                     </div>
                     {firebaseError && <p className="text-xs text-red-500 text-center">{firebaseError}</p>}
+                    <div style={{marginTop:'12px',marginBottom:'8px'}}>
+                      <label style={{display:'flex',alignItems:'flex-start',gap:'10px',cursor:'pointer'}}>
+                        <input
+                          type="checkbox"
+                          checked={termsAccepted}
+                          onChange={e => setTermsAccepted(e.target.checked)}
+                          style={{marginTop:'2px',width:'16px',height:'16px',flexShrink:0,accentColor:'#4A7A50'}}
+                        />
+                        <span style={{fontSize:'12px',color:'#6B7280'}}>
+                          I have read and accept the{' '}
+                          <a href="/terms" target="_blank" rel="noopener noreferrer" style={{color:'#4A7A50',textDecoration:'underline'}}>
+                            Terms and Conditions
+                          </a>
+                        </span>
+                      </label>
+                    </div>
                     <button
                       type="submit"
-                      disabled={registerForm.formState.isSubmitting}
+                      disabled={!termsAccepted || registerForm.formState.isSubmitting}
                       className="w-full py-3 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                       style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
                     >
