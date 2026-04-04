@@ -13,6 +13,8 @@ import { t } from '@/lib/i18n'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { cfFetch } from '@/lib/api'
+import { PhoneInput } from '@/components/ui/PhoneInput'
+import { COUNTRY_CODES } from '@/lib/countryCodes'
 
 // ─── Constants ────────────────────────────────────────
 
@@ -107,6 +109,16 @@ export default function DashboardPage() {
   const [selectedIcons, setSelectedIcons] = useState<string[]>([])
   const [iconsSaving, setIconsSaving] = useState(false)
 
+  // ── Phone state ──
+  const [countryCode, setCountryCode] = useState('+506')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [phoneVerified, setPhoneVerified] = useState(false)
+  const [verifying, setVerifying] = useState(false)
+  const [otpSent, setOtpSent] = useState(false)
+  const [otpInput, setOtpInput] = useState('')
+  const [verifyError, setVerifyError] = useState('')
+  const [verifyLoading, setVerifyLoading] = useState(false)
+
   // ── Form setup ──
   const {
     register,
@@ -140,6 +152,9 @@ export default function DashboardPage() {
       primaryLanguage: data.profile.primaryLanguage ?? '',
       organDonor: data.profile.organDonor ?? false,
     })
+    setCountryCode(data.profile.phoneCountryCode ?? '+506')
+    setPhoneNumber(data.profile.phoneLocal ?? '')
+    setPhoneVerified(data.profile.phoneVerified ?? false)
   }, [data, reset])
 
   // ── Initialize photo preview from profile ──
@@ -268,6 +283,61 @@ export default function DashboardPage() {
     if (newIcons !== selectedIcons) {
       setSelectedIcons(newIcons)
       void saveQuickGlanceIcons(newIcons)
+    }
+  }
+
+  // ── Phone verification handlers ──
+  async function handleSendOtp(channel: 'whatsapp' | 'sms') {
+    if (!phoneNumber) return
+    const fullPhone = `${countryCode}${phoneNumber}`
+    setVerifying(true)
+    try {
+      const res = await cfFetch('sendPhoneVerification', {
+        method: 'POST',
+        body: JSON.stringify({ phone: fullPhone, channel }),
+      })
+      if (res.ok) {
+        setOtpSent(true)
+        setVerifyError('')
+      } else {
+        setVerifyError(t('profile.sendOtpFailed', lang))
+      }
+    } catch {
+      setVerifyError(t('profile.sendOtpFailed', lang))
+    } finally {
+      setVerifying(false)
+    }
+  }
+
+  async function handleConfirmOtp() {
+    if (otpInput.length !== 6) return
+    const fullPhone = `${countryCode}${phoneNumber}`
+    setVerifyLoading(true)
+    setVerifyError('')
+    try {
+      const res = await cfFetch('verifyPhone', {
+        method: 'POST',
+        body: JSON.stringify({ phone: fullPhone, code: otpInput }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setPhoneVerified(true)
+        setOtpSent(false)
+        setOtpInput('')
+      } else if (data.error === 'code_expired') {
+        setVerifyError(t('profile.codeExpired', lang))
+        setOtpSent(false)
+      } else if (data.remainingAttempts !== undefined) {
+        setVerifyError(
+          `${t('profile.invalidCode', lang)} (${data.remainingAttempts} ${t('profile.attemptsLeft', lang)})`
+        )
+      } else {
+        setVerifyError(t('profile.verifyFailed', lang))
+      }
+    } catch {
+      setVerifyError(t('profile.verifyFailed', lang))
+    } finally {
+      setVerifyLoading(false)
     }
   }
 
@@ -635,6 +705,110 @@ export default function DashboardPage() {
                     {t('profile.organDonorLabel', lang)}
                   </span>
                 </label>
+              </div>
+
+              {/* Phone number */}
+              <div className="mt-4">
+                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                  {t('profile.phone', lang)}
+                </label>
+                <PhoneInput
+                  value={phoneNumber ? `${countryCode}${phoneNumber}` : ''}
+                  onChange={(fullNumber) => {
+                    const match = [...COUNTRY_CODES]
+                      .sort((a, b) => b.code.length - a.code.length)
+                      .find((c) => fullNumber.startsWith(c.code))
+                    if (match) {
+                      setCountryCode(match.code)
+                      setPhoneNumber(fullNumber.slice(match.code.length))
+                      if (phoneVerified) {
+                        setPhoneVerified(false)
+                        setOtpSent(false)
+                        setOtpInput('')
+                        setVerifyError('')
+                      }
+                    }
+                  }}
+                  placeholder="88887777"
+                  className={
+                    phoneNumber && !phoneVerified
+                      ? 'border-amber-400'
+                      : phoneVerified
+                        ? 'border-[#4A7A50]'
+                        : ''
+                  }
+                />
+                {phoneNumber && !phoneVerified && (
+                  <p className="text-xs text-amber-600 mt-1.5">
+                    ⚠️ {t('profile.phoneUnverified', lang)}
+                  </p>
+                )}
+                {phoneVerified && (
+                  <p className="text-xs text-[#4A7A50] mt-1.5">
+                    ✓ {t('profile.verified', lang)}
+                  </p>
+                )}
+                {phoneNumber && !phoneVerified && !otpSent && (
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSendOtp('whatsapp')}
+                      disabled={verifying}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-[#4A7A50] text-[#4A7A50] hover:bg-[#E8F2E6] transition-colors disabled:opacity-50"
+                    >
+                      💬 {t('profile.verifyWhatsApp', lang)}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSendOtp('sms')}
+                      disabled={verifying}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                      📱 {t('profile.verifySMS', lang)}
+                    </button>
+                  </div>
+                )}
+                {otpSent && !phoneVerified && (
+                  <div className="mt-3 space-y-2">
+                    <p className="text-xs text-gray-500">
+                      {t('profile.otpSent', lang)}
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={otpInput}
+                        onChange={e => setOtpInput(e.target.value.replace(/\D/g, ''))}
+                        placeholder="000000"
+                        className="w-32 border border-gray-200 rounded-xl px-3 py-2 text-sm text-center tracking-widest focus:outline-none focus:border-[#4A7A50]"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleConfirmOtp}
+                        disabled={otpInput.length !== 6 || verifyLoading}
+                        className="px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
+                        style={{ background: 'linear-gradient(145deg,#44664a,#7a9e7e)' }}
+                      >
+                        {verifyLoading ? '...' : t('profile.confirm', lang)}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOtpSent(false)
+                          setOtpInput('')
+                          setVerifyError('')
+                        }}
+                        className="px-3 py-2 text-sm text-gray-400 hover:text-gray-600"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    {verifyError && (
+                      <p className="text-xs text-red-500">{verifyError}</p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Actions row */}

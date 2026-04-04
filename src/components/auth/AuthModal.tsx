@@ -432,9 +432,9 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
                           style={{marginTop:'2px',width:'16px',height:'16px',flexShrink:0,accentColor:'#4A7A50'}}
                         />
                         <span style={{fontSize:'12px',color:'#6B7280'}}>
-                          I have read and accept the{' '}
+                          {t('terms.iAccept', lang)}{' '}
                           <a href="/terms" target="_blank" rel="noopener noreferrer" style={{color:'#4A7A50',textDecoration:'underline'}}>
-                            Terms and Conditions
+                            {t('terms.title', lang)}
                           </a>
                         </span>
                       </label>

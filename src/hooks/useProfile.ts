@@ -21,6 +21,9 @@ export interface ProfileData {
     qrEnabled?: boolean
     quickGlanceIcons?: string[]
     onboardingComplete?: boolean
+    phoneCountryCode?: string
+    phoneLocal?: string
+    phoneVerified?: boolean
   }
   qrToken: string
   qrUrl: string
