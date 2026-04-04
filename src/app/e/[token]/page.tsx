@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import type { ReactNode } from 'react'
+import type { ReactNode, FormEvent } from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
@@ -200,6 +200,23 @@ export default function EmergencyProfilePage() {
   const [retiredMessage, setRetiredMessage] = useState('')
   const [selectedLang, setSelectedLang] = useState('en')
 
+  // ── Emergency overlay state ──
+  const [showEmergencyOptions, setShowEmergencyOptions] = useState(false)
+  const [emergencyTriggeredAt, setEmergencyTriggeredAt] = useState<string | null>(null)
+  const [locationShared, setLocationShared] = useState(false)
+  const [locationDenied, setLocationDenied] = useState(false)
+  const [mapsUrl, setMapsUrl] = useState('')
+  const [wazeUrl, setWazeUrl] = useState('')
+
+  // ── Appointment overlay state ──
+  const [appointmentStep, setAppointmentStep] = useState<'form' | 'otp' | null>(null)
+  const [sessionId, setSessionId] = useState('')
+  const [requesterForm, setRequesterForm] = useState({ name: '', role: '', phone: '', email: '' })
+  const [otpForm, setOtpForm] = useState({ publicOtp: '', privateOtp: '' })
+  const [appointmentError, setAppointmentError] = useState('')
+  const [appointmentLoading, setAppointmentLoading] = useState(false)
+  const [showAppointmentSuccess, setShowAppointmentSuccess] = useState(false)
+
   useEffect(() => {
     if (!token) return
 
@@ -237,6 +254,102 @@ export default function EmergencyProfilePage() {
 
     fetchProfile()
   }, [token])
+
+  // ── Emergency handlers ──
+  async function handleEmergency() {
+    const triggeredAt = new Date().toISOString()
+    setEmergencyTriggeredAt(triggeredAt)
+    setShowEmergencyOptions(true)
+    await fetch(`${CF_FUNCTIONS_BASE}/confirmEmergency`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: 'phase2', triggeredAt }),
+    })
+  }
+
+  function handleShareLocation() {
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords
+        const res = await fetch(`${CF_FUNCTIONS_BASE}/confirmEmergency`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, action: 'location', lat, lng }),
+        })
+        const locationData = await res.json()
+        setLocationShared(true)
+        setMapsUrl(locationData.mapsUrl)
+        setWazeUrl(locationData.wazeUrl)
+      },
+      () => {
+        setLocationDenied(true)
+      }
+    )
+  }
+
+  async function handleCancel() {
+    await fetch(`${CF_FUNCTIONS_BASE}/confirmEmergency`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: 'cancel', triggeredAt: emergencyTriggeredAt }),
+    })
+    setShowEmergencyOptions(false)
+    setEmergencyTriggeredAt(null)
+  }
+
+  // ── Appointment handlers ──
+  async function handleAppointmentSubmit(e: FormEvent) {
+    e.preventDefault()
+    setAppointmentLoading(true)
+    setAppointmentError('')
+    const res = await fetch(`${CF_FUNCTIONS_BASE}/requestAppointment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token,
+        requesterName: requesterForm.name,
+        requesterRole: requesterForm.role,
+        requesterPhone: requesterForm.phone,
+        requesterEmail: requesterForm.email,
+      }),
+    })
+    const apptData = await res.json()
+    if (apptData.sessionId) {
+      setSessionId(apptData.sessionId)
+      setAppointmentStep('otp')
+    } else {
+      setAppointmentError('Failed to send codes. Please try again.')
+    }
+    setAppointmentLoading(false)
+  }
+
+  async function handleValidateOTP() {
+    setAppointmentLoading(true)
+    setAppointmentError('')
+    const res = await fetch(`${CF_FUNCTIONS_BASE}/validateAppointmentOTP`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId,
+        publicOtp: otpForm.publicOtp,
+        privateOtp: otpForm.privateOtp,
+      }),
+    })
+    const otpData = await res.json()
+    if (otpData.success) {
+      setAppointmentStep(null)
+      setShowAppointmentSuccess(true)
+    } else {
+      if (otpData.error === 'otp_expired') {
+        setAppointmentError('Code has expired. Please start over.')
+      } else if (otpData.remainingAttempts !== undefined) {
+        setAppointmentError(`Incorrect code. ${otpData.remainingAttempts} attempt(s) remaining.`)
+      } else {
+        setAppointmentError('Invalid code. Please try again.')
+      }
+    }
+    setAppointmentLoading(false)
+  }
 
   // ── Loading ──
   if (status === 'loading') {
@@ -710,7 +823,7 @@ export default function EmergencyProfilePage() {
 
       {/* ── SECTION 4: Sticky bottom action buttons ── */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50"
+        className="fixed bottom-0 left-0 right-0 z-40"
         style={{
           background: 'rgba(255,255,255,0.95)',
           backdropFilter: 'blur(12px)',
@@ -721,6 +834,7 @@ export default function EmergencyProfilePage() {
         <div className="max-w-2xl mx-auto px-4 py-3 flex gap-3">
           {/* Emergency button */}
           <button
+            onClick={handleEmergency}
             className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 active:scale-95 transition-transform"
             style={{ background: 'linear-gradient(145deg,#DC2626,#EF4444)' }}
           >
@@ -728,19 +842,277 @@ export default function EmergencyProfilePage() {
           </button>
 
           {/* Appointment button */}
-          <button className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-[#1C2B1E] bg-[#E8F2E6] flex items-center justify-center gap-2 active:scale-95 transition-transform border border-[#C8DEC4]">
-            {t('emergency.action.appointment', selectedLang as Lang)}
-          </button>
-
-          {/* Dismiss button */}
           <button
-            className="px-4 py-3.5 rounded-2xl text-sm font-medium text-gray-400 bg-gray-100 active:scale-95 transition-transform"
-            onClick={() => window.history.back()}
+            onClick={() => setAppointmentStep('form')}
+            className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-[#1C2B1E] bg-[#E8F2E6] flex items-center justify-center gap-2 active:scale-95 transition-transform border border-[#C8DEC4]"
           >
-            {t('emergency.action.dismiss', selectedLang as Lang)}
+            {t('emergency.action.appointment', selectedLang as Lang)}
           </button>
         </div>
       </div>
+
+      {/* ── Emergency Options Overlay ── */}
+      {showEmergencyOptions && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowEmergencyOptions(false)} />
+          <div className="relative w-full sm:max-w-[480px] bg-white sm:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl">
+            <div
+              className="px-5 py-4 flex items-center gap-3"
+              style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+            >
+              <button
+                onClick={() => setShowEmergencyOptions(false)}
+                className="text-white/70 hover:text-white transition-colors text-xl leading-none"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <h2 className="text-white font-semibold text-base">🚨 Emergency</h2>
+            </div>
+            <div className="px-5 py-5 overflow-y-auto max-h-[70vh] space-y-6">
+
+              {/* Share Location */}
+              <div>
+                <button
+                  onClick={handleShareLocation}
+                  disabled={locationShared}
+                  className="w-full py-3 px-4 rounded-2xl text-sm font-semibold text-white flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-60"
+                  style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+                >
+                  📍 {t('emergency.shareLocation', selectedLang as Lang)}
+                </button>
+                <p className="text-xs text-gray-500 mt-1 text-center">One-time location share — not tracked</p>
+                {locationShared && (
+                  <div className="mt-3 text-center space-y-2">
+                    <p className="text-sm text-green-700 font-medium">✅ {t('emergency.locationSent', selectedLang as Lang)}</p>
+                    <div className="flex gap-2 justify-center">
+                      {mapsUrl && (
+                        <a
+                          href={mapsUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-2 rounded-full text-xs font-semibold text-white"
+                          style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
+                        >
+                          Open in Maps
+                        </a>
+                      )}
+                      {wazeUrl && (
+                        <a
+                          href={wazeUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-4 py-2 rounded-full text-xs font-semibold text-[#1C2B1E] border border-[#C8DEC4] bg-[#E8F2E6]"
+                        >
+                          Open in Waze
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {locationDenied && (
+                  <p className="mt-2 text-xs text-amber-600 text-center">
+                    ⚠️ Location permission denied. Please share your location manually with emergency contacts.
+                  </p>
+                )}
+              </div>
+
+              {/* Emergency Contacts */}
+              {emergencyContacts.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[#4A7A50]">
+                    {t('emergency.contacts', selectedLang as Lang)}
+                  </p>
+                  {[...emergencyContacts]
+                    .sort((a, b) => a.priority - b.priority)
+                    .map((contact) => (
+                      <div key={contact.id} className="p-3 rounded-xl bg-[#FAFAF8] border border-[#E8EDE8]">
+                        <p className="font-semibold text-sm text-[#1C2B1E]">
+                          {contact.name} — {contact.relationship}
+                        </p>
+                        {contact.phone && (
+                          <div className="flex gap-2 mt-2">
+                            <a
+                              href={`https://wa.me/${contact.phone.replace(/\D/g, '')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-[#25D366]"
+                            >
+                              WhatsApp
+                            </a>
+                            <a
+                              href={`tel:${contact.phone}`}
+                              className="px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                              style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
+                            >
+                              Call
+                            </a>
+                          </div>
+                        )}
+                        {contact.email && (
+                          <a href={`mailto:${contact.email}`} className="mt-1 inline-block text-xs text-[#4A7A50]">
+                            Email
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Cancel */}
+              <div className="text-center pb-2">
+                <button onClick={handleCancel} className="text-sm text-gray-400 underline mt-6">
+                  {t('emergency.cancelAlert', selectedLang as Lang)}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Appointment Overlay ── */}
+      {(appointmentStep !== null || showAppointmentSuccess) && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => { setAppointmentStep(null); setShowAppointmentSuccess(false); setAppointmentError('') }}
+          />
+          <div className="relative w-full sm:max-w-[480px] bg-white sm:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl">
+            <div
+              className="px-5 py-4 flex items-center gap-3"
+              style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+            >
+              <button
+                onClick={() => { setAppointmentStep(null); setShowAppointmentSuccess(false); setAppointmentError('') }}
+                className="text-white/70 hover:text-white transition-colors text-xl leading-none"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <h2 className="text-white font-semibold text-base">📅 Appointment</h2>
+            </div>
+            <div className="px-5 py-5 overflow-y-auto max-h-[70vh]">
+              {showAppointmentSuccess ? (
+                <div className="text-center py-8">
+                  <p className="text-4xl mb-4">✅</p>
+                  <p className="text-base font-semibold text-[#1C2B1E]">Access Granted</p>
+                  <p className="text-sm text-gray-500 mt-2">Appointment session verified successfully.</p>
+                </div>
+              ) : appointmentStep === 'form' ? (
+                <form onSubmit={handleAppointmentSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your full name *</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Your full name"
+                      value={requesterForm.name}
+                      onChange={e => setRequesterForm(p => ({ ...p, name: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your role *</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Your role (e.g. Cardiologist, Caretaker, Family member)"
+                      value={requesterForm.role}
+                      onChange={e => setRequesterForm(p => ({ ...p, role: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your phone (for OTP) *</label>
+                    <input
+                      required
+                      type="tel"
+                      placeholder="Your phone (for OTP)"
+                      value={requesterForm.phone}
+                      onChange={e => setRequesterForm(p => ({ ...p, phone: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your email (for OTP) *</label>
+                    <input
+                      required
+                      type="email"
+                      placeholder="Your email (for OTP)"
+                      value={requesterForm.email}
+                      onChange={e => setRequesterForm(p => ({ ...p, email: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+                  {appointmentError && (
+                    <p className="text-red-500 text-sm">{appointmentError}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={appointmentLoading}
+                    className="w-full py-3.5 rounded-2xl text-sm font-bold text-white disabled:opacity-60 active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+                  >
+                    {appointmentLoading ? 'Sending…' : 'Send access codes'}
+                  </button>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.yourCode', selectedLang as Lang)}
+                    </label>
+                    <p className="text-xs text-gray-500 mb-2">
+                      Enter the 6-digit code sent to your phone and email
+                    </p>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      inputMode="numeric"
+                      value={otpForm.publicOtp}
+                      onChange={e => setOtpForm(p => ({ ...p, publicOtp: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-center tracking-widest font-mono focus:outline-none focus:border-[#4A7A50]"
+                      placeholder="——————"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.holderCode', selectedLang as Lang)}
+                    </label>
+                    <p className="text-xs text-gray-500 mb-2">
+                      {t('appointment.holderCodeHint', selectedLang as Lang)}
+                    </p>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      inputMode="numeric"
+                      value={otpForm.privateOtp}
+                      onChange={e => setOtpForm(p => ({ ...p, privateOtp: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-center tracking-widest font-mono focus:outline-none focus:border-[#4A7A50]"
+                      placeholder="——————"
+                    />
+                  </div>
+                  {appointmentError && (
+                    <p className="text-red-500 text-sm mt-2">{appointmentError}</p>
+                  )}
+                  <button
+                    onClick={handleValidateOTP}
+                    disabled={
+                      otpForm.publicOtp.length !== 6 ||
+                      otpForm.privateOtp.length !== 6 ||
+                      appointmentLoading
+                    }
+                    className="w-full py-3.5 rounded-2xl text-sm font-bold text-white disabled:opacity-40 active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+                  >
+                    {appointmentLoading ? 'Verifying…' : t('appointment.accessJournal', selectedLang as Lang)}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
