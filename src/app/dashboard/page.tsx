@@ -379,7 +379,12 @@ export default function DashboardPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(cleanData),
+        body: JSON.stringify({
+          ...cleanData,
+          phoneCountryCode: countryCode,
+          phoneLocal: phoneNumber,
+          phone: phoneNumber ? `${countryCode}${phoneNumber}` : '',
+        }),
       })
       if (!res.ok) throw new Error('Failed to save profile')
       setSaveSuccess(true)
