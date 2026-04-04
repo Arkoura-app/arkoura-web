@@ -324,6 +324,16 @@ export default function DashboardPage() {
         setPhoneVerified(true)
         setOtpSent(false)
         setOtpInput('')
+        // Save phone fields to profile
+        await cfFetch('updateProfile', {
+          method: 'PUT',
+          body: JSON.stringify({
+            phoneCountryCode: countryCode,
+            phoneLocal: phoneNumber,
+            phone: `${countryCode}${phoneNumber}`,
+            phoneVerified: true,
+          }),
+        })
       } else if (data.error === 'code_expired') {
         setVerifyError(t('profile.codeExpired', lang))
         setOtpSent(false)
