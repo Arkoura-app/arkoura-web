@@ -7,7 +7,7 @@ import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
 import { LanguagePicker } from '@/components/auth/LanguagePicker'
 
-const TERMS_SECTIONS: { title: string; paragraphs: string[] }[] = [
+const TERMS_SECTIONS: { title: string; paragraphs: string[]; links?: { label: string; href: string }[] }[] = [
   {
     title: '1. Introduction and Acceptance',
     paragraphs: [
@@ -157,6 +157,19 @@ const TERMS_SECTIONS: { title: string; paragraphs: string[] }[] = [
       'Operator: Arkoura',
     ],
   },
+  {
+    title: '17. Compliance & Security',
+    paragraphs: [
+      'For detailed information on how Arkoura protects your data and meets applicable regulatory standards, please visit:',
+    ],
+    links: [
+      { label: 'GDPR Compliance', href: '/compliance/gdpr' },
+      { label: 'PII Protection', href: '/compliance/pii' },
+      { label: 'HIPAA Alignment', href: '/compliance/hipaa' },
+      { label: 'CCPA Compliance', href: '/compliance/ccpa' },
+      { label: 'Security Standards', href: '/security' },
+    ],
+  },
 ]
 
 export default function TermsPage() {
@@ -193,6 +206,15 @@ export default function TermsPage() {
                   <p key={j}>{p}</p>
                 ))}
               </div>
+              {section.links?.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-2 text-sm text-[#4A7A50] hover:underline mt-2"
+                >
+                  📄 {link.label}
+                </a>
+              ))}
             </div>
           ))}
         </div>
