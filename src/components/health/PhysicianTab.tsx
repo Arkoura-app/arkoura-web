@@ -6,6 +6,7 @@ import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
 import { SAVE_BTN_STYLE } from './formStyles'
+import { PhoneInput } from '@/components/ui/PhoneInput'
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
@@ -246,12 +247,10 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
               <label className="text-xs font-medium text-gray-600 mb-1 block">
                 {t('physician.phone', lang as Lang)} *
               </label>
-              <input
-                type="tel"
+              <PhoneInput
                 value={form.phone}
-                onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                placeholder="+506 2222 3333"
-                className={INPUT_CLS}
+                onChange={val => setForm(p => ({ ...p, phone: val }))}
+                placeholder="88887777"
               />
             </div>
 

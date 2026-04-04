@@ -5,6 +5,7 @@ import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
 import { cfFetch } from '@/lib/api'
 import { RecordCardNew } from './RecordCardNew'
+import { PhoneInput } from '@/components/ui/PhoneInput'
 
 // ─── Types ───────────────────────────────────────────
 
@@ -309,12 +310,10 @@ export function ContactsTab() {
               <label className="text-xs font-medium text-gray-600 mb-1 block">
                 {t('contact.phone', lang)} *
               </label>
-              <input
-                type="tel"
+              <PhoneInput
                 value={form.phone}
-                onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                placeholder={t('contact.phonePlaceholder', lang)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                onChange={val => setForm(p => ({ ...p, phone: val }))}
+                placeholder="88887777"
               />
             </div>
 
@@ -324,12 +323,10 @@ export function ContactsTab() {
                 {t('contact.altPhone', lang)}{' '}
                 <span className="text-gray-400">{t('form.optional', lang)}</span>
               </label>
-              <input
-                type="tel"
+              <PhoneInput
                 value={form.phoneAlt}
-                onChange={e => setForm(p => ({ ...p, phoneAlt: e.target.value }))}
-                placeholder="+1 555 000 0001"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                onChange={val => setForm(p => ({ ...p, phoneAlt: val }))}
+                placeholder="88887777"
               />
             </div>
 
