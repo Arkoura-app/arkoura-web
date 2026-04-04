@@ -9,6 +9,8 @@ import Image from 'next/image'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { t } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
+import { PhoneInput } from '@/components/ui/PhoneInput'
+import { COUNTRY_CODES } from '@/lib/countryCodes'
 
 // ─── Types ────────────────────────────────────────────
 
@@ -132,6 +134,55 @@ const LANGUAGES = [
   { code: 'sv', label: 'Svenska' },
 ]
 
+// ─── Relationship translation ─────────────────────────
+
+function translateRelationship(rel: string, lang: string): string {
+  const map: Record<string, Record<string, string>> = {
+    'Spouse / Partner': {
+      en: 'Spouse / Partner', es: 'Cónyuge / Pareja',
+      fr: 'Conjoint / Partenaire', de: 'Ehepartner / Partner',
+      pt: 'Cônjuge / Parceiro', zh: '配偶/伴侣', ja: '配偶者/パートナー',
+      it: 'Coniuge / Partner', ru: 'Супруг / Партнёр', sv: 'Make/partner',
+    },
+    'Parent': {
+      en: 'Parent', es: 'Padre/Madre', fr: 'Parent', de: 'Elternteil',
+      pt: 'Pai/Mãe', zh: '父母', ja: '親',
+      it: 'Genitore', ru: 'Родитель', sv: 'Förälder',
+    },
+    'Child': {
+      en: 'Child', es: 'Hijo/Hija', fr: 'Enfant', de: 'Kind',
+      pt: 'Filho/Filha', zh: '子女', ja: '子',
+      it: 'Figlio/Figlia', ru: 'Ребёнок', sv: 'Barn',
+    },
+    'Sibling': {
+      en: 'Sibling', es: 'Hermano/Hermana', fr: 'Frère/Sœur', de: 'Geschwister',
+      pt: 'Irmão/Irmã', zh: '兄弟姐妹', ja: '兄弟姉妹',
+      it: 'Fratello/Sorella', ru: 'Брат/Сестра', sv: 'Syskon',
+    },
+    'Friend': {
+      en: 'Friend', es: 'Amigo/Amiga', fr: 'Ami/Amie', de: 'Freund/Freundin',
+      pt: 'Amigo/Amiga', zh: '朋友', ja: '友人',
+      it: 'Amico/Amica', ru: 'Друг', sv: 'Vän',
+    },
+    'Caretaker': {
+      en: 'Caretaker', es: 'Cuidador', fr: 'Soignant', de: 'Betreuer',
+      pt: 'Cuidador', zh: '看护者', ja: '介護者',
+      it: 'Badante', ru: 'Опекун', sv: 'Vårdgivare',
+    },
+    'Doctor': {
+      en: 'Doctor', es: 'Doctor/Doctora', fr: 'Médecin', de: 'Arzt/Ärztin',
+      pt: 'Médico/Médica', zh: '医生', ja: '医師',
+      it: 'Medico', ru: 'Врач', sv: 'Läkare',
+    },
+    'Legal Guardian': {
+      en: 'Legal Guardian', es: 'Tutor Legal', fr: 'Tuteur légal', de: 'Vormund',
+      pt: 'Tutor Legal', zh: '法定监护人', ja: '法定後見人',
+      it: 'Tutore legale', ru: 'Законный опекун', sv: 'Juridisk vårdnadshavare',
+    },
+  }
+  return map[rel]?.[lang] ?? map[rel]?.['en'] ?? rel
+}
+
 // ─── Sub-components ───────────────────────────────────
 
 function CriticalBadge({ lang }: { lang: Lang }) {
@@ -216,6 +267,8 @@ export default function EmergencyProfilePage() {
   const [appointmentError, setAppointmentError] = useState('')
   const [appointmentLoading, setAppointmentLoading] = useState(false)
   const [showAppointmentSuccess, setShowAppointmentSuccess] = useState(false)
+  const [apptCountryCode, setApptCountryCode] = useState('+506')
+  const [apptLocalPhone, setApptLocalPhone] = useState('')
 
   useEffect(() => {
     if (!token) return
@@ -309,7 +362,7 @@ export default function EmergencyProfilePage() {
         token,
         requesterName: requesterForm.name,
         requesterRole: requesterForm.role,
-        requesterPhone: requesterForm.phone,
+        requesterPhone: `${apptCountryCode}${apptLocalPhone}`,
         requesterEmail: requesterForm.email,
       }),
     })
@@ -853,115 +906,161 @@ export default function EmergencyProfilePage() {
 
       {/* ── Emergency Options Overlay ── */}
       {showEmergencyOptions && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowEmergencyOptions(false)} />
-          <div className="relative w-full sm:max-w-[480px] bg-white sm:rounded-3xl rounded-t-3xl overflow-hidden shadow-2xl">
-            <div
-              className="px-5 py-4 flex items-center gap-3"
-              style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
-            >
-              <button
-                onClick={() => setShowEmergencyOptions(false)}
-                className="text-white/70 hover:text-white transition-colors text-xl leading-none"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-              <h2 className="text-white font-semibold text-base">🚨 Emergency</h2>
-            </div>
-            <div className="px-5 py-5 overflow-y-auto max-h-[70vh] space-y-6">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowEmergencyOptions(false)}
+          />
 
-              {/* Share Location */}
-              <div>
+          {/* Sheet */}
+          <div className="relative w-full md:max-w-md bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+
+            {/* Header bar */}
+            <div className="sticky top-0 z-10 bg-red-600 px-6 pt-6 pb-4">
+              {/* Drag handle — mobile */}
+              <div className="w-10 h-1 bg-white/30 rounded-full mx-auto mb-4 md:hidden" />
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-lg">
+                  🚨 {t('emergency.title', selectedLang as Lang)}
+                </h2>
                 <button
+                  onClick={() => setShowEmergencyOptions(false)}
+                  className="text-white/70 hover:text-white transition-colors text-xl leading-none"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="px-6 py-6 space-y-4">
+
+              {/* Location share card */}
+              <div
+                className="rounded-2xl border border-gray-100 overflow-hidden"
+                style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+              >
+                <button
+                  type="button"
                   onClick={handleShareLocation}
                   disabled={locationShared}
-                  className="w-full py-3 px-4 rounded-2xl text-sm font-semibold text-white flex items-center justify-center gap-2 active:scale-95 transition-transform disabled:opacity-60"
-                  style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
+                  className="w-full flex items-start gap-4 p-4 text-left hover:bg-gray-50 transition-colors disabled:opacity-60"
                 >
-                  📍 {t('emergency.shareLocation', selectedLang as Lang)}
-                </button>
-                <p className="text-xs text-gray-500 mt-1 text-center">One-time location share — not tracked</p>
-                {locationShared && (
-                  <div className="mt-3 text-center space-y-2">
-                    <p className="text-sm text-green-700 font-medium">✅ {t('emergency.locationSent', selectedLang as Lang)}</p>
-                    <div className="flex gap-2 justify-center">
-                      {mapsUrl && (
-                        <a
-                          href={mapsUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-4 py-2 rounded-full text-xs font-semibold text-white"
-                          style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
-                        >
-                          Open in Maps
-                        </a>
-                      )}
-                      {wazeUrl && (
-                        <a
-                          href={wazeUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-4 py-2 rounded-full text-xs font-semibold text-[#1C2B1E] border border-[#C8DEC4] bg-[#E8F2E6]"
-                        >
-                          Open in Waze
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-                {locationDenied && (
-                  <p className="mt-2 text-xs text-amber-600 text-center">
-                    ⚠️ Location permission denied. Please share your location manually with emergency contacts.
-                  </p>
-                )}
-              </div>
-
-              {/* Emergency Contacts */}
-              {emergencyContacts.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[#4A7A50]">
-                    {t('emergency.contacts', selectedLang as Lang)}
-                  </p>
-                  {[...emergencyContacts]
-                    .sort((a, b) => a.priority - b.priority)
-                    .map((contact) => (
-                      <div key={contact.id} className="p-3 rounded-xl bg-[#FAFAF8] border border-[#E8EDE8]">
-                        <p className="font-semibold text-sm text-[#1C2B1E]">
-                          {contact.name} — {contact.relationship}
+                  <span className="text-2xl mt-0.5">📍</span>
+                  <div className="flex-1">
+                    <p className="font-semibold text-[#1C2B1E] text-sm">
+                      {t('emergency.shareLocation', selectedLang as Lang)}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {t('emergency.locationOneTime', selectedLang as Lang)}
+                    </p>
+                    {locationShared && (
+                      <div className="mt-2 space-y-1.5">
+                        <p className="text-xs text-[#4A7A50] font-medium">
+                          ✓ {t('emergency.locationSent', selectedLang as Lang)}
                         </p>
-                        {contact.phone && (
-                          <div className="flex gap-2 mt-2">
+                        {mapsUrl && (
+                          <div className="flex gap-2">
                             <a
-                              href={`https://wa.me/${contact.phone.replace(/\D/g, '')}`}
+                              href={mapsUrl}
                               target="_blank"
-                              rel="noreferrer"
-                              className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-[#25D366]"
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-600 underline"
                             >
-                              WhatsApp
+                              Google Maps
                             </a>
                             <a
-                              href={`tel:${contact.phone}`}
-                              className="px-3 py-1.5 rounded-full text-xs font-semibold text-white"
-                              style={{ background: 'linear-gradient(145deg, #44664a, #7a9e7e)' }}
+                              href={wazeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-600 underline"
                             >
-                              Call
+                              Waze
                             </a>
                           </div>
                         )}
-                        {contact.email && (
-                          <a href={`mailto:${contact.email}`} className="mt-1 inline-block text-xs text-[#4A7A50]">
-                            Email
-                          </a>
-                        )}
+                      </div>
+                    )}
+                    {locationDenied && (
+                      <p className="text-xs text-amber-600 mt-1">
+                        ⚠️ {t('emergency.locationDenied', selectedLang as Lang)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+              </div>
+
+              {/* Emergency contacts card */}
+              <div
+                className="rounded-2xl border border-gray-100 overflow-hidden"
+                style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+              >
+                <div className="px-4 py-3 border-b border-gray-50">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    {t('emergency.contacts', selectedLang as Lang)}
+                  </p>
+                </div>
+                <div className="divide-y divide-gray-50">
+                  {[...emergencyContacts]
+                    .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
+                    .map((contact, i) => (
+                      <div key={contact.id} className="px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-sm text-[#1C2B1E]">
+                              {contact.name}
+                              {i === 0 && (
+                                <span className="ml-2 text-xs font-medium text-[#4A7A50] bg-[#E8F2E6] px-1.5 py-0.5 rounded-full">
+                                  Primary
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {translateRelationship(contact.relationship, selectedLang)}
+                            </p>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            {contact.phone && (
+                              <>
+                                <a
+                                  href={`https://wa.me/${contact.phone.replace(/\D/g, '')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#25D366] text-white text-sm"
+                                >
+                                  💬
+                                </a>
+                                <a
+                                  href={`tel:${contact.phone}`}
+                                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#4A7A50] text-white text-sm"
+                                >
+                                  📞
+                                </a>
+                              </>
+                            )}
+                            {contact.email && (
+                              <a
+                                href={`mailto:${contact.email}`}
+                                className="flex items-center justify-center w-9 h-9 rounded-xl bg-gray-100 text-gray-600 text-sm"
+                              >
+                                ✉️
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ))}
                 </div>
-              )}
+              </div>
 
-              {/* Cancel */}
-              <div className="text-center pb-2">
-                <button onClick={handleCancel} className="text-sm text-gray-400 underline mt-6">
+              {/* Cancel link */}
+              <div className="text-center pt-2 pb-2">
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="text-sm text-gray-400 hover:text-gray-600 underline transition-colors"
+                >
                   {t('emergency.cancelAlert', selectedLang as Lang)}
                 </button>
               </div>
@@ -1001,44 +1100,57 @@ export default function EmergencyProfilePage() {
               ) : appointmentStep === 'form' ? (
                 <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your full name *</label>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.yourName', selectedLang as Lang)} *
+                    </label>
                     <input
                       required
                       type="text"
-                      placeholder="Your full name"
+                      placeholder={t('appointment.yourName', selectedLang as Lang)}
                       value={requesterForm.name}
                       onChange={e => setRequesterForm(p => ({ ...p, name: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your role *</label>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.yourRole', selectedLang as Lang)} *
+                    </label>
                     <input
                       required
                       type="text"
-                      placeholder="Your role (e.g. Cardiologist, Caretaker, Family member)"
+                      placeholder={t('appointment.yourRolePlaceholder', selectedLang as Lang)}
                       value={requesterForm.role}
                       onChange={e => setRequesterForm(p => ({ ...p, role: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your phone (for OTP) *</label>
-                    <input
-                      required
-                      type="tel"
-                      placeholder="Your phone (for OTP)"
-                      value={requesterForm.phone}
-                      onChange={e => setRequesterForm(p => ({ ...p, phone: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.yourPhone', selectedLang as Lang)} *
+                    </label>
+                    <PhoneInput
+                      value={apptLocalPhone ? `${apptCountryCode}${apptLocalPhone}` : ''}
+                      onChange={(fullNumber) => {
+                        const match = [...COUNTRY_CODES]
+                          .sort((a, b) => b.code.length - a.code.length)
+                          .find(c => fullNumber.startsWith(c.code))
+                        if (match) {
+                          setApptCountryCode(match.code)
+                          setApptLocalPhone(fullNumber.slice(match.code.length))
+                        }
+                      }}
+                      placeholder="88887777"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">Your email (for OTP) *</label>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      {t('appointment.yourEmail', selectedLang as Lang)} *
+                    </label>
                     <input
                       required
                       type="email"
-                      placeholder="Your email (for OTP)"
+                      placeholder={t('appointment.yourEmail', selectedLang as Lang)}
                       value={requesterForm.email}
                       onChange={e => setRequesterForm(p => ({ ...p, email: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#4A7A50]"
@@ -1053,7 +1165,7 @@ export default function EmergencyProfilePage() {
                     className="w-full py-3.5 rounded-2xl text-sm font-bold text-white disabled:opacity-60 active:scale-95 transition-transform"
                     style={{ background: 'linear-gradient(145deg, #1C2B1E, #2D4A32)' }}
                   >
-                    {appointmentLoading ? 'Sending…' : 'Send access codes'}
+                    {appointmentLoading ? '…' : t('appointment.sendCode', selectedLang as Lang)}
                   </button>
                 </form>
               ) : (
