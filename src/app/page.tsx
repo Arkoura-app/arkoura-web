@@ -2425,7 +2425,7 @@ function BrandSection({ lang }: { lang: string }) {
               className="text-[#7A9E7E] font-bold text-xl mb-2"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              Ark
+              Arc
             </p>
             <p className="text-white/80 text-sm leading-relaxed">
               {t('brand.ark', lang as Lang)}
@@ -2436,7 +2436,7 @@ function BrandSection({ lang }: { lang: string }) {
               className="text-[#7A9E7E] font-bold text-xl mb-2"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              Aura
+              Oura
             </p>
             <p className="text-white/80 text-sm leading-relaxed">
               {t('brand.aura', lang as Lang)}

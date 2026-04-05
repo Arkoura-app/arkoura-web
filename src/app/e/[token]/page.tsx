@@ -28,6 +28,7 @@ interface EmergencyProfile {
     quickGlanceIcons: string[] | null
     city: string | null
     country: string | null
+    phoneVerified: boolean | null
   }
   primaryPhysician: {
     name: string
@@ -260,7 +261,7 @@ export default function EmergencyProfilePage() {
   const [wazeUrl, setWazeUrl] = useState('')
 
   // ── Appointment overlay state ──
-  const [appointmentStep, setAppointmentStep] = useState<'form' | 'otp' | null>(null)
+  const [appointmentStep, setAppointmentStep] = useState<'form' | 'otp' | 'no_phone' | null>(null)
   const [sessionId, setSessionId] = useState('')
   const [requesterForm, setRequesterForm] = useState({ name: '', role: '', phone: '', email: '' })
   const [otpForm, setOtpForm] = useState({ publicOtp: '', privateOtp: '' })
@@ -351,6 +352,14 @@ export default function EmergencyProfilePage() {
   }
 
   // ── Appointment handlers ──
+  function handleAppointmentTap() {
+    if (!data?.profile?.phoneVerified) {
+      setAppointmentStep('no_phone')
+      return
+    }
+    setAppointmentStep('form')
+  }
+
   async function handleAppointmentSubmit(e: FormEvent) {
     e.preventDefault()
     setAppointmentLoading(true)
@@ -896,7 +905,7 @@ export default function EmergencyProfilePage() {
 
           {/* Appointment button */}
           <button
-            onClick={() => setAppointmentStep('form')}
+            onClick={handleAppointmentTap}
             className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-[#1C2B1E] bg-[#E8F2E6] flex items-center justify-center gap-2 active:scale-95 transition-transform border border-[#C8DEC4]"
           >
             {t('emergency.action.appointment', selectedLang as Lang)}
@@ -1069,8 +1078,39 @@ export default function EmergencyProfilePage() {
         </div>
       )}
 
+      {/* ── No Phone Overlay ── */}
+      {appointmentStep === 'no_phone' && (
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setAppointmentStep(null)}
+          />
+          <div className="relative w-full md:max-w-md bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden">
+            <div className="p-8 text-center">
+              <div className="text-5xl mb-4">📵</div>
+              <h3 className="font-bold text-[#1C2B1E] text-lg mb-3">
+                {t('appointment.unavailable', selectedLang as Lang)}
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                {t('appointment.noPhoneMessage', selectedLang as Lang)}
+              </p>
+              <p className="text-sm text-[#4A7A50] font-medium mb-8">
+                {t('appointment.useEmergencyInstead', selectedLang as Lang)}
+              </p>
+              <button
+                type="button"
+                onClick={() => setAppointmentStep(null)}
+                className="px-6 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                ← {t('common.back', selectedLang as Lang)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Appointment Overlay ── */}
-      {(appointmentStep !== null || showAppointmentSuccess) && (
+      {((appointmentStep !== null && appointmentStep !== 'no_phone') || showAppointmentSuccess) && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
           <div
             className="absolute inset-0 bg-black/50"
