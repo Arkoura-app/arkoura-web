@@ -67,11 +67,20 @@ export function useProfile() {
 
     try {
       const token = await user.getIdToken()
-      const res = await fetch(
-        `${CF_FUNCTIONS_BASE}/getProfile`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (!res.ok) {
+      // Retry up to 4 times on 404 — the onUserCreated trigger creates
+      // health_profiles/{uid} asynchronously and may not be done yet.
+      let res: Response | null = null
+      for (let attempt = 0; attempt < 4; attempt++) {
+        if (attempt > 0) {
+          await new Promise(r => setTimeout(r, 1500))
+        }
+        res = await fetch(
+          `${CF_FUNCTIONS_BASE}/getProfile`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        if (res.ok || res.status !== 404) break
+      }
+      if (!res || !res.ok) {
         setError('Failed to load profile')
         return
       }
