@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import type { FirebaseApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import type { Auth } from 'firebase/auth'
 
 // Firebase public config — these values are intentionally
@@ -31,7 +31,11 @@ function getFirebaseApp(): FirebaseApp | null {
 function getFirebaseAuth(): Auth | null {
   const app = getFirebaseApp()
   if (!app) return null
-  return getAuth(app)
+  const auth = getAuth(app)
+  // Set persistence to LOCAL so session survives PWA close/reopen on mobile
+  setPersistence(auth, browserLocalPersistence)
+    .catch(err => console.error('Auth persistence error:', err))
+  return auth
 }
 
 export const app = getFirebaseApp()
