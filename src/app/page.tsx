@@ -2404,6 +2404,57 @@ function TrustSection({ lang }: { lang: string }) {
   )
 }
 
+// ─── Brand Section ────────────────────────────────────────────────────────────
+
+function BrandSection({ lang }: { lang: string }) {
+  return (
+    <section className="py-24 px-6" style={{ background: '#1C2B1E' }}>
+      <div className="max-w-3xl mx-auto text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[#7A9E7E] mb-4">
+          {t('brand.eyebrow', lang as Lang)}
+        </p>
+        <h2
+          className="text-3xl md:text-4xl font-bold text-white mb-6"
+          style={{ fontFamily: "'Manrope', sans-serif" }}
+        >
+          {t('brand.title', lang as Lang)}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-left">
+          <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+            <p
+              className="text-[#7A9E7E] font-bold text-xl mb-2"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              Ark
+            </p>
+            <p className="text-white/80 text-sm leading-relaxed">
+              {t('brand.ark', lang as Lang)}
+            </p>
+          </div>
+          <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+            <p
+              className="text-[#7A9E7E] font-bold text-xl mb-2"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              Aura
+            </p>
+            <p className="text-white/80 text-sm leading-relaxed">
+              {t('brand.aura', lang as Lang)}
+            </p>
+          </div>
+        </div>
+        <p className="text-white/60 text-sm mb-12 italic">
+          {t('brand.combined', lang as Lang)}
+        </p>
+        <div className="w-16 h-px bg-[#7A9E7E]/40 mx-auto mb-10" />
+        <p className="text-white text-lg md:text-xl leading-relaxed font-light max-w-2xl mx-auto">
+          {t('brand.mission', lang as Lang)}
+        </p>
+      </div>
+    </section>
+  )
+}
+
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 function Footer({ lang }: { lang: string }) {
@@ -2467,6 +2518,7 @@ export default function Page() {
       <ZeroFrictionSection lang={currentLang} />
       <DifferentiatorsSection lang={currentLang} />
       <TrustSection lang={currentLang} />
+      <BrandSection lang={currentLang} />
       <Footer lang={currentLang} />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultView={authView} />
     </div>
