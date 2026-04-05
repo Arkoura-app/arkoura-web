@@ -735,7 +735,6 @@ export default function DashboardPage() {
                   {t('profile.phone', lang)}
                 </label>
                 <PhoneInput
-                  key={`phone-${phoneNumber || 'empty'}`}
                   value={phoneNumber ? `${countryCode}${phoneNumber}` : ''}
                   onChange={(fullNumber) => {
                     const match = [...COUNTRY_CODES]

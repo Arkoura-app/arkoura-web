@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import { t, type Lang } from '@/lib/i18n'
 
 const AuthModal = dynamic(
   () => import('@/components/auth/AuthModal').then(mod => mod.AuthModal),
@@ -1645,42 +1646,42 @@ function HeroSection({ lang, onGetStarted }: { lang: string; onGetStarted: () =>
 
 // ─── Section 2 — Problem (Carousel) ──────────────────────────────────────────
 
-const SCENARIOS = [
+const SCENARIO_KEYS = [
   {
     image: '/case01.png',
-    title: 'The cyclist who could not speak',
-    body: 'He collapsed mid-route. No ID. Responders had no way to know about his penicillin allergy. The treatment they gave him nearly ended his life.',
-    tag: 'Happens every day',
+    titleKey: 'scenarios.s1.title',
+    bodyKey: 'scenarios.s1.body',
+    tagKey: 'scenarios.s1.tag',
   },
   {
     image: '/case02.png',
-    title: 'The tourist and the language barrier',
-    body: 'Anaphylactic reaction in Tokyo. Her allergy history was in English. The doctors were brilliant — but twenty minutes was lost to translation.',
-    tag: 'In every country',
+    titleKey: 'scenarios.s2.title',
+    bodyKey: 'scenarios.s2.body',
+    tagKey: 'scenarios.s2.tag',
   },
   {
     image: '/case03.png',
-    title: 'The parent who forgot',
-    body: 'Dementia. He wandered from home. No medications list, no doctor name remembered. The ER started from zero.',
-    tag: 'Closer than you think',
+    titleKey: 'scenarios.s3.title',
+    bodyKey: 'scenarios.s3.body',
+    tagKey: 'scenarios.s3.tag',
   },
   {
     image: '/case04.png',
-    title: 'Abroad and unable to communicate',
-    body: 'Severe chest pain in a foreign market. No shared language with locals. Twelve minutes passed before anyone understood what he needed.',
-    tag: '1 in 4 emergencies involve a language barrier',
+    titleKey: 'scenarios.s4.title',
+    bodyKey: 'scenarios.s4.body',
+    tagKey: 'scenarios.s4.tag',
   },
   {
     image: '/case05.png',
-    title: 'The child who couldn\'t say his name',
-    body: 'Non-verbal and lost at a crowded festival. No name, no parents\' contacts, no sensory needs communicated. Responders had nothing to go on.',
-    tag: '1 in 36 children is autistic globally',
+    titleKey: 'scenarios.s5.title',
+    bodyKey: 'scenarios.s5.body',
+    tagKey: 'scenarios.s5.tag',
   },
   {
     image: '/case06.png',
-    title: 'He fainted. He recovered. He opened a session.',
-    body: 'Regained consciousness surrounded by paramedics. He opened a timed session, handed them a code — and they accessed his full journal and history in seconds.',
-    tag: 'When words come back — more becomes possible',
+    titleKey: 'scenarios.s6.title',
+    bodyKey: 'scenarios.s6.body',
+    tagKey: 'scenarios.s6.tag',
   },
 ]
 
@@ -1714,7 +1715,7 @@ function ProblemSection({ lang }: { lang: string }) {
           viewport={vp}
           className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
-          {SCENARIOS.map((scenario, i) => (
+          {SCENARIO_KEYS.map((scenario, i) => (
             <motion.div
               key={i}
               variants={fadeUp}
@@ -1728,7 +1729,7 @@ function ProblemSection({ lang }: { lang: string }) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={scenario.image}
-                  alt={scenario.title}
+                  alt={t(scenario.titleKey, lang as Lang)}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
@@ -1742,20 +1743,20 @@ function ProblemSection({ lang }: { lang: string }) {
                     color: '#1C2B1E',
                   }}
                 >
-                  {scenario.title}
+                  {t(scenario.titleKey, lang as Lang)}
                 </h3>
                 <p
                   className="flex-1 text-sm leading-relaxed"
                   style={{ color: '#4B5563' }}
                 >
-                  {scenario.body}
+                  {t(scenario.bodyKey, lang as Lang)}
                 </p>
                 <div className="mt-6">
                   <span
                     className="inline-block rounded-full px-3 py-1 text-xs font-medium"
                     style={{ background: '#E8F2E6', color: '#4A7A50' }}
                   >
-                    {scenario.tag}
+                    {t(scenario.tagKey, lang as Lang)}
                   </span>
                 </div>
               </div>
