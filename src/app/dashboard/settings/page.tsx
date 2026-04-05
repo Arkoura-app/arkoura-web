@@ -17,6 +17,17 @@ export default function SettingsPage() {
   // ── Export ──
   const [exporting, setExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
+  const [exportSummary, setExportSummary] = useState<{
+    conditions: number
+    allergies: number
+    medications: number
+    emergencyContacts: number
+    documents: number
+    allergyNames: string[]
+    medicationNames: string[]
+    conditionNames: string[]
+    profileFieldsExported: string[]
+  } | null>(null)
 
   // ── Delete Account ──
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -83,6 +94,9 @@ export default function SettingsPage() {
         a.click()
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
+        if (data.summary) {
+          setExportSummary(data.summary)
+        }
         setExportSuccess(true)
         setTimeout(() => setExportSuccess(false), 3000)
       }
@@ -172,19 +186,75 @@ export default function SettingsPage() {
         <p className="text-xs text-gray-500 mb-4">
           {t('settings.exportDataHint', lang)}
         </p>
-        {exportSuccess ? (
-          <p className="text-xs text-[#4A7A50] font-medium">
-            ✓ {t('settings.exportDownloaded', lang)}
-          </p>
-        ) : (
-          <button
-            type="button"
-            onClick={handleExport}
-            disabled={exporting}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
-          >
-            {exporting ? '...' : `📦 ${t('settings.requestExport', lang)}`}
-          </button>
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={exporting}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+        >
+          {exporting ? '...' : `📦 ${t('settings.requestExport', lang)}`}
+        </button>
+
+        {exportSuccess && exportSummary && (
+          <div className="mt-4 p-4 rounded-2xl bg-[#F4FAF4] border border-[#C8DEC4] space-y-3">
+            <p className="text-sm font-semibold text-[#1C2B1E]">
+              ✅ {t('settings.exportDownloaded', lang)}
+            </p>
+
+            {/* Counts */}
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { icon: '🩺', label: t('emergency.conditions', lang), count: exportSummary.conditions },
+                { icon: '🌿', label: t('emergency.allergies', lang), count: exportSummary.allergies },
+                { icon: '💊', label: t('emergency.medications', lang), count: exportSummary.medications },
+                { icon: '👥', label: t('emergency.contacts', lang), count: exportSummary.emergencyContacts },
+                { icon: '📄', label: t('settings.documents', lang), count: exportSummary.documents },
+              ].map(item => (
+                <div key={item.label} className="text-center p-2 bg-white rounded-xl border border-[#E8F2E6]">
+                  <p className="text-lg">{item.icon}</p>
+                  <p className="text-sm font-bold text-[#1C2B1E]">{item.count}</p>
+                  <p className="text-xs text-gray-500">{item.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Names preview */}
+            {exportSummary.allergyNames.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-gray-500 mb-1">
+                  {t('emergency.allergies', lang)}:
+                </p>
+                <p className="text-xs text-gray-600">
+                  {exportSummary.allergyNames.join(', ')}
+                </p>
+              </div>
+            )}
+            {exportSummary.medicationNames.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-gray-500 mb-1">
+                  {t('emergency.medications', lang)}:
+                </p>
+                <p className="text-xs text-gray-600">
+                  {exportSummary.medicationNames.join(', ')}
+                </p>
+              </div>
+            )}
+            {exportSummary.conditionNames.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-gray-500 mb-1">
+                  {t('emergency.conditions', lang)}:
+                </p>
+                <p className="text-xs text-gray-600">
+                  {exportSummary.conditionNames.join(', ')}
+                </p>
+              </div>
+            )}
+
+            {/* Privacy note */}
+            <p className="text-xs text-gray-400 italic border-t border-[#E8F2E6] pt-2">
+              {t('settings.exportPrivacyNote', lang)}
+            </p>
+          </div>
         )}
       </div>
 

@@ -156,12 +156,6 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!data) return
     // After fetching profile data:
-    console.log('[profile] phone fields received:', {
-      phone: (data.profile as Record<string, unknown>).phone,
-      phoneVerified: data.profile.phoneVerified,
-      phoneCountryCode: data.profile.phoneCountryCode,
-      phoneLocal: data.profile.phoneLocal,
-    })
     reset({
       firstName: data.profile.firstName ?? '',
       lastName: data.profile.lastName ?? '',
