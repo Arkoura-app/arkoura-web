@@ -33,6 +33,16 @@ export function PhoneInput({ value, onChange, placeholder, disabled, className }
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!value) return
+    const reparsed = parsePhone(value)
+    if (reparsed.code !== selectedCode || reparsed.local !== localNumber) {
+      setSelectedCode(reparsed.code)
+      setLocalNumber(reparsed.local)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
+
+  useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpen(false)
