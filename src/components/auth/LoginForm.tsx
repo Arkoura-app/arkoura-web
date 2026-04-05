@@ -6,7 +6,6 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
-import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
 import { LanguagePicker } from './LanguagePicker'
@@ -60,38 +59,10 @@ export default function LoginForm({ onSuccess, onForgotPassword, onRegister }: L
       return
     }
     try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider())
-      // Wait 1.5s for onUserCreated to finish
-      await new Promise(r => setTimeout(r, 1500))
-      try {
-        const token = await result.user.getIdToken()
-        const res = await fetch(
-          `${CF_FUNCTIONS_BASE}/getProfile`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-
-        // 404 = new user, profile not created yet
-        // onboardingComplete not true = needs onboarding
-        if (res.status === 404) {
-          window.location.href = '/dashboard/onboarding'
-          return
-        }
-
-        if (res.ok) {
-          const data = await res.json()
-          const needsOnboarding = !data?.profile?.onboardingComplete
-          window.location.href = needsOnboarding
-            ? '/dashboard/onboarding'
-            : '/dashboard'
-          return
-        }
-
-        // Any other error — go to dashboard normally
-        window.location.href = '/dashboard'
-      } catch {
-        // Network error — go to dashboard
-        window.location.href = '/dashboard'
-      }
+      await signInWithPopup(auth, new GoogleAuthProvider())
+      // ARK-38: Wizard removed pre-launch.
+      //         Files kept for reference.
+      window.location.href = '/dashboard'
     } catch {
       setGoogleError('Google sign-in failed. Please try again.')
     }

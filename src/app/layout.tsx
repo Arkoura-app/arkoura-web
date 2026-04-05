@@ -88,7 +88,12 @@ export const metadata: Metadata = {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     other: [{ rel: 'mask-icon', url: '/icon.png', color: '#4A7A50' }],
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Arkoura',
+  },
   verification: {
     google: 'Jgsa21xcnmXDBX7M9nzPW45cL8DyePtZgrAA4XLC4Fc',
   },

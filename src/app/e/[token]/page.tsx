@@ -9,8 +9,18 @@ import Image from 'next/image'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { t } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
+import { translateRelationship } from '@/lib/relationships'
 import { PhoneInput } from '@/components/ui/PhoneInput'
 import { COUNTRY_CODES } from '@/lib/countryCodes'
+
+// ─── Helpers ──────────────────────────────────────────
+
+function parseDateOfBirth(dob: string): Date {
+  // Parse YYYY-MM-DD as local date to avoid
+  // UTC offset shifting the day
+  const [year, month, day] = dob.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
 
 // ─── Types ────────────────────────────────────────────
 
@@ -135,55 +145,6 @@ const LANGUAGES = [
   { code: 'ru', label: 'Русский' },
   { code: 'sv', label: 'Svenska' },
 ]
-
-// ─── Relationship translation ─────────────────────────
-
-function translateRelationship(rel: string, lang: string): string {
-  const map: Record<string, Record<string, string>> = {
-    'Spouse / Partner': {
-      en: 'Spouse / Partner', es: 'Cónyuge / Pareja',
-      fr: 'Conjoint / Partenaire', de: 'Ehepartner / Partner',
-      pt: 'Cônjuge / Parceiro', zh: '配偶/伴侣', ja: '配偶者/パートナー',
-      it: 'Coniuge / Partner', ru: 'Супруг / Партнёр', sv: 'Make/partner',
-    },
-    'Parent': {
-      en: 'Parent', es: 'Padre/Madre', fr: 'Parent', de: 'Elternteil',
-      pt: 'Pai/Mãe', zh: '父母', ja: '親',
-      it: 'Genitore', ru: 'Родитель', sv: 'Förälder',
-    },
-    'Child': {
-      en: 'Child', es: 'Hijo/Hija', fr: 'Enfant', de: 'Kind',
-      pt: 'Filho/Filha', zh: '子女', ja: '子',
-      it: 'Figlio/Figlia', ru: 'Ребёнок', sv: 'Barn',
-    },
-    'Sibling': {
-      en: 'Sibling', es: 'Hermano/Hermana', fr: 'Frère/Sœur', de: 'Geschwister',
-      pt: 'Irmão/Irmã', zh: '兄弟姐妹', ja: '兄弟姉妹',
-      it: 'Fratello/Sorella', ru: 'Брат/Сестра', sv: 'Syskon',
-    },
-    'Friend': {
-      en: 'Friend', es: 'Amigo/Amiga', fr: 'Ami/Amie', de: 'Freund/Freundin',
-      pt: 'Amigo/Amiga', zh: '朋友', ja: '友人',
-      it: 'Amico/Amica', ru: 'Друг', sv: 'Vän',
-    },
-    'Caretaker': {
-      en: 'Caretaker', es: 'Cuidador', fr: 'Soignant', de: 'Betreuer',
-      pt: 'Cuidador', zh: '看护者', ja: '介護者',
-      it: 'Badante', ru: 'Опекун', sv: 'Vårdgivare',
-    },
-    'Doctor': {
-      en: 'Doctor', es: 'Doctor/Doctora', fr: 'Médecin', de: 'Arzt/Ärztin',
-      pt: 'Médico/Médica', zh: '医生', ja: '医師',
-      it: 'Medico', ru: 'Врач', sv: 'Läkare',
-    },
-    'Legal Guardian': {
-      en: 'Legal Guardian', es: 'Tutor Legal', fr: 'Tuteur légal', de: 'Vormund',
-      pt: 'Tutor Legal', zh: '法定监护人', ja: '法定後見人',
-      it: 'Tutore legale', ru: 'Законный опекун', sv: 'Juridisk vårdnadshavare',
-    },
-  }
-  return map[rel]?.[lang] ?? map[rel]?.['en'] ?? rel
-}
 
 // ─── Sub-components ───────────────────────────────────
 
@@ -587,7 +548,7 @@ export default function EmergencyProfilePage() {
               {profile.dateOfBirth && (
                 <p className="text-white/50 text-xs mt-1">
                   {t('emergency.dob', selectedLang as Lang)}:{' '}
-                  {new Date(profile.dateOfBirth).toLocaleDateString('en-US', {
+                  {parseDateOfBirth(profile.dateOfBirth).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -813,8 +774,8 @@ export default function EmergencyProfilePage() {
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-gray-500 mt-0.5 capitalize">
-                            {contact.relationship}
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {translateRelationship(contact.relationship, selectedLang)}
                           </p>
                           {contact.email && (
                             <a

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useCatalogSearch } from '@/hooks/useCatalogSearch'
-import type { Lang } from '@/lib/i18n'
+import { t, type Lang } from '@/lib/i18n'
 
 interface SelectionResult {
   id: string | null
@@ -91,16 +91,6 @@ export function CatalogSearchInput({ type, lang, placeholder, value, onSelect, d
             <div className="px-3 py-2 text-sm text-gray-400">Searching...</div>
           )}
 
-          {!searching && results.length === 0 && (
-            <button
-              type="button"
-              onClick={handleCustom}
-              className="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-50 text-[#4A7A50] font-medium"
-            >
-              + Add &ldquo;{inputValue}&rdquo; as custom entry
-            </button>
-          )}
-
           {results.map(entry => (
             <button
               key={entry.id}
@@ -116,6 +106,16 @@ export function CatalogSearchInput({ type, lang, placeholder, value, onSelect, d
               )}
             </button>
           ))}
+
+          {!searching && inputValue.trim().length > 0 && (
+            <button
+              type="button"
+              onClick={handleCustom}
+              className="w-full text-left px-3 py-2.5 text-sm hover:bg-gray-50 text-[#4A7A50] font-medium border-t border-gray-50"
+            >
+              + &ldquo;{inputValue}&rdquo; — {t('catalog.addCustomEntry', lang)}
+            </button>
+          )}
         </div>
       )}
     </div>

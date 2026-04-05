@@ -9,12 +9,13 @@ import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useProfile } from '@/hooks/useProfile'
 import { useProfileLang } from '@/contexts/LanguageContext'
-import { t, SUPPORTED_LANGS, LANG_NAMES } from '@/lib/i18n'
+import { t, SUPPORTED_LANGS, LANG_NAMES, type Lang } from '@/lib/i18n'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { cfFetch } from '@/lib/api'
 import { PhoneInput } from '@/components/ui/PhoneInput'
 import { COUNTRY_CODES } from '@/lib/countryCodes'
+import { InstallPrompt } from '@/components/ui/InstallPrompt'
 
 // ─── Constants ────────────────────────────────────────
 
@@ -477,6 +478,7 @@ export default function DashboardPage() {
 
   // ── Page ──
   return (
+    <>
     <div className="max-w-5xl mx-auto px-4 py-6 pb-8">
 
       {/* ── Page Header ── */}
@@ -651,7 +653,7 @@ export default function DashboardPage() {
                   <input
                     {...register('firstName')}
                     type="text"
-                    placeholder="Ada"
+                    placeholder={`${t('form.eg', lang as Lang)} Ada`}
                     className={inputCls(!!errors.firstName)}
                   />
                   {errors.firstName && (
@@ -665,7 +667,7 @@ export default function DashboardPage() {
                   <input
                     {...register('lastName')}
                     type="text"
-                    placeholder="Lovelace"
+                    placeholder={`${t('form.eg', lang as Lang)} Lovelace`}
                     className={inputCls(!!errors.lastName)}
                   />
                   {errors.lastName && (
@@ -954,7 +956,7 @@ export default function DashboardPage() {
                       type="text"
                       value={addressLine1}
                       onChange={e => setAddressLine1(e.target.value)}
-                      placeholder="123 Main St"
+                      placeholder={`${t('form.eg', lang as Lang)} 123 Main St`}
                       className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
                     />
                   </div>
@@ -1168,5 +1170,7 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+    <InstallPrompt />
+    </>
   )
 }

@@ -2651,6 +2651,75 @@ const translations: TranslationMap = {
     ru: 'Другие языки, которыми я владею',
     sv: 'Andra språk jag talar',
   },
+
+  // ─── Catalog ───────────────────────────────────────────────────────────────
+  'catalog.addCustomEntry': {
+    en: 'Add as custom entry',
+    es: 'Agregar como entrada personalizada',
+    fr: 'Ajouter comme entrée personnalisée',
+    de: 'Als eigenen Eintrag hinzufügen',
+    pt: 'Adicionar como entrada personalizada',
+    zh: '添加为自定义条目',
+    ja: 'カスタムエントリとして追加',
+    it: 'Aggiungi come voce personalizzata',
+    ru: 'Добавить как пользовательскую запись',
+    sv: 'Lägg till som anpassad post',
+  },
+
+  // ─── Form helpers ──────────────────────────────────────────────────────────
+  'form.eg': {
+    en: 'e.g.', es: 'ej.', fr: 'ex.',
+    de: 'z.B.', pt: 'ex.', zh: '例：',
+    ja: '例：', it: 'es.', ru: 'напр.',
+    sv: 'ex.',
+  },
+
+  // ─── PWA ───────────────────────────────────────────────────────────────────
+  'pwa.title': {
+    en: 'Add Arkoura to your home screen',
+    es: 'Agregar Arkoura a tu pantalla de inicio',
+    fr: "Ajouter Arkoura à l'écran d'accueil",
+    de: 'Arkoura zum Startbildschirm hinzufügen',
+    pt: 'Adicionar Arkoura à tela inicial',
+    zh: '将Arkoura添加到主屏幕',
+    ja: 'ArkouraをホームスクリーンWに追加',
+    it: 'Aggiungi Arkoura alla schermata Home',
+    ru: 'Добавить Arkoura на главный экран',
+    sv: 'Lägg till Arkoura på startskärmen',
+  },
+  'pwa.iosInstructions': {
+    en: 'Tap the Share button (□↑) at the bottom of Safari, then tap "Add to Home Screen".',
+    es: 'Toca el botón Compartir (□↑) en la parte inferior de Safari, luego toca "Agregar a pantalla de inicio".',
+    fr: 'Appuyez sur le bouton Partager (□↑) en bas de Safari, puis sur "Sur l\'écran d\'accueil".',
+    de: 'Tippen Sie auf das Teilen-Symbol (□↑) unten in Safari, dann auf "Zum Home-Bildschirm".',
+    pt: 'Toque no botão Compartilhar (□↑) na parte inferior do Safari, depois em "Adicionar à Tela de Início".',
+    zh: '点击Safari底部的分享按钮（□↑），然后选择"添加到主屏幕"。',
+    ja: 'Safariの下部にある共有ボタン（□↑）をタップし、「ホーム画面に追加」を選択してください。',
+    it: 'Tocca il pulsante Condividi (□↑) nella parte inferiore di Safari, poi tocca "Aggiungi alla schermata Home".',
+    ru: 'Нажмите кнопку «Поделиться» (□↑) внизу Safari, затем «На экран «Домой»».',
+    sv: 'Tryck på delningsknappen (□↑) längst ned i Safari, sedan på "Lägg till på hemskärmen".',
+  },
+  'pwa.androidInstructions': {
+    en: 'Install Arkoura for quick access from your home screen — works offline too.',
+    es: 'Instala Arkoura para acceso rápido desde tu pantalla de inicio — también funciona sin conexión.',
+    fr: "Installez Arkoura pour un accès rapide depuis votre écran d'accueil — fonctionne aussi hors ligne.",
+    de: 'Installieren Sie Arkoura für schnellen Zugriff vom Startbildschirm — funktioniert auch offline.',
+    pt: 'Instale o Arkoura para acesso rápido pela tela inicial — funciona offline também.',
+    zh: '安装Arkoura，从主屏幕快速访问——也支持离线使用。',
+    ja: 'Arkouraをインストールしてホームスクリーンから素早くアクセス——オフラインでも動作します。',
+    it: 'Installa Arkoura per un accesso rapido dalla schermata Home — funziona anche offline.',
+    ru: 'Установите Arkoura для быстрого доступа с главного экрана — работает и офлайн.',
+    sv: 'Installera Arkoura för snabb åtkomst från startskärmen — fungerar även offline.',
+  },
+  'pwa.install': {
+    en: 'Install App', es: 'Instalar App',
+    fr: "Installer l'app", de: 'App installieren',
+    pt: 'Instalar App', zh: '安装应用',
+    ja: 'アプリをインストール',
+    it: "Installa l'app",
+    ru: 'Установить приложение',
+    sv: 'Installera appen',
+  },
 }
 
 export function t(key: string, lang: Lang = 'en'): string {

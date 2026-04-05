@@ -16,7 +16,6 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import zxcvbn from 'zxcvbn'
 import { auth } from '@/lib/firebase'
-import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
 import { LanguagePicker } from './LanguagePicker'
@@ -148,7 +147,9 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       localStorage.setItem("arkoura_agreer_name", agreerName.trim())
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
-      onSuccess('/dashboard/onboarding')
+      // ARK-38: Wizard removed pre-launch.
+      //         Files kept for reference.
+      onSuccess('/dashboard')
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? ''
       setFirebaseError(authErrors[code] ?? 'Registration failed. Try again.')
@@ -181,25 +182,9 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
     }
     try {
       localStorage.setItem("arkoura_agreer_name", agreerName.trim())
-      const result = await signInWithPopup(auth, new GoogleAuthProvider())
-      try {
-        const token = await result.user.getIdToken()
-        const res = await fetch(
-          `${CF_FUNCTIONS_BASE}/getProfile`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-        if (res.ok) {
-          const data = await res.json()
-          const needsOnboarding = !data?.profile?.onboardingComplete
-          if (needsOnboarding) {
-            onOpenChange(false)
-            window.location.href = '/dashboard/onboarding'
-            return
-          }
-        }
-      } catch {
-        // If profile check fails, go to dashboard normally
-      }
+      await signInWithPopup(auth, new GoogleAuthProvider())
+      // ARK-38: Wizard removed pre-launch.
+      //         Files kept for reference.
       onSuccess()
     } catch {
       setGoogleError('Google sign-in failed. Please try again.')

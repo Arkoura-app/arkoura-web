@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+::placeholder {
+  color: #D1D5DB; /* Tailwind gray-300 */
+  opacity: 1;
+}
+
 /* ─── Hero entrance animations (CSS-only, no JS on LCP path) ─── */
 
 @keyframes arkoura-fade {

@@ -66,38 +66,10 @@ function GoogleButton({ disabled }: { disabled: boolean }) {
       return
     }
     try {
-      const result = await signInWithPopup(auth, new GoogleAuthProvider())
-      // Wait 1.5s for onUserCreated to finish
-      await new Promise(r => setTimeout(r, 1500))
-      try {
-        const token = await result.user.getIdToken()
-        const res = await fetch(
-          `${CF_FUNCTIONS_BASE}/getProfile`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-
-        // 404 = new user, profile not created yet
-        // onboardingComplete not true = needs onboarding
-        if (res.status === 404) {
-          window.location.href = '/dashboard/onboarding'
-          return
-        }
-
-        if (res.ok) {
-          const data = await res.json()
-          const needsOnboarding = !data?.profile?.onboardingComplete
-          window.location.href = needsOnboarding
-            ? '/dashboard/onboarding'
-            : '/dashboard'
-          return
-        }
-
-        // Any other error — go to dashboard normally
-        window.location.href = '/dashboard'
-      } catch {
-        // Network error — go to dashboard
-        window.location.href = '/dashboard'
-      }
+      await signInWithPopup(auth, new GoogleAuthProvider())
+      // ARK-38: Wizard removed pre-launch.
+      //         Files kept for reference.
+      window.location.href = '/dashboard'
     } catch {
       setError('Google sign-in failed. Please try again.')
     }
@@ -215,8 +187,10 @@ function SignInContent() {
       }
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
-      router.push('/dashboard/onboarding')
-      window.location.href = '/dashboard/onboarding'
+      // ARK-38: Wizard removed pre-launch.
+      //         Files kept for reference.
+      router.push('/dashboard')
+      window.location.href = '/dashboard'
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? ''
       setFirebaseError(authErrors[code] ?? 'Registration failed. Try again.')

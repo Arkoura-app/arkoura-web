@@ -224,7 +224,7 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
                   type="text"
                   value={form.country}
                   onChange={e => setForm(p => ({ ...p, country: e.target.value }))}
-                  placeholder="Costa Rica"
+                  placeholder={`${t('form.eg', lang as Lang)} Costa Rica`}
                   className={INPUT_CLS}
                 />
               </div>
@@ -236,7 +236,7 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
                   type="text"
                   value={form.city}
                   onChange={e => setForm(p => ({ ...p, city: e.target.value }))}
-                  placeholder="San José"
+                  placeholder={`${t('form.eg', lang as Lang)} San José`}
                   className={INPUT_CLS}
                 />
               </div>
@@ -298,7 +298,7 @@ export function PhysicianTab({ initialData }: PhysicianTabProps) {
                 type="text"
                 value={form.notes}
                 onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
-                placeholder="e.g. Clínica Santa Fe · Mon–Fri 8am–5pm"
+                placeholder={`${t('form.eg', lang as Lang)} Clínica Santa Fe · Mon–Fri 8am–5pm`}
                 className={INPUT_CLS}
               />
             </div>

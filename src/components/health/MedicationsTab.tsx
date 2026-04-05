@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
+import { t, type Lang } from '@/lib/i18n'
 import { cfFetch } from '@/lib/api'
 import { CatalogSearchInput } from './CatalogSearchInput'
 import { RecordCardNew } from './RecordCardNew'
@@ -240,7 +240,7 @@ export function MedicationsTab() {
                 type="text"
                 value={form.genericName}
                 onChange={e => setForm(p => ({ ...p, genericName: e.target.value }))}
-                placeholder="e.g. metformin hydrochloride"
+                placeholder={`${t('form.eg', lang as Lang)} metformin hydrochloride`}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
               />
             </div>
