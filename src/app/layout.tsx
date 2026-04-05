@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
 import Script from 'next/script'
 import { LanguageProvider } from '@/contexts/LanguageContext'
@@ -112,6 +112,10 @@ export const metadata: Metadata = {
       sv: 'https://arkoura.com',
     },
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#FFFFFF',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -187,6 +187,7 @@ function SignInContent() {
       }
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
+      sessionStorage.setItem('justRegistered', '1')
       // ARK-38: Wizard removed pre-launch.
       //         Files kept for reference.
       router.push('/dashboard')

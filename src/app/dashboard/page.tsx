@@ -16,6 +16,7 @@ import { cfFetch } from '@/lib/api'
 import { PhoneInput } from '@/components/ui/PhoneInput'
 import { COUNTRY_CODES } from '@/lib/countryCodes'
 import { InstallPrompt } from '@/components/ui/InstallPrompt'
+import { WelcomeModal } from '@/components/ui/WelcomeModal'
 
 // ─── Constants ────────────────────────────────────────
 
@@ -105,6 +106,10 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+
+  // ── Section collapse state ──
+  const [locationExpanded, setLocationExpanded] = useState(false)
+  const [additionalExpanded, setAdditionalExpanded] = useState(false)
 
   // ── Icons state ──
   const [selectedIcons, setSelectedIcons] = useState<string[]>([])
@@ -894,10 +899,19 @@ export default function DashboardPage() {
 
               {/* ── Contact & Location ── */}
               <div className="mt-6">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                  {t('profile.contactLocation', lang)}
-                </h3>
-                <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setLocationExpanded(p => !p)}
+                  className="w-full flex items-center justify-between py-2"
+                >
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                    {t('profile.contactLocation', lang)}
+                  </h3>
+                  <span className={`text-gray-400 transition-transform text-xs ${locationExpanded ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+                {locationExpanded && <div className="space-y-3 mt-3">
 
                   {/* Country */}
                   <div>
@@ -1003,15 +1017,24 @@ export default function DashboardPage() {
                       />
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
 
               {/* ── Additional Profile Fields ── */}
               <div className="mt-6">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                  {t('profile.additionalInfo', lang)}
-                </h3>
-                <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setAdditionalExpanded(p => !p)}
+                  className="w-full flex items-center justify-between py-2"
+                >
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                    {t('profile.additionalInfo', lang)}
+                  </h3>
+                  <span className={`text-gray-400 transition-transform text-xs ${additionalExpanded ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+                {additionalExpanded && <div className="space-y-3 mt-3">
 
                   {/* Gender identity + Nationality row */}
                   <div className="grid grid-cols-2 gap-3">
@@ -1082,7 +1105,7 @@ export default function DashboardPage() {
                       </p>
                     )}
                   </div>
-                </div>
+                </div>}
               </div>
 
               {/* Actions row */}
@@ -1171,6 +1194,7 @@ export default function DashboardPage() {
       </div>
     </div>
     <InstallPrompt />
+    <WelcomeModal />
     </>
   )
 }

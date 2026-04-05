@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 import { t } from '@/lib/i18n'
+import { translateRelationship } from '@/lib/relationships'
 import { cfFetch } from '@/lib/api'
 import { RecordCardNew } from './RecordCardNew'
 import { PhoneInput } from '@/components/ui/PhoneInput'
@@ -425,7 +426,7 @@ export function ContactsTab() {
             <RecordCardNew
               key={contact.id}
               title={contact.name}
-              subtitle={contact.relationship}
+              subtitle={translateRelationship(contact.relationship, lang)}
               badge={
                 contact.priority === 1
                   ? {

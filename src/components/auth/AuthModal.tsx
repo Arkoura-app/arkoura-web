@@ -147,6 +147,7 @@ export function AuthModal({ open, onOpenChange, defaultView = 'register' }: Auth
       localStorage.setItem("arkoura_agreer_name", agreerName.trim())
       setRegistered(true)
       await new Promise((r) => setTimeout(r, 2000))
+      sessionStorage.setItem('justRegistered', '1')
       // ARK-38: Wizard removed pre-launch.
       //         Files kept for reference.
       onSuccess('/dashboard')
