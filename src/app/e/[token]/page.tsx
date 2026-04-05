@@ -29,6 +29,7 @@ interface EmergencyProfile {
     city: string | null
     country: string | null
     phoneVerified: boolean | null
+    emergencyNotes: string | null
   }
   primaryPhysician: {
     name: string
@@ -639,6 +640,16 @@ export default function EmergencyProfilePage() {
               </div>
             )}
           </div>
+
+          {/* ── Emergency Notes Banner ── */}
+          {profile.emergencyNotes && (
+            <div className="mx-4 mt-3 px-4 py-3 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-2.5">
+              <span className="text-amber-500 flex-shrink-0 mt-0.5">⚠️</span>
+              <p className="text-sm text-amber-800 leading-relaxed">
+                {profile.emergencyNotes}
+              </p>
+            </div>
+          )}
 
           {/* ── SECTION 2: Language selector strip ── */}
           <div className="relative bg-[#F0F4EE] border-b border-[#E8EDE8]">

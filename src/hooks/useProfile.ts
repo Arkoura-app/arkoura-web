@@ -24,6 +24,17 @@ export interface ProfileData {
     phoneCountryCode?: string
     phoneLocal?: string
     phoneVerified?: boolean
+    country?: string
+    state?: string
+    city?: string
+    addressLine1?: string
+    addressLine2?: string
+    postalCode?: string
+    timezone?: string
+    genderIdentity?: string
+    nationality?: string
+    emergencyNotes?: string
+    secondaryLanguages?: string[]
   }
   qrToken: string
   qrUrl: string

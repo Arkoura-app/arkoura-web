@@ -16,7 +16,7 @@ export default function SettingsPage() {
 
   // ── Export ──
   const [exporting, setExporting] = useState(false)
-  const [exportUrl, setExportUrl] = useState('')
+  const [exportSuccess, setExportSuccess] = useState(false)
 
   // ── Delete Account ──
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -62,11 +62,32 @@ export default function SettingsPage() {
   async function handleExport() {
     setExporting(true)
     try {
-      const res = await cfFetch('exportUserData', { method: 'POST' })
+      const res = await cfFetch('exportUserData', {
+        method: 'POST',
+      })
       const data = await res.json()
-      if (data.downloadUrl) {
-        setExportUrl(data.downloadUrl)
+
+      if (data.export) {
+        // Create a blob and trigger download
+        const blob = new Blob(
+          [JSON.stringify(data.export, null, 2)],
+          { type: 'application/json' }
+        )
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `arkoura-export-${
+          new Date().toISOString().split('T')[0]
+        }.json`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+        setExportSuccess(true)
+        setTimeout(() => setExportSuccess(false), 3000)
       }
+    } catch (err) {
+      console.error('Export error:', err)
     } finally {
       setExporting(false)
     }
@@ -151,19 +172,10 @@ export default function SettingsPage() {
         <p className="text-xs text-gray-500 mb-4">
           {t('settings.exportDataHint', lang)}
         </p>
-        {exportUrl ? (
-          <div className="space-y-2">
-            <a
-              href={exportUrl}
-              download="arkoura-export.json"
-              className="flex items-center gap-2 text-sm text-[#4A7A50] font-medium underline"
-            >
-              ⬇️ {t('settings.downloadExport', lang)}
-            </a>
-            <p className="text-xs text-gray-400">
-              {t('settings.exportExpires', lang)}
-            </p>
-          </div>
+        {exportSuccess ? (
+          <p className="text-xs text-[#4A7A50] font-medium">
+            ✓ {t('settings.exportDownloaded', lang)}
+          </p>
         ) : (
           <button
             type="button"

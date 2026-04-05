@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useProfile } from '@/hooks/useProfile'
 import { useProfileLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
+import { t, SUPPORTED_LANGS, LANG_NAMES } from '@/lib/i18n'
 import { CF_FUNCTIONS_BASE } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { cfFetch } from '@/lib/api'
@@ -119,6 +119,19 @@ export default function DashboardPage() {
   const [verifyError, setVerifyError] = useState('')
   const [verifyLoading, setVerifyLoading] = useState(false)
 
+  // ── Extended profile state ──
+  const [country, setCountry] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [addressLine1, setAddressLine1] = useState('')
+  const [addressLine2, setAddressLine2] = useState('')
+  const [postalCode, setPostalCode] = useState('')
+  const [timezone, setTimezone] = useState('')
+  const [genderIdentity, setGenderIdentity] = useState('')
+  const [nationality, setNationality] = useState('')
+  const [emergencyNotes, setEmergencyNotes] = useState('')
+  const [secondaryLanguages, setSecondaryLanguages] = useState<string[]>([])
+
   // ── Form setup ──
   const {
     register,
@@ -162,7 +175,25 @@ export default function DashboardPage() {
     setCountryCode(data.profile.phoneCountryCode ?? '+506')
     setPhoneNumber(data.profile.phoneLocal ?? '')
     setPhoneVerified(data.profile.phoneVerified ?? false)
+    setCountry(data.profile.country ?? '')
+    setState(data.profile.state ?? '')
+    setCity(data.profile.city ?? '')
+    setAddressLine1(data.profile.addressLine1 ?? '')
+    setAddressLine2(data.profile.addressLine2 ?? '')
+    setPostalCode(data.profile.postalCode ?? '')
+    setTimezone(data.profile.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone)
+    setGenderIdentity(data.profile.genderIdentity ?? '')
+    setNationality(data.profile.nationality ?? '')
+    setEmergencyNotes(data.profile.emergencyNotes ?? '')
+    setSecondaryLanguages(data.profile.secondaryLanguages ?? [])
   }, [data, reset])
+
+  // ── Auto-detect timezone on mount if not set ──
+  useEffect(() => {
+    if (!timezone) {
+      setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Initialize photo preview from profile ──
   useEffect(() => {
@@ -384,6 +415,17 @@ export default function DashboardPage() {
           phoneCountryCode: countryCode,
           phoneLocal: phoneNumber,
           phone: phoneNumber ? `${countryCode}${phoneNumber}` : '',
+          country,
+          state,
+          city,
+          addressLine1,
+          addressLine2,
+          postalCode,
+          timezone,
+          genderIdentity,
+          nationality,
+          emergencyNotes,
+          secondaryLanguages,
         }),
       })
       if (!res.ok) throw new Error('Failed to save profile')
@@ -831,6 +873,220 @@ export default function DashboardPage() {
                     )}
                   </div>
                 )}
+              </div>
+
+              {/* ── Emergency Notes ── */}
+              <div className="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-200">
+                <label className="text-sm font-semibold text-amber-800 mb-1 block">
+                  🚨 {t('profile.emergencyNotes', lang)}
+                </label>
+                <p className="text-xs text-amber-600 mb-2">
+                  {t('profile.emergencyNotesHint', lang)}
+                </p>
+                <textarea
+                  value={emergencyNotes}
+                  onChange={e => setEmergencyNotes(e.target.value)}
+                  placeholder={t('profile.emergencyNotesPlaceholder', lang)}
+                  maxLength={300}
+                  rows={3}
+                  className="w-full border border-amber-300 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-amber-500 resize-none"
+                />
+                <p className="text-xs text-amber-500 mt-1 text-right">
+                  {emergencyNotes.length}/300
+                </p>
+              </div>
+
+              {/* ── Contact & Location ── */}
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                  {t('profile.contactLocation', lang)}
+                </h3>
+                <div className="space-y-3">
+
+                  {/* Country */}
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 mb-1 block">
+                      {t('profile.country', lang)}
+                    </label>
+                    <select
+                      value={country}
+                      onChange={e => setCountry(e.target.value)}
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#4A7A50]"
+                    >
+                      <option value="">{t('profile.selectCountry', lang)}</option>
+                      {COUNTRY_CODES.map(c => (
+                        <option key={c.iso} value={c.iso}>
+                          {c.flag} {c.country}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* State + City row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.state', lang)}
+                      </label>
+                      <input
+                        type="text"
+                        value={state}
+                        onChange={e => setState(e.target.value)}
+                        placeholder={t('profile.statePlaceholder', lang)}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.city', lang)}
+                      </label>
+                      <input
+                        type="text"
+                        value={city}
+                        onChange={e => setCity(e.target.value)}
+                        placeholder={t('profile.cityPlaceholder', lang)}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Address line 1 */}
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 mb-1 block">
+                      {t('profile.addressLine1', lang)}
+                      <span className="text-gray-400 ml-1">{t('form.optional', lang)}</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={addressLine1}
+                      onChange={e => setAddressLine1(e.target.value)}
+                      placeholder="123 Main St"
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+
+                  {/* Address line 2 */}
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 mb-1 block">
+                      {t('profile.addressLine2', lang)}
+                      <span className="text-gray-400 ml-1">{t('form.optional', lang)}</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={addressLine2}
+                      onChange={e => setAddressLine2(e.target.value)}
+                      placeholder="Apt, Suite, Floor..."
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                    />
+                  </div>
+
+                  {/* Postal code + Timezone row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.postalCode', lang)}
+                      </label>
+                      <input
+                        type="text"
+                        value={postalCode}
+                        onChange={e => setPostalCode(e.target.value)}
+                        placeholder="10203"
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.timezone', lang)}
+                      </label>
+                      <input
+                        type="text"
+                        value={timezone}
+                        onChange={e => setTimezone(e.target.value)}
+                        placeholder="America/Costa_Rica"
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Additional Profile Fields ── */}
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                  {t('profile.additionalInfo', lang)}
+                </h3>
+                <div className="space-y-3">
+
+                  {/* Gender identity + Nationality row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.genderIdentity', lang)}
+                        <span className="text-gray-400 ml-1">{t('form.optional', lang)}</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={genderIdentity}
+                        onChange={e => setGenderIdentity(e.target.value)}
+                        placeholder={t('profile.genderIdentityPlaceholder', lang)}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 mb-1 block">
+                        {t('profile.nationality', lang)}
+                        <span className="text-gray-400 ml-1">{t('form.optional', lang)}</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={nationality}
+                        onChange={e => setNationality(e.target.value)}
+                        placeholder={t('profile.nationalityPlaceholder', lang)}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#4A7A50]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Secondary languages */}
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 mb-1 block">
+                      {t('profile.secondaryLanguages', lang)}
+                      <span className="text-gray-400 ml-1">{t('form.optional', lang)} · max 10</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {SUPPORTED_LANGS
+                        .filter(code => code !== lang)
+                        .map(code => {
+                          const isSelected = secondaryLanguages.includes(code)
+                          return (
+                            <button
+                              key={code}
+                              type="button"
+                              onClick={() => {
+                                if (isSelected) {
+                                  setSecondaryLanguages(prev => prev.filter(l => l !== code))
+                                } else if (secondaryLanguages.length < 10) {
+                                  setSecondaryLanguages(prev => [...prev, code])
+                                }
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                isSelected
+                                  ? 'bg-[#4A7A50] text-white border-[#4A7A50]'
+                                  : 'bg-white text-gray-600 border-gray-200 hover:border-[#4A7A50]'
+                              }`}
+                            >
+                              {LANG_NAMES[code]} ({code.toUpperCase()})
+                            </button>
+                          )
+                        })}
+                    </div>
+                    {secondaryLanguages.length > 0 && (
+                      <p className="text-xs text-gray-400 mt-1">
+                        {secondaryLanguages.length}/10 selected
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Actions row */}
