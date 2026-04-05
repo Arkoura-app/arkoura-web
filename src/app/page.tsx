@@ -1648,37 +1648,37 @@ function HeroSection({ lang, onGetStarted }: { lang: string; onGetStarted: () =>
 
 const SCENARIO_KEYS = [
   {
-    image: '/case01.png',
+    image: '/case01.PNG',
     titleKey: 'scenarios.s1.title',
     bodyKey: 'scenarios.s1.body',
     tagKey: 'scenarios.s1.tag',
   },
   {
-    image: '/case02.png',
+    image: '/case02.PNG',
     titleKey: 'scenarios.s2.title',
     bodyKey: 'scenarios.s2.body',
     tagKey: 'scenarios.s2.tag',
   },
   {
-    image: '/case03.png',
+    image: '/case03.PNG',
     titleKey: 'scenarios.s3.title',
     bodyKey: 'scenarios.s3.body',
     tagKey: 'scenarios.s3.tag',
   },
   {
-    image: '/case04.png',
+    image: '/case04.PNG',
     titleKey: 'scenarios.s4.title',
     bodyKey: 'scenarios.s4.body',
     tagKey: 'scenarios.s4.tag',
   },
   {
-    image: '/case05.png',
+    image: '/case05.PNG',
     titleKey: 'scenarios.s5.title',
     bodyKey: 'scenarios.s5.body',
     tagKey: 'scenarios.s5.tag',
   },
   {
-    image: '/case06.png',
+    image: '/case06.PNG',
     titleKey: 'scenarios.s6.title',
     bodyKey: 'scenarios.s6.body',
     tagKey: 'scenarios.s6.tag',
